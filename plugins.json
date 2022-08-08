@@ -1,0 +1,75 @@
+[
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hentaijk.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/RUBIKOF/my_plugins",
+        "fileSize": 23805,
+        "status": 1,
+        "language": "es",
+        "authors": [
+            "RUBIKOF"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 1,
+        "internalName": "HentaiJKProvider",
+        "description": "JKanime subpage but with tasty content",
+        "url": "https://raw.githubusercontent.com/RUBIKOF/my_plugins/builds/HentaiJKProvider.cs3",
+        "name": "HentaiJKProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hentaila.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/RUBIKOF/my_plugins",
+        "fileSize": 19293,
+        "status": 1,
+        "language": "es",
+        "authors": [
+            "RUBIKOF"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 1,
+        "internalName": "HentailaProvider",
+        "url": "https://raw.githubusercontent.com/RUBIKOF/my_plugins/builds/HentailaProvider.cs3",
+        "name": "HentailaProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=jav.guru&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/RUBIKOF/my_plugins",
+        "fileSize": 16682,
+        "status": 1,
+        "language": "es",
+        "authors": [
+            "RUBIKOF"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 1,
+        "internalName": "JavGuru",
+        "url": "https://raw.githubusercontent.com/RUBIKOF/my_plugins/builds/JavGuru.cs3",
+        "name": "JavGuru"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=javenspanish.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/RUBIKOF/my_plugins",
+        "fileSize": 17445,
+        "status": 1,
+        "language": "es",
+        "authors": [
+            "RUBIKOF"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 1,
+        "internalName": "JavSpanishProvider",
+        "url": "https://raw.githubusercontent.com/RUBIKOF/my_plugins/builds/JavSpanishProvider.cs3",
+        "name": "JavSpanishProvider"
+    }
+]
