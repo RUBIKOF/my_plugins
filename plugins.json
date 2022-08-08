@@ -1,0 +1,59 @@
+[
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hentaijk.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/RUBIKOF/my_plugins",
+        "fileSize": 23806,
+        "status": 1,
+        "language": "es",
+        "authors": [
+            "RUBIKOF"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 1,
+        "internalName": "HentaiJKProvider",
+        "description": "JKanime subpage but with tasty content",
+        "url": "https://raw.githubusercontent.com/RUBIKOF/my_plugins/builds/HentaiJKProvider.cs3",
+        "name": "HentaiJKProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hentaila.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/RUBIKOF/my_plugins",
+        "fileSize": 19297,
+        "status": 1,
+        "language": "es",
+        "authors": [
+            "RUBIKOF"
+        ],
+        "tvTypes": [
+            "NSFW"
+        ],
+        "version": 1,
+        "internalName": "HentailaProvider",
+        "url": "https://raw.githubusercontent.com/RUBIKOF/my_plugins/builds/HentailaProvider.cs3",
+        "name": "HentailaProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=javenspanish.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/RUBIKOF/my_plugins",
+        "fileSize": 15115,
+        "status": 1,
+        "language": "es",
+        "authors": [
+            "RUBIKOF"
+        ],
+        "tvTypes": [
+            "Anime",
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "JavSpanishProvider",
+        "url": "https://raw.githubusercontent.com/RUBIKOF/my_plugins/builds/JavSpanishProvider.cs3",
+        "name": "JavSpanishProvider"
+    }
+]
