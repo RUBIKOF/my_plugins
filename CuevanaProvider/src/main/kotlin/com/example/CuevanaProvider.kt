@@ -32,7 +32,7 @@ class CuevanaProvider : MainAPI() {
                                 .map {
                                     //val title = it.selectFirst("h2.Title")!!.text()
                                     val title = it.selectFirst("img.lazy")!!.attr("data-src")
-                                    val poster = "https:" + it.selectFirst("img.lazy")!!.attr("data-src")
+                                    val poster = it.selectFirst("img.lazy")!!.attr("data-src").replace("//","")
                                     val url = it.selectFirst("a")!!.attr("href")
                                     TvSeriesSearchResponse(
                                             title,
@@ -73,7 +73,7 @@ class CuevanaProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val url = "$mainUrl/?s=${query}"
+        val url = "$mainUrl/search.html?keyword=${query}"
         val document = app.get(url).document
 
         return document.select("li.xxx.TPostMv").map {
