@@ -32,7 +32,7 @@ class CuevanaProvider : MainAPI() {
                                 .map {
                                     //val title = it.selectFirst("h2.Title")!!.text()
                                     val title = it.selectFirst("img.lazy")!!.attr("data-src")
-                                    val poster = "https://pelisimg.online/cover/la-edad-dorada.jpg"
+                                    val poster = "http://pelisimg.online/cover/la-edad-dorada.jpg"
                                     val url = it.selectFirst("a")!!.attr("href")
                                     TvSeriesSearchResponse(
                                             title,
