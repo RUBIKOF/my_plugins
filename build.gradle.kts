@@ -2,6 +2,7 @@ import com.lagradost.cloudstream3.gradle.CloudstreamExtension
 import com.android.build.gradle.BaseExtension
 
 buildscript {
+    ext.kotlin_version = '1.7.1'
     repositories {
         google()
         mavenCentral()
@@ -76,7 +77,7 @@ subprojects {
         // but you dont need to include any of them if you dont need them
         // https://github.com/recloudstream/cloudstream/blob/master/app/build.gradle
         implementation(kotlin("stdlib")) // adds standard kotlin features, like listOf, mapOf etc
-        implementation("com.github.Blatzar:NiceHttp:0.3.2") // http library
+        implementation("com.github.Blatzar:NiceHttp:0.4.4") // http library
         implementation("org.jsoup:jsoup:1.13.1") // html parser
     }
 }
