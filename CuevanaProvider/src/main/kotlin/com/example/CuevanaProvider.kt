@@ -32,7 +32,7 @@ class CuevanaProvider : MainAPI() {
                                 .map {
                                     //val title = it.selectFirst("h2.Title")!!.text()
                                     val title = it.selectFirst("img.lazy")!!.attr("data-src")
-                                    val poster = it.selectFirst("img.lazy")!!.attr("data-src").replace("//","")
+                                    val poster = "https://cdn.jkdesu.com/assets/images/animes/image/zanting-rang-wo-cha-gonglue.jpg"
                                     val url = it.selectFirst("a")!!.attr("href")
                                     TvSeriesSearchResponse(
                                             title,
