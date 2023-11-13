@@ -31,8 +31,8 @@ class CuevanaProvider : MainAPI() {
                         app.get("$mainUrl/serie", timeout = 120).document.select("section.home-series li")
                                 .map {
                                     //val title = it.selectFirst("h2.Title")!!.text()
-                                    val title = it.selectFirst("img.lazy")!!.attr("data-src")
-                                    val poster = "http://pelisimg.online/cover/la-edad-dorada.jpg"
+                                    val title = "11"
+                                    val poster = it.selectFirst("img.lazy")?.attr("data-src")
                                     val url = it.selectFirst("a")!!.attr("href")
                                     TvSeriesSearchResponse(
                                             title,
