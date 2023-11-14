@@ -28,11 +28,10 @@ class CuevanaProvider : MainAPI() {
         items.add(
                 HomePageList(
                         "Series",
-                        app.get("$mainUrl/serie", timeout = 120).document.select("section.home-series li")
+                        app.get("$mainUrl/serie", timeout = 120).document.select("#tabserie-1 > ul > li")
                                 .map {
-                                    //val title = it.selectFirst("h2.Title")!!.text()
-                                    val title = "11"
-                                    val poster = it.selectFirst("img.lazy")?.attr("data-src")
+                                    val title = it.selectFirst("h2.Title")!!.text()
+                                    val poster = it.selectFirst("img")?.attr("src")
                                     val url = it.selectFirst("a")!!.attr("href")
                                     TvSeriesSearchResponse(
                                             title,
