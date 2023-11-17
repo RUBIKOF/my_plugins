@@ -143,50 +143,17 @@ class JavSpanishProvider : MainAPI() {
         val poster = ""
         val title = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-7b148b4.elementor-widget.elementor-widget-heading > div > h1")?.text()?:""
         val type = "NFSW"
-
         val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
 
 
-        val streamUrl = ""
-
-
         //Fin espacio prueba
-        return MovieLoadResponse(
-                name = title,
-                url = url,
-                apiName = this.name,
-                type = TvType.NSFW,
-                dataUrl = streamUrl,
-                posterUrl = poster,
-                year = null,
-                plot = description,
+        return newMovieLoadResponse(
+                title,
+                url,
+                TvType.NSFW,
+                url
         )
 
-    }
-
-    data class Nozomi(
-            @JsonProperty("file") val file: String?
-    )
-
-    private fun streamClean(
-            name: String,
-            url: String,
-            referer: String,
-            quality: String?,
-            callback: (ExtractorLink) -> Unit,
-            m3u8: Boolean
-    ): Boolean {
-        callback(
-                ExtractorLink(
-                        name,
-                        name,
-                        url,
-                        referer,
-                        getQualityFromName(quality),
-                        m3u8
-                )
-        )
-        return true
     }
 
     override suspend fun loadLinks(
@@ -196,8 +163,6 @@ class JavSpanishProvider : MainAPI() {
             callback: (ExtractorLink) -> Unit
     ): Boolean {
         try {
-            // GET request to: https://player.javfree.sh/stream/687234424271726c
-
             val x = app.get(data).document
             //val url = x.selectFirst("#elementor-tab-content-7231 > div > iframe")?.attr("src")?:""
             val url = "https://voe.sx/e/cc6lejcng05n"
@@ -208,7 +173,6 @@ class JavSpanishProvider : MainAPI() {
                         subtitleCallback = subtitleCallback,
                         callback = callback
                 )
-
         } catch (e: Exception) {
             e.printStackTrace()
             logError(e)
