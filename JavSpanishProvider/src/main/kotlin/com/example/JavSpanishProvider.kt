@@ -199,7 +199,8 @@ class JavSpanishProvider : MainAPI() {
             // GET request to: https://player.javfree.sh/stream/687234424271726c
 
             val x = app.get(data).document
-            val url = x.selectFirst("#elementor-tab-content-7231 > div > iframe")?.attr("src")?:""
+            //val url = x.selectFirst("#elementor-tab-content-7231 > div > iframe")?.attr("src")?:""
+            val url = "https://voe.sx/e/cc6lejcng05n"
             if (data.isNotBlank()) {
                 //Log.i(this.name, "ApiError => (link url) $linkUrl")
                 loadExtractor(
