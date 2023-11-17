@@ -201,14 +201,14 @@ class JavSpanishProvider : MainAPI() {
             val x = app.get(data).document
             //val url = x.selectFirst("#elementor-tab-content-7231 > div > iframe")?.attr("src")?:""
             val url = "https://voe.sx/e/cc6lejcng05n"
-            if (data.isNotBlank()) {
+
                 //Log.i(this.name, "ApiError => (link url) $linkUrl")
                 loadExtractor(
                         url = url,
                         subtitleCallback = subtitleCallback,
                         callback = callback
                 )
-            }
+
         } catch (e: Exception) {
             e.printStackTrace()
             logError(e)
