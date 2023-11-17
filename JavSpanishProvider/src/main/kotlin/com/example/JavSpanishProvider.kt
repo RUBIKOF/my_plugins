@@ -164,8 +164,8 @@ class JavSpanishProvider : MainAPI() {
     ): Boolean {
         try {
             val x = app.get(data).document
-            //val url = x.selectFirst("#elementor-tab-content-7231 > div > iframe")?.attr("src")?:""
-            val url = "https://voe.sx/e/cc6lejcng05n"
+            val url = x.selectFirst("#elementor-tab-content-7231 > div > iframe")?.attr("src")?:""
+            //val url = "https://voe.sx/e/cc6lejcng05n"
 
                 //Log.i(this.name, "ApiError => (link url) $linkUrl")
                 loadExtractor(
