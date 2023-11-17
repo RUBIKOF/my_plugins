@@ -19,5 +19,5 @@ cloudstream {
     status = 1 // will be 3 if unspecified
     tvTypes = listOf("NSFW")
 
-    iconUrl = "https://www.google.com/s2/favicons?domain=javenspanish.com&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=hentaila.com&sz=%size%"
 }
