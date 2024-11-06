@@ -49,7 +49,7 @@ class JavSpanishProvider : MainAPI() {
         items.add(
                 HomePageList(
                         "Recientes",
-                        app.get(mainUrl).document.select("#post-31 > div > div > div > div > section.elementor-section.elementor-top-section.elementor-element.elementor-element-543e45e.elementor-section-stretched.elementor-section-boxed.elementor-section-height-default.elementor-section-height-default > div > div > div > div > div > div.elementor-element.elementor-element-0034ef1.elementor-grid-4.elementor-posts--align-center.elementor-posts__hover-none.elementor-grid-tablet-2.elementor-grid-mobile-1.elementor-posts--thumbnail-top.elementor-card-shadow-yes.elementor-widget.elementor-widget-posts > div > div > article.elementor-post.elementor-grid-item").map {
+                            app.get(mainUrl).document.select("#post-31 > div > div > div > div > section.elementor-section.elementor-top-section.elementor-element.elementor-element-543e45e.elementor-section-stretched.elementor-section-boxed.elementor-section-height-default.elementor-section-height-default > div > div > div > div > div > div.elementor-element.elementor-element-0034ef1.elementor-grid-4.elementor-posts--align-center.elementor-posts__hover-none.elementor-grid-tablet-2.elementor-grid-mobile-1.elementor-posts--thumbnail-top.elementor-card-shadow-yes.elementor-widget.elementor-widget-posts > div > div > article.elementor-post.elementor-grid-item").map {
                             val title = it.selectFirst("div h3")?.text()
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
@@ -66,8 +66,8 @@ class JavSpanishProvider : MainAPI() {
         )
         urls.apmap { (url, name) ->
             val soup = app.get(url).document
-            val home = soup.select(".g-0").map {
-                val title = it.selectFirst("h5 a")?.text()
+            val home = soup.select(".elementor-post__card").map {
+                val title = it.selectFirst(".elementor-post__title")?.text()
                 val poster = it.selectFirst("img")?.attr("src") ?: ""
                 AnimeSearchResponse(
                         title!!,
