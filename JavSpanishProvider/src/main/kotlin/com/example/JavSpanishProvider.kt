@@ -66,18 +66,16 @@ class JavSpanishProvider : MainAPI() {
         )
         urls.apmap { (url, name) ->
             val soup = app.get(url).document
-            var f: Int
-            f=0
-            var inicio: Int
-            inicio =0
-            var z: Int
+            var f: Int =0
+            var inicio: Int =0
+            var z: Int =0
             var x =""
             var poster =""
             val home = soup.select(".elementor-post__card").map {
                 val title = it.selectFirst(".elementor-post__title")?.text()
                 val texto = it.selectFirst(".elementor-post__thumbnail")?.text()
                 if (texto != null) {
-                    inicio = texto.indexOf("data-lazy-srcset", 18)
+                    inicio = texto.indexOf("data-lazy-srcset") + 18
                     f = texto.length
                     x = texto.substring(inicio,f-inicio)
                     z = x.indexOf(" ")
