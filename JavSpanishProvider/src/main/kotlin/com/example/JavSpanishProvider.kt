@@ -68,7 +68,7 @@ class JavSpanishProvider : MainAPI() {
             val soup = app.get(url).document
             val home = soup.select(".elementor-post__card").map {
                 val title = it.selectFirst(".elementor-post__title")?.text()
-                val poster = it.selectFirst("img")?.attr("src") ?: ""
+                val poster = it.selectFirst(".elementor-post__thumbnail")?.attr("src") ?: ""
                 AnimeSearchResponse(
                         title!!,
                         fixUrl(it.selectFirst("a")?.attr("href") ?: ""),
