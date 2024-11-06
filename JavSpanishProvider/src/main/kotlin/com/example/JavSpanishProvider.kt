@@ -76,12 +76,9 @@ class JavSpanishProvider : MainAPI() {
                 var title =""
                 val texto = it.selectFirst(".elementor-post__thumbnail img").toString()
                 if (texto != null) {
-                    inicio = texto.indexOf("data-lazy-srcset") + 18
-                    f = texto.length
-                    x = texto.substring(inicio,f-inicio)
-                    z = x.indexOf(" ")
-                    //poster = x.substring(0,z).toString()
-                    title = x.substring(0,z).toString()
+                    inicio = texto.indexOf("data-lazy-srcset")
+
+                    title = texto.substring(0,inicio).toString()
                 }
                 else{
                     //poster = "https://wallpapers.com/images/hd/naruto-profile-pictures-sa1tekghfajrr928.jpg"
