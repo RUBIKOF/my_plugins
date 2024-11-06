@@ -66,9 +66,28 @@ class JavSpanishProvider : MainAPI() {
         )
         urls.apmap { (url, name) ->
             val soup = app.get(url).document
+            var f: Int
+            f=0
+            var inicio: Int
+            inicio =0
+            var z: Int
+            var x =""
+            var poster =""
             val home = soup.select(".elementor-post__card").map {
                 val title = it.selectFirst(".elementor-post__title")?.text()
-                val poster = it.selectFirst("img")?.attr("src") ?: ""
+                val texto = it.selectFirst(".elementor-post__thumbnail")?.text()
+                if (texto != null) {
+                    inicio = texto.indexOf("data-lazy-srcset", 18)
+                    f = texto.length
+                    x = texto.substring(inicio,f-inicio)
+                    z = x.indexOf(" ")
+                    poster = x.substring(0,z).toString()
+                }
+                else{
+                    poster = "https://wallpapers.com/images/hd/naruto-profile-pictures-sa1tekghfajrr928.jpg"
+                }
+
+
                 AnimeSearchResponse(
                         title!!,
                         fixUrl(it.selectFirst("a")?.attr("href") ?: ""),
