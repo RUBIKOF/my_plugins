@@ -73,7 +73,7 @@ class JavSpanishProvider : MainAPI() {
             var poster =""
             val home = soup.select(".elementor-post__card").map {
                 //val title = it.selectFirst(".elementor-post__title")?.text()
-                val texto = it.selectFirst(".elementor-post__thumbnail").toString()
+                val texto = it.selectFirst(".elementor-post__thumbnail img").toString()
                 val title = texto;
 
 
