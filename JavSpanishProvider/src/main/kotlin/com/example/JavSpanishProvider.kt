@@ -65,7 +65,7 @@ class JavSpanishProvider : MainAPI() {
                                 ultimo = texto.length
                                 link = texto.substring(inicio,ultimo).toString()
                                 z = link.indexOf(" ")
-                                poster = link   .substring(0,z).toString()
+                                poster = link.substring(0,z).toString()
                             val url = it.selectFirst("a")?.attr("href")?:""
 
 
@@ -162,11 +162,22 @@ class JavSpanishProvider : MainAPI() {
             @JsonProperty("image"  ) var image  : String? = null
     )
     override suspend fun load(url: String): LoadResponse {
+        var texto: String
+        var inicio: Int
+        var ultimo: Int
+        var link: String
+        var z: Int
         val doc = app.get(url, timeout = 120).document
         val poster = ""
-        val title = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-7b148b4.elementor-widget.elementor-widget-heading > div > h1")?.text()?:""
+        //val title = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-7b148b4.elementor-widget.elementor-widget-heading > div > h1")?.text()?:""
         val type = "NFSW"
-        val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
+        //val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
+        texto = doc.selectFirst("#elementor-tab-content-7233 > div > iframe").toString()
+        inicio = texto.indexOf("src=") + 3
+        ultimo = texto.length
+        link = texto.substring(inicio,ultimo).toString()
+        z = link.indexOf(" ")
+        val title = link.substring(0,z).toString()
 
 
         //Fin espacio prueba
