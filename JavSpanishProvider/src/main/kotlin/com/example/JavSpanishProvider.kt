@@ -30,6 +30,10 @@ class JavSpanishProvider : MainAPI() {
     override val hasMainPage = true
     override val hasChromecastSupport = true
     override val hasDownloadSupport = true
+    override val supportedTypes = setOf(
+            TvType.NSFW
+    )
+
 
     override val mainPage = mainPageOf(
             "$mainUrl/page/" to "Main Page",
@@ -48,6 +52,12 @@ class JavSpanishProvider : MainAPI() {
                 ),
         )
 
+        var texto: String
+        var inicio: Int
+        var ultimo: Int
+        var link2: String
+        var z: Int
+        var poster =""
 
         val categoryData = request.data
         val categoryName = request.name
@@ -57,13 +67,21 @@ class JavSpanishProvider : MainAPI() {
             if (it == null) { return@mapNotNull null }
             val title = it.selectFirst("div h3")?.text() ?: ""
             val link = fixUrlNull(it.selectFirst("a")?.attr("href")) ?: return@mapNotNull null
-            val img = fetchImgUrl(it.selectFirst("img"))
+            //val img = fetchImgUrl(it.selectFirst("img"))
+            texto = it.selectFirst("a div img").toString()
+            inicio = texto.indexOf("data-lazy-srcset") + 18
+            ultimo = texto.length
+            link2 = texto.substring(inicio,ultimo).toString()
+            z = link2.indexOf(" ")
+            poster = link2.substring(0,z).toString()
+
+
             MovieSearchResponse(
                     name = title,
                     url = link,
                     apiName = this.name,
                     type = globalTvType,
-                    posterUrl = img
+                    posterUrl = poster
             )
         }
         if (home.isNotEmpty()) {
