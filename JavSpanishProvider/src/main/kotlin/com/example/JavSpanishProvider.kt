@@ -45,26 +45,16 @@ class JavSpanishProvider : MainAPI() {
         )
 
         val items = ArrayList<HomePageList>()
-        var texto: String
-        var inicio: Int
-        var ultimo: Int
-        var url: String
-        var z: Int
-        var poster =""
+
         items.add(
                 HomePageList(
                         "Recientes",
-                            app.get(mainUrl).document.select(".elementor-post__card").map {
-                            val title = it.selectFirst(".elementor-post__title")?.text()
+                            app.get(mainUrl).document.select("#post-31 > div > div > div > div > section.elementor-section.elementor-top-section.elementor-element.elementor-element-543e45e.elementor-section-stretched.elementor-section-boxed.elementor-section-height-default.elementor-section-height-default > div > div > div > div > div > div.elementor-element.elementor-element-0034ef1.elementor-grid-4.elementor-posts--align-center.elementor-posts__hover-none.elementor-grid-tablet-2.elementor-grid-mobile-1.elementor-posts--thumbnail-top.elementor-card-shadow-yes.elementor-widget.elementor-widget-posts > div > div > article.elementor-post.elementor-grid-item").map {
+                            val title = it.selectFirst("div h3")?.text()
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
-                                //texto = it.selectFirst("a div img")?.attr("src") ?: ""
-                                texto = it.selectFirst(".elementor-post__thumbnail img").toString()
-                                inicio = texto.indexOf("data-lazy-srcset") + 18
-                                ultimo = texto.length
-                                url = texto.substring(inicio,ultimo).toString()
-                                z = url.indexOf(" ")
-                                poster = url.substring(0,z).toString()
+                            val poster =
+                                    it.selectFirst("a div img")?.attr("src") ?: ""
                             val url = it.selectFirst("a")?.attr("href")?:""
 
 
