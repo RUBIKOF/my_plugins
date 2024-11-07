@@ -31,6 +31,7 @@ class JavSpanishProvider : MainAPI() {
     override val supportedTypes = setOf(
             TvType.NSFW
     )
+    val saveImage ="";
 
     override suspend fun getMainPage(page: Int, request : MainPageRequest): HomePageResponse {
         val urls = listOf(
@@ -48,7 +49,7 @@ class JavSpanishProvider : MainAPI() {
         var texto: String
         var inicio: Int
         var ultimo: Int
-        var url: String
+        var link: String
         var z: Int
         var poster =""
         items.add(
@@ -62,9 +63,9 @@ class JavSpanishProvider : MainAPI() {
                                 texto = it.selectFirst("a div img").toString()
                                 inicio = texto.indexOf("data-lazy-srcset") + 18
                                 ultimo = texto.length
-                                url = texto.substring(inicio,ultimo).toString()
-                                z = url.indexOf(" ")
-                                poster = url.substring(0,z).toString()
+                                link = texto.substring(inicio,ultimo).toString()
+                                z = link.indexOf(" ")
+                                poster = link   .substring(0,z).toString()
                             val url = it.selectFirst("a")?.attr("href")?:""
 
 
@@ -79,7 +80,7 @@ class JavSpanishProvider : MainAPI() {
             var texto: String
             var inicio: Int
             var ultimo: Int
-            var url: String
+            var link: String
             var z: Int
             var poster =""
             val home = soup.select(".elementor-post__card").map {
@@ -87,9 +88,9 @@ class JavSpanishProvider : MainAPI() {
                 texto = it.selectFirst(".elementor-post__thumbnail img").toString()
                 inicio = texto.indexOf("data-lazy-srcset") + 18
                 ultimo = texto.length
-                url = texto.substring(inicio,ultimo).toString()
-                z = url.indexOf(" ")
-                poster = url.substring(0,z).toString()
+                link = texto.substring(inicio,ultimo).toString()
+                z = link.indexOf(" ")
+                poster = link.substring(0,z).toString()
 
                 AnimeSearchResponse(
                         title!!,
@@ -186,7 +187,19 @@ class JavSpanishProvider : MainAPI() {
     ): Boolean {
         try {
             val x = app.get(data).document
-            val url = x.selectFirst("#elementor-tab-content-7233 > div > iframe")?.attr("src")?:""
+            var texto: String
+            var inicio: Int
+            var ultimo: Int
+            var link: String
+            var z: Int
+            val url: String
+            //val url = x.selectFirst("#elementor-tab-content-7233 > div > iframe")?.attr("src")?:""
+            texto = x.selectFirst("#elementor-tab-content-7233 > div > iframe").toString()
+            inicio = texto.indexOf("src=") + 3
+            ultimo = texto.length
+            link = texto.substring(inicio,ultimo).toString()
+            z = link.indexOf(" ")
+            url = link.substring(0,z).toString()
             //val url = "https://voe.sx/e/cc6lejcng05n"
 
                 //Log.i(this.name, "ApiError => (link url) $linkUrl")
