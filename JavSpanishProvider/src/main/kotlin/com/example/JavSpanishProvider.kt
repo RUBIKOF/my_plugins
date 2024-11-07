@@ -180,8 +180,7 @@ class JavSpanishProvider : MainAPI() {
                 apiName = this.name,
                 type = TvType.NSFW,
                 dataUrl = url,
-                posterUrl = poster,
-                plot = title
+                posterUrl = poster
         )
 
     }
