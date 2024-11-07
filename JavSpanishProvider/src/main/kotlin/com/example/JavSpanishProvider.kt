@@ -97,6 +97,65 @@ class JavSpanishProvider : MainAPI() {
             throw ErrorLoadingException("No homepage data found!")
         }
 
+
+
+
+
+
+        val items = ArrayList<HomePageList>()
+
+        urls.apmap { (url, name) ->
+            val soup = app.get(url).document
+            var texto: String
+            var inicio: Int
+            var ultimo: Int
+            var link: String
+            var z: Int
+            var poster =""
+            val home = soup.select(".elementor-post__card").map {
+                val title = it.selectFirst(".elementor-post__title")?.text()
+                texto = it.selectFirst(".elementor-post__thumbnail img").toString()
+                inicio = texto.indexOf("data-lazy-srcset") + 18
+                ultimo = texto.length
+                link = texto.substring(inicio,ultimo).toString()
+                z = link.indexOf(" ")
+                poster = link.substring(0,z).toString()
+
+                AnimeSearchResponse(
+                        title!!,
+                        fixUrl(it.selectFirst("a")?.attr("href") ?: ""),
+                        this.name,
+                        TvType.Anime,
+                        fixUrl(poster),
+                        null,
+                        if (title.contains("Latino") || title.contains("Castellano")) EnumSet.of(
+                                DubStatus.Dubbed
+                        ) else EnumSet.of(DubStatus.Subbed),
+                )
+            }
+            items.add(HomePageList(name, home))
+        }
+
+        if (items.size <= 0) throw ErrorLoadingException()
+        return HomePageResponse(items)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     data class MainSearch(
