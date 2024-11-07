@@ -164,7 +164,7 @@ class JavSpanishProvider : MainAPI() {
     override suspend fun load(url: String): LoadResponse {
         val doc = app.get(url, timeout = 120).document
         val poster = ""
-        //val title = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-7b148b4.elementor-widget.elementor-widget-heading > div > h1")?.text()?:""
+        val title = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-7b148b4.elementor-widget.elementor-widget-heading > div > h1")?.text()?:""
         val type = "NFSW"
         val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
         var texto: String
@@ -172,12 +172,6 @@ class JavSpanishProvider : MainAPI() {
         var ultimo: Int
         var link: String
         var z: Int
-        texto = doc.selectFirst("body").toString()
-        inicio = texto.indexOf("https://dooood.com")
-        ultimo = texto.length
-        link = texto.substring(inicio,ultimo).toString()
-        z = link.indexOf(" ")
-        val title = link.substring(0,z).replace("\"","").replace("dooood.com", "dood.ws")
 
         //Fin espacio prueba
         return newMovieLoadResponse(
@@ -202,15 +196,32 @@ class JavSpanishProvider : MainAPI() {
             var ultimo: Int
             var link: String
             var z: Int
-            val url: String
+            var url =""
             //val url = x.selectFirst("#elementor-tab-content-7233 > div > iframe")?.attr("src")?:""
             //texto = x.selectFirst("#elementor-tab-content-7233 > div > iframe").toString()
+
             texto = x.selectFirst("body").toString()
-            inicio = texto.indexOf("https://dooood.com")
             ultimo = texto.length
-            link = texto.substring(inicio,ultimo).toString()
-            z = link.indexOf(" ")
-            url = link.substring(0,z).replace("\"","").replace("dooood.com", "dood.ws")
+            if(texto.contains("dooood.com")){
+                inicio = texto.indexOf("https://dooood.com")
+                link = texto.substring(inicio,ultimo).toString()
+                url = link.substring(0,link.indexOf("\"")).replace("dooood.com", "dood.ws")
+            }
+            else if(texto.contains("dood.ws")){
+                inicio = texto.indexOf("https://dood.ws")
+                link = texto.substring(inicio,ultimo).toString()
+                url = link.substring(0,link.indexOf("\"")).replace("dood.ws", "dood.ws")
+            }
+            else if(texto.contains("dood.sh")){
+                inicio = texto.indexOf("https://dood.sh")
+                link = texto.substring(inicio,ultimo).toString()
+                url = link.substring(0,link.indexOf("\"")).replace("dood.sh", "dood.ws")
+            }
+            else if(texto.contains("dood.la")){
+                inicio = texto.indexOf("https://dood.la")
+                link = texto.substring(inicio,ultimo).toString()
+                url = link.substring(0,link.indexOf("\"")).replace("dood.la", "dood.ws")
+            }
             //val url = "https://voe.sx/e/cc6lejcng05n"
 
                 //Log.i(this.name, "ApiError => (link url) $linkUrl")
