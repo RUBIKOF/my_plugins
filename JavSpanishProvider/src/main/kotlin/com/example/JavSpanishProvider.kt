@@ -172,8 +172,8 @@ class JavSpanishProvider : MainAPI() {
         var ultimo: Int
         var link: String
         var z: Int
-        texto = doc.selectFirst("body").toString()
-        inicio = texto.indexOf("https://dooood.com")
+        texto = doc.selectFirst("#elementor-tab-content-7233 > div > iframe").toString()
+        inicio = texto.indexOf("src=") + 4
         ultimo = texto.length
         link = texto.substring(inicio,ultimo).toString()
         z = link.indexOf(" ")
@@ -204,8 +204,8 @@ class JavSpanishProvider : MainAPI() {
             var z: Int
             val url: String
             //val url = x.selectFirst("#elementor-tab-content-7233 > div > iframe")?.attr("src")?:""
-            texto = x.selectFirst("body").toString()
-            inicio = texto.indexOf("https://dooood.com")
+            texto = x.selectFirst("#elementor-tab-content-7233 > div > iframe").toString()
+            inicio = texto.indexOf("src=") + 4
             ultimo = texto.length
             link = texto.substring(inicio,ultimo).toString()
             z = link.indexOf(" ")
