@@ -84,23 +84,6 @@ class JavSpanishProvider : MainAPI() {
                     posterUrl = poster
             )
         }
-        if (home.isNotEmpty()) {
-            return newHomePageResponse(
-                    list = HomePageList(
-                            name = categoryName,
-                            list = home,
-                            isHorizontalImages = true
-                    ),
-                    hasNext = true
-            )
-        } else {
-            throw ErrorLoadingException("No homepage data found!")
-        }
-
-
-
-
-
 
         val items = ArrayList<HomePageList>()
 
@@ -137,24 +120,22 @@ class JavSpanishProvider : MainAPI() {
         }
 
         if (items.size <= 0) throw ErrorLoadingException()
-        return HomePageResponse(items)
+        //return HomePageResponse(items)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if (home.isNotEmpty()) {
+            return newHomePageResponse(
+                    list = HomePageList(
+                            name = categoryName,
+                            list = home,
+                            isHorizontalImages = true
+                    ),
+                    hasNext = true
+            )
+        } else {
+            throw ErrorLoadingException("No homepage data found!")
+        }
 
     }
 
