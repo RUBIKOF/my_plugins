@@ -45,7 +45,12 @@ class JavSpanishProvider : MainAPI() {
         )
 
         val items = ArrayList<HomePageList>()
-
+        var texto: String
+        var inicio: Int
+        var ultimo: Int
+        var url: String
+        var z: Int
+        var poster =""
         items.add(
                 HomePageList(
                         "Recientes",
@@ -53,8 +58,13 @@ class JavSpanishProvider : MainAPI() {
                             val title = it.selectFirst("div h3")?.text()
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
-                            val poster =
-                                    it.selectFirst("a div img")?.attr("src") ?: ""
+                            //val poster = it.selectFirst("a div img")?.attr("src") ?: ""
+                                texto = it.selectFirst("a div img").toString()
+                                inicio = texto.indexOf("data-lazy-srcset") + 18
+                                ultimo = texto.length
+                                url = texto.substring(inicio,ultimo).toString()
+                                z = url.indexOf(" ")
+                                poster = url.substring(0,z).toString()
                             val url = it.selectFirst("a")?.attr("href")?:""
 
 
