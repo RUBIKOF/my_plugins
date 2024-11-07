@@ -66,23 +66,21 @@ class JavSpanishProvider : MainAPI() {
         )
         urls.apmap { (url, name) ->
             val soup = app.get(url).document
-            var f: Int =0
-            var inicio: Int =0
-            var z: Int =0
-            var x =""
+            var texto: String
+            var inicio: Int
+            var ultimo: Int
+            var url: String
+            var z: Int
             var poster =""
             val home = soup.select(".elementor-post__card").map {
                 //val title = it.selectFirst(".elementor-post__title")?.text()
                 var title =""
-                val texto = it.selectFirst(".elementor-post__thumbnail img").toString()
-                if (texto != null) {
-                    inicio = texto.indexOf("data-lazy-srcset")
-
-                    title = texto.substring(0,inicio).toString()
-                }
-                else{
-                    //poster = "https://wallpapers.com/images/hd/naruto-profile-pictures-sa1tekghfajrr928.jpg"
-                }
+                texto = it.selectFirst(".elementor-post__thumbnail img").toString()
+                inicio = texto.indexOf("data-lazy-srcset") + 18
+                ultimo = texto.length
+                url = texto.substring(inicio,ultimo).toString()
+                z = url.indexOf(" ")
+                title = url.substring(0,z).toString()
 
 
 
