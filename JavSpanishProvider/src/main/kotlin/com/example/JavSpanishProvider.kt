@@ -73,16 +73,13 @@ class JavSpanishProvider : MainAPI() {
             var z: Int
             var poster =""
             val home = soup.select(".elementor-post__card").map {
-                //val title = it.selectFirst(".elementor-post__title")?.text()
-                var title =""
+                val title = it.selectFirst(".elementor-post__title")?.text()
                 texto = it.selectFirst(".elementor-post__thumbnail img").toString()
                 inicio = texto.indexOf("data-lazy-srcset") + 18
                 ultimo = texto.length
                 url = texto.substring(inicio,ultimo).toString()
                 z = url.indexOf(" ")
-                title = url.substring(0,z).toString()
-
-
+                poster = url.substring(0,z).toString()
 
                 AnimeSearchResponse(
                         title!!,
