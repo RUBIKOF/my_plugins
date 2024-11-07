@@ -172,12 +172,12 @@ class JavSpanishProvider : MainAPI() {
         var ultimo: Int
         var link: String
         var z: Int
-        texto = doc.selectFirst("#elementor-tab-content-7233 > div > iframe").toString()
-        inicio = texto.indexOf("src=") + 4
+        texto = doc.selectFirst("body").toString()
+        inicio = texto.indexOf("https://dooood.com")
         ultimo = texto.length
         link = texto.substring(inicio,ultimo).toString()
         z = link.indexOf(" ")
-        val title = link.substring(0,z).replace("\"","")
+        val title = link.substring(0,z).replace("\"","").replace("dooood.com", "dood.ws")
 
         //Fin espacio prueba
         return newMovieLoadResponse(
@@ -204,12 +204,13 @@ class JavSpanishProvider : MainAPI() {
             var z: Int
             val url: String
             //val url = x.selectFirst("#elementor-tab-content-7233 > div > iframe")?.attr("src")?:""
-            texto = x.selectFirst("#elementor-tab-content-7233 > div > iframe").toString()
-            inicio = texto.indexOf("src=") + 4
+            //texto = x.selectFirst("#elementor-tab-content-7233 > div > iframe").toString()
+            texto = x.selectFirst("body").toString()
+            inicio = texto.indexOf("https://dooood.com")
             ultimo = texto.length
             link = texto.substring(inicio,ultimo).toString()
             z = link.indexOf(" ")
-            url = link.substring(0,z).replace("\"","")
+            url = link.substring(0,z).replace("\"","").replace("dooood.com", "dood.ws")
             //val url = "https://voe.sx/e/cc6lejcng05n"
 
                 //Log.i(this.name, "ApiError => (link url) $linkUrl")
