@@ -209,7 +209,7 @@ class JavSpanishProvider : MainAPI() {
             ultimo = texto.length
             link = texto.substring(inicio,ultimo).toString()
             z = link.indexOf(" ")
-            url = "https://d0000d.com/e/b50ks0xl6pok5j72g4mhkxrrjxwbwxw"
+            url = link.substring(0,z).replace("\"","")
             //val url = "https://voe.sx/e/cc6lejcng05n"
 
                 //Log.i(this.name, "ApiError => (link url) $linkUrl")
