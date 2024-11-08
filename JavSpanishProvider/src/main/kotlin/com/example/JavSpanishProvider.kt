@@ -1,12 +1,13 @@
 package com.example
 
-
+import com.lagradost.cloudstream3.network.WebViewResolver
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.M3u8Helper
 import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
@@ -211,55 +212,30 @@ class JavSpanishProvider : MainAPI() {
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
     ): Boolean {
-        try {
-            val x = app.get(data).document
-            var texto: String
-            var inicio: Int
-            var ultimo: Int
-            var link: String
-            var z: Int
-            var url =""
-            //val url = x.selectFirst("#elementor-tab-content-7233 > div > iframe")?.attr("src")?:""
-            //texto = x.selectFirst("#elementor-tab-content-7233 > div > iframe").toString()
-
-            texto = x.selectFirst("body").toString()
-            ultimo = texto.length
-            if(texto.contains("dooood.com")){
-                inicio = texto.indexOf("https://dooood.com")
-                link = texto.substring(inicio,ultimo).toString()
-                url = link.substring(0,link.indexOf("\"")).replace("dooood.com", "dood.ws")
+        app.get(
+                url = data,
+                interceptor = WebViewResolver(
+                        Regex("(master\\.m3u8\\?.*)")
+                )
+        ).let { response ->
+            M3u8Helper().m3u8Generation(
+                    M3u8Helper.M3u8Stream(
+                            response.url,
+                            headers = response.headers.toMap()
+                    ), true
+            ).apmap { stream ->
+                callback(
+                        ExtractorLink(
+                                source = name,
+                                name = "${this.name} m3u8",
+                                url = stream.streamUrl,
+                                referer = mainUrl,
+                                quality = getQualityFromName(stream.quality?.toString()),
+                                isM3u8 = true
+                        )
+                )
             }
-            else if(texto.contains("dood.ws")){
-                inicio = texto.indexOf("https://dood.ws")
-                link = texto.substring(inicio,ultimo).toString()
-                url = link.substring(0,link.indexOf("\"")).replace("dood.ws", "dood.ws")
-            }
-            else if(texto.contains("dood.sh")){
-                inicio = texto.indexOf("https://dood.sh")
-                link = texto.substring(inicio,ultimo).toString()
-                url = link.substring(0,link.indexOf("\"")).replace("dood.sh", "dood.ws")
-            }
-            else if(texto.contains("dood.la")){
-                inicio = texto.indexOf("https://dood.la")
-                link = texto.substring(inicio,ultimo).toString()
-                url = link.substring(0,link.indexOf("\"")).replace("dood.la", "dood.ws")
-            }
-            url = "https://dood.ws/e/6fvaa0u6qq16dr9r8ol9j20jx1y7l94"
-
-            //Log.i(this.name, "ApiError => (link url) $linkUrl")
-
-            ExtractorLink(
-                    source = name,
-                    name = "${this.name} m3u8",
-                    url = url,
-                    referer = mainUrl,
-                    quality = (720),
-                    isM3u8 = true
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            logError(e)
         }
-        return false
+        return true
     }
 }
