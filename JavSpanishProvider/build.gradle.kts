@@ -16,11 +16,12 @@ cloudstream {
      * 3: Beta only
      * */
     status = 1 // will be 3 if unspecified
-    tvTypes = listOf(
+    /*tvTypes = listOf(
             "Anime",
             "TvSeries",
             "Movie",
-    )
+    )*/
+    tvTypes = listOf("NSFW")
 
     iconUrl = "https://www.google.com/s2/favicons?domain=javenspanish.com&sz=%size%"
 }
