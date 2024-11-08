@@ -23,5 +23,5 @@ cloudstream {
     )*/
     tvTypes = listOf("NSFW")
 
-    iconUrl = "https://www.google.com/s2/favicons?domain=javenspanish.com&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=jav.guru&sz=%size%"
 }
