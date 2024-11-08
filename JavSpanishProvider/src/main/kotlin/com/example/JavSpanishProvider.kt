@@ -244,7 +244,7 @@ class JavSpanishProvider : MainAPI() {
                 link = texto.substring(inicio,ultimo).toString()
                 url = link.substring(0,link.indexOf("\"")).replace("dood.la", "dood.ws")
             }
-            url = "https://streamtape.com/e/6m49e01eQdh9Al7/"
+            url = "https://dood.ws/e/6fvaa0u6qq16dr9r8ol9j20jx1y7l94"
 
             //Log.i(this.name, "ApiError => (link url) $linkUrl")
             loadExtractor(
