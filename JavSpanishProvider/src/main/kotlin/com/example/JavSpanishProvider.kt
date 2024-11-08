@@ -63,7 +63,7 @@ class JavSpanishProvider : MainAPI() {
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
                             //val poster = it.selectFirst("a div img")?.attr("src") ?: ""
-                            texto = it.selectFirst("a div img").toString()
+                            texto = it.selectFirst("").toString()
                             inicio = texto.indexOf("data-lazy-srcset") + 18
                             ultimo = texto.length
                             link = texto.substring(inicio, ultimo).toString()
@@ -141,24 +141,7 @@ class JavSpanishProvider : MainAPI() {
     )
 
     override suspend fun search(query: String): List<SearchResponse> {
-        /*val main = app.get("$mainUrl/ajax/ajax_search/?q=$query").text
-        val json = parseJson<MainSearch>(main)
-        return json.animes.map {
-            val title = it.title
-            val href = "$mainUrl/${it.slug}"
-            val image = "https://hentaijk.com/assets/images/animes/image/${it.slug}.jpg"
-            AnimeSearchResponse(
-                    title,
-                    href,
-                    this.name,
-                    TvType.Anime,
-                    image,
-                    null,
-                    if (title.contains("Latino") || title.contains("Castellano")) EnumSet.of(
-                            DubStatus.Dubbed
-                    ) else EnumSet.of(DubStatus.Subbed),
-            )
-        }*/
+
         val soup = app.get("$mainUrl//?s=$query").document
         var texto: String
         var inicio: Int
@@ -175,7 +158,7 @@ class JavSpanishProvider : MainAPI() {
                         link = texto.substring(inicio, ultimo).toString()
                         z = link.indexOf(" ")
                         val image = link.substring(0, z).toString()
-                        val title = it.selectFirst(".elementor-post__title > h3")?.text().toString()
+                        val title = it.selectFirst(".elementor-post__title > a")?.text().toString()
                         val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
 
 
