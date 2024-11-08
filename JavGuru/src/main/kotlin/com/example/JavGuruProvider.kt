@@ -22,8 +22,8 @@ class JavGuruProvider : MainAPI() {
         }
     }
 
-    override var mainUrl = "https://javenspanish.com/"
-    override var name = "JavGuru"
+    override var mainUrl = "https://jav.guru/"
+    override var name = "JavGuru    "
     override var lang = "es"
     override val hasMainPage = true
     override val hasChromecastSupport = true
@@ -58,17 +58,13 @@ class JavGuruProvider : MainAPI() {
         items.add(
                 HomePageList(
                         "Recientes",
-                        app.get(mainUrl).document.select(".post").map {
-                            val title = it.selectFirst("div h3")?.text()
+                        app.get(mainUrl).document.select("#main > div").map {
+                            val title = it.selectFirst("h2")?.text()
+                            val poster = it.selectFirst("img")?.attr("src")
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
                             //val poster = it.selectFirst("a div img")?.attr("src") ?: ""
-                            texto = it.selectFirst(" a div img").toString()
-                            inicio = texto.indexOf("data-lazy-srcset") + 18
-                            ultimo = texto.length
-                            link = texto.substring(inicio, ultimo).toString()
-                            z = link.indexOf(" ")
-                            poster = link.substring(0, z).toString()
+
                             val url = it.selectFirst("a")?.attr("href") ?: ""
 
 
