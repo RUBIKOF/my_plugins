@@ -211,11 +211,8 @@ class JavSpanishProvider : MainAPI() {
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
     ): Boolean {
-        app.get(data).document.select("script").apmap { script ->
-            if (script.data().contains("var videos = {") || script.data()
-                            .contains("var anime_id =") || script.data().contains("server")
-            ) {
-                val videos = script.data().replace("\\/", "/")
+        app.get(data).document.select("#h-tabs > div > div > div.elementor-tabs-content-wrapper > div >div >iframe").mapNotNull{
+                val videos = it.attr("src")
                 fetchUrls(videos).map {
                     it.replace("https://embedsb.com/e/", "https://watchsb.com/e/")
                             .replace("https://ok.ru", "http://ok.ru")
@@ -223,7 +220,7 @@ class JavSpanishProvider : MainAPI() {
                     loadExtractor(it, data, subtitleCallback, callback)
                 }
             }
-        }
+
         return true
     }
 }
