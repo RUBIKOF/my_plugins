@@ -34,9 +34,9 @@ class JavSpanishProvider : MainAPI() {
     override val mainPage = mainPageOf(
             "$mainUrl/page/" to "Main Page",
     )
-    val saveImage ="";
+    val saveImage = "";
 
-    override suspend fun getMainPage(page: Int, request : MainPageRequest): HomePageResponse {
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val urls = listOf(
                 Pair(
                         "$mainUrl/familia",
@@ -54,7 +54,7 @@ class JavSpanishProvider : MainAPI() {
         var ultimo: Int
         var link: String
         var z: Int
-        var poster =""
+        var poster = ""
         items.add(
                 HomePageList(
                         "Recientes",
@@ -66,10 +66,10 @@ class JavSpanishProvider : MainAPI() {
                             texto = it.selectFirst("a div img").toString()
                             inicio = texto.indexOf("data-lazy-srcset") + 18
                             ultimo = texto.length
-                            link = texto.substring(inicio,ultimo).toString()
+                            link = texto.substring(inicio, ultimo).toString()
                             z = link.indexOf(" ")
-                            poster = link.substring(0,z).toString()
-                            val url = it.selectFirst("a")?.attr("href")?:""
+                            poster = link.substring(0, z).toString()
+                            val url = it.selectFirst("a")?.attr("href") ?: ""
 
 
                             newAnimeSearchResponse(title, url) {
@@ -85,15 +85,15 @@ class JavSpanishProvider : MainAPI() {
             var ultimo: Int
             var link: String
             var z: Int
-            var poster =""
+            var poster = ""
             val home = soup.select(".elementor-post__card").map {
                 val title = it.selectFirst(".elementor-post__title")?.text()
                 texto = it.selectFirst(".elementor-post__thumbnail img").toString()
                 inicio = texto.indexOf("data-lazy-srcset") + 18
                 ultimo = texto.length
-                link = texto.substring(inicio,ultimo).toString()
+                link = texto.substring(inicio, ultimo).toString()
                 z = link.indexOf(" ")
-                poster = link.substring(0,z).toString()
+                poster = link.substring(0, z).toString()
 
                 AnimeSearchResponse(
                         title!!,
@@ -141,7 +141,7 @@ class JavSpanishProvider : MainAPI() {
     )
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val main = app.get("$mainUrl/ajax/ajax_search/?q=$query").text
+        /*val main = app.get("$mainUrl/ajax/ajax_search/?q=$query").text
         val json = parseJson<MainSearch>(main)
         return json.animes.map {
             val title = it.title
@@ -158,7 +158,36 @@ class JavSpanishProvider : MainAPI() {
                             DubStatus.Dubbed
                     ) else EnumSet.of(DubStatus.Subbed),
             )
+        }*/
+        val soup = app.get("$mainUrl//?s=$query").document
+        var texto: String
+        var inicio: Int
+        var ultimo: Int
+        var link: String
+        var z: Int
+        var poster = ""
+
+            return app.get("$mainUrl//?s=$query").document
+                    .select(".elementor-posts-container").select(".elementor-post__card").mapNotNull {
+                        texto = it.selectFirst(".elementor-post__thumbnail img").toString()
+                        inicio = texto.indexOf("data-lazy-srcset") + 18
+                        ultimo = texto.length
+                        link = texto.substring(inicio, ultimo).toString()
+                        z = link.indexOf(" ")
+                        val image = link.substring(0, z).toString()
+                        val title = it.selectFirst(".elementor-post__title").toString()
+                        val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
+
+
+                        MovieSearchResponse(
+                                title,
+                                url,
+                                this.name,
+                                TvType.NSFW,
+                                image
+                        )
         }
+
     }
     data class EpsInfo (
             @JsonProperty("number" ) var number : String? = null,
