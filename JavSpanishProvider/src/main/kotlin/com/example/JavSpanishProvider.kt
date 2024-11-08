@@ -31,16 +31,19 @@ class JavSpanishProvider : MainAPI() {
     override val supportedTypes = setOf(
             TvType.NSFW
     )
+    override val mainPage = mainPageOf(
+            "$mainUrl/page/" to "Main Page",
+    )
     val saveImage ="";
 
     override suspend fun getMainPage(page: Int, request : MainPageRequest): HomePageResponse {
         val urls = listOf(
                 Pair(
-                        "$mainUrl/familia",
+                        "$mainUrl/familia/page/",
                         "Familia"
                 ),
                 Pair(
-                        "$mainUrl/milf",
+                        "$mainUrl/milf/page/",
                         "Milf"
                 ),
         )
