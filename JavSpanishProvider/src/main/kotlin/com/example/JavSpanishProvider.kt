@@ -247,10 +247,14 @@ class JavSpanishProvider : MainAPI() {
             url = "https://dood.ws/e/6fvaa0u6qq16dr9r8ol9j20jx1y7l94"
 
             //Log.i(this.name, "ApiError => (link url) $linkUrl")
-            loadExtractor(
+
+            ExtractorLink(
+                    source = name,
+                    name = "${this.name} m3u8",
                     url = url,
-                    subtitleCallback = subtitleCallback,
-                    callback = callback
+                    referer = mainUrl,
+                    quality = (720),
+                    isM3u8 = true
             )
         } catch (e: Exception) {
             e.printStackTrace()
