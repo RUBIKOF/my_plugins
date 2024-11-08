@@ -47,15 +47,9 @@ class JavGuruProvider : MainAPI() {
                         "Milf"
                 ),
         )
-        val categoryName = request.name
+
         val pagedLink = if (page > 0) "https://jav.guru/page/" + page else "https://jav.guru/"
         val items = ArrayList<HomePageList>()
-        var texto: String
-        var inicio: Int
-        var ultimo: Int
-        var link: String
-        var z: Int
-        var poster = ""
         items.add(
                 HomePageList(
                         "Recientes",
