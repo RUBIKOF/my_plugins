@@ -47,7 +47,8 @@ class JavGuruProvider : MainAPI() {
                         "Milf"
                 ),
         )
-
+        val categoryName = request.name
+        val pagedLink = if (page > 0) categoryName + page else categoryName
         val items = ArrayList<HomePageList>()
         var texto: String
         var inicio: Int
@@ -58,7 +59,7 @@ class JavGuruProvider : MainAPI() {
         items.add(
                 HomePageList(
                         "Recientes",
-                        app.get(mainUrl).document.select("#main > div").map {
+                        app.get(pagedLink).document.select("#main > div").map {
                             val title = it.selectFirst("h2")?.text()
                             val poster = it.selectFirst("img")?.attr("src")
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
