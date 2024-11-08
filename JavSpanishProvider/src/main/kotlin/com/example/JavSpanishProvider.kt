@@ -244,7 +244,7 @@ class JavSpanishProvider : MainAPI() {
                 link = texto.substring(inicio,ultimo).toString()
                 url = link.substring(0,link.indexOf("\"")).replace("dood.la", "dood.ws")
             }
-            //val url = "https://voe.sx/e/cc6lejcng05n"
+            url = "https://findjav.com/t/672ddd502968c"
 
             //Log.i(this.name, "ApiError => (link url) $linkUrl")
             loadExtractor(
