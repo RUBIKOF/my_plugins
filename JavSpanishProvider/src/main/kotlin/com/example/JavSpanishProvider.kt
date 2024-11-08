@@ -175,7 +175,7 @@ class JavSpanishProvider : MainAPI() {
                         link = texto.substring(inicio, ultimo).toString()
                         z = link.indexOf(" ")
                         val image = link.substring(0, z).toString()
-                        val title = it.selectFirst(".elementor-post__title").toString()
+                        val title = it.selectFirst(".elementor-post__title > h3")?.text().toString()
                         val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
 
 
