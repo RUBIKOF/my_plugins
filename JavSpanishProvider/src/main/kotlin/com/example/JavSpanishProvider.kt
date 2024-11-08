@@ -39,11 +39,11 @@ class JavSpanishProvider : MainAPI() {
     override suspend fun getMainPage(page: Int, request : MainPageRequest): HomePageResponse {
         val urls = listOf(
                 Pair(
-                        "$mainUrl/familia/page/",
+                        "$mainUrl/familia",
                         "Familia"
                 ),
                 Pair(
-                        "$mainUrl/milf/page/",
+                        "$mainUrl/milf",
                         "Milf"
                 ),
         )
