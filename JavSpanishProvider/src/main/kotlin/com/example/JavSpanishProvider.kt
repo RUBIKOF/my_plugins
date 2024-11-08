@@ -211,51 +211,19 @@ class JavSpanishProvider : MainAPI() {
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
     ): Boolean {
-        try {
-            val x = app.get(data).document
-            var texto: String
-            var inicio: Int
-            var ultimo: Int
-            var link: String
-            var z: Int
-            var url =""
-            //val url = x.selectFirst("#elementor-tab-content-7233 > div > iframe")?.attr("src")?:""
-            //texto = x.selectFirst("#elementor-tab-content-7233 > div > iframe").toString()
-
-            texto = x.selectFirst("body").toString()
-            ultimo = texto.length
-            if(texto.contains("dooood.com")){
-                inicio = texto.indexOf("https://dooood.com")
-                link = texto.substring(inicio,ultimo).toString()
-                url = link.substring(0,link.indexOf("\"")).replace("dooood.com", "dood.ws")
+        app.get(data).document.select("script").apmap { script ->
+            if (script.data().contains("var videos = {") || script.data()
+                            .contains("var anime_id =") || script.data().contains("server")
+            ) {
+                val videos = script.data().replace("\\/", "/")
+                fetchUrls(videos).map {
+                    it.replace("https://embedsb.com/e/", "https://watchsb.com/e/")
+                            .replace("https://ok.ru", "http://ok.ru")
+                }.apmap {
+                    loadExtractor(it, data, subtitleCallback, callback)
+                }
             }
-            else if(texto.contains("dood.ws")){
-                inicio = texto.indexOf("https://dood.ws")
-                link = texto.substring(inicio,ultimo).toString()
-                url = link.substring(0,link.indexOf("\"")).replace("dood.ws", "dood.ws")
-            }
-            else if(texto.contains("dood.sh")){
-                inicio = texto.indexOf("https://dood.sh")
-                link = texto.substring(inicio,ultimo).toString()
-                url = link.substring(0,link.indexOf("\"")).replace("dood.sh", "dood.ws")
-            }
-            else if(texto.contains("dood.la")){
-                inicio = texto.indexOf("https://dood.la")
-                link = texto.substring(inicio,ultimo).toString()
-                url = link.substring(0,link.indexOf("\"")).replace("dood.la", "dood.ws")
-            }
-            //url = "https://dood.ws/e/6fvaa0u6qq16dr9r8ol9j20jx1y7l94"
-
-            //Log.i(this.name, "ApiError => (link url) $linkUrl")
-            loadExtractor(
-                    url = url,
-                    subtitleCallback = subtitleCallback,
-                    callback = callback
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            logError(e)
         }
-        return false
+        return true
     }
 }
