@@ -214,8 +214,9 @@ class JavSpanishProvider : MainAPI() {
         app.get(data).document.select("#h-tabs > div > div > div.elementor-tabs-content-wrapper > div >div >iframe").mapNotNull{
                 val videos = it.attr("src")
                 fetchUrls(videos).map {
-                    it.replace("https://embedsb.com/e/", "https://watchsb.com/e/")
-                            .replace("https://ok.ru", "http://ok.ru")
+                    it.replace("https://dooood.com", "https://dood.ws")
+                            .replace("https://dood.sh", "https://dood.ws")
+                            .replace("https://dood.la","https://dood.ws")
                 }.apmap {
                     loadExtractor(it, data, subtitleCallback, callback)
                 }
