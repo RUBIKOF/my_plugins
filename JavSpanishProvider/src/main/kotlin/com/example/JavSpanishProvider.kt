@@ -10,7 +10,6 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
-import org.jsoup.nodes.Element
 import java.util.*
 
 
@@ -23,7 +22,6 @@ class JavSpanishProvider : MainAPI() {
         }
     }
 
-    private val globalTvType = TvType.NSFW
     override var mainUrl = "https://javenspanish.com/"
     override var name = "JavEnSpanish"
     override var lang = "es"
@@ -33,12 +31,7 @@ class JavSpanishProvider : MainAPI() {
     override val supportedTypes = setOf(
             TvType.NSFW
     )
-
-
-    override val mainPage = mainPageOf(
-            "$mainUrl/page/" to "Main Page",
-    )
-
+    val saveImage ="";
 
     override suspend fun getMainPage(page: Int, request : MainPageRequest): HomePageResponse {
         val urls = listOf(
@@ -52,41 +45,36 @@ class JavSpanishProvider : MainAPI() {
                 ),
         )
 
+        val items = ArrayList<HomePageList>()
         var texto: String
         var inicio: Int
         var ultimo: Int
-        var link2: String
+        var link: String
         var z: Int
         var poster =""
+        items.add(
+                HomePageList(
+                        "Recientes",
+                        app.get(mainUrl).document.select("#post-31 > div > div > div > div > section.elementor-section.elementor-top-section.elementor-element.elementor-element-543e45e.elementor-section-stretched.elementor-section-boxed.elementor-section-height-default.elementor-section-height-default > div > div > div > div > div > div.elementor-element.elementor-element-0034ef1.elementor-grid-4.elementor-posts--align-center.elementor-posts__hover-none.elementor-grid-tablet-2.elementor-grid-mobile-1.elementor-posts--thumbnail-top.elementor-card-shadow-yes.elementor-widget.elementor-widget-posts > div > div > article.elementor-post.elementor-grid-item").map {
+                            val title = it.selectFirst("div h3")?.text()
+                            val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
+                                DubStatus.Dubbed else DubStatus.Subbed
+                            //val poster = it.selectFirst("a div img")?.attr("src") ?: ""
+                            texto = it.selectFirst("a div img").toString()
+                            inicio = texto.indexOf("data-lazy-srcset") + 18
+                            ultimo = texto.length
+                            link = texto.substring(inicio,ultimo).toString()
+                            z = link.indexOf(" ")
+                            poster = link.substring(0,z).toString()
+                            val url = it.selectFirst("a")?.attr("href")?:""
 
-        val categoryData = request.data
-        val categoryName = request.name
-        val pagedLink = if (page > 0) categoryData + page else categoryData
-        val soup = app.get(pagedLink).document
-        val home = soup.select("#post-31 > div > div > div > div > section.elementor-section.elementor-top-section.elementor-element.elementor-element-543e45e.elementor-section-stretched.elementor-section-boxed.elementor-section-height-default.elementor-section-height-default > div > div > div > div > div > div.elementor-element.elementor-element-0034ef1.elementor-grid-4.elementor-posts--align-center.elementor-posts__hover-none.elementor-grid-tablet-2.elementor-grid-mobile-1.elementor-posts--thumbnail-top.elementor-card-shadow-yes.elementor-widget.elementor-widget-posts > div > div > article.elementor-post.elementor-grid-item").mapNotNull {
-            if (it == null) { return@mapNotNull null }
-            val title = it.selectFirst("div h3")?.text() ?: ""
-            val link = fixUrlNull(it.selectFirst("a")?.attr("href")) ?: return@mapNotNull null
-            //val img = fetchImgUrl(it.selectFirst("img"))
-            texto = it.selectFirst("a div img").toString()
-            inicio = texto.indexOf("data-lazy-srcset") + 18
-            ultimo = texto.length
-            link2 = texto.substring(inicio,ultimo).toString()
-            z = link2.indexOf(" ")
-            poster = link2.substring(0,z).toString()
 
-
-            MovieSearchResponse(
-                    name = title,
-                    url = link,
-                    apiName = this.name,
-                    type = globalTvType,
-                    posterUrl = poster
-            )
-        }
-
-        val items = ArrayList<HomePageList>()
-
+                            newAnimeSearchResponse(title, url) {
+                                this.posterUrl = poster
+                                addDubStatus(dubstat)
+                            }
+                        })
+        )
         urls.apmap { (url, name) ->
             val soup = app.get(url).document
             var texto: String
@@ -120,8 +108,7 @@ class JavSpanishProvider : MainAPI() {
         }
 
         if (items.size <= 0) throw ErrorLoadingException()
-        return HomePageResponse(items)
-
+        return HomePageResponse(items, hasNext = true)
 
     }
 
@@ -151,21 +138,24 @@ class JavSpanishProvider : MainAPI() {
     )
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val url = "$mainUrl/video/search?search=${query}"
-        val document = app.get(url).document
-        return document.select("div.sectionWrapper div.wrap").mapNotNull {
-            if (it == null) { return@mapNotNull null }
-            val title = it.selectFirst("span.title a")?.text() ?: return@mapNotNull null
-            val link = fixUrlNull(it.selectFirst("a")?.attr("href")) ?: return@mapNotNull null
-            val image = fetchImgUrl(it.selectFirst("img"))
-            MovieSearchResponse(
-                    name = title,
-                    url = link,
-                    apiName = this.name,
-                    type = globalTvType,
-                    posterUrl = image
+        val main = app.get("$mainUrl/ajax/ajax_search/?q=$query").text
+        val json = parseJson<MainSearch>(main)
+        return json.animes.map {
+            val title = it.title
+            val href = "$mainUrl/${it.slug}"
+            val image = "https://hentaijk.com/assets/images/animes/image/${it.slug}.jpg"
+            AnimeSearchResponse(
+                    title,
+                    href,
+                    this.name,
+                    TvType.Anime,
+                    image,
+                    null,
+                    if (title.contains("Latino") || title.contains("Castellano")) EnumSet.of(
+                            DubStatus.Dubbed
+                    ) else EnumSet.of(DubStatus.Subbed),
             )
-        }.distinctBy { it.url }
+        }
     }
     data class EpsInfo (
             @JsonProperty("number" ) var number : String? = null,
@@ -241,25 +231,16 @@ class JavSpanishProvider : MainAPI() {
             }
             //val url = "https://voe.sx/e/cc6lejcng05n"
 
-                //Log.i(this.name, "ApiError => (link url) $linkUrl")
-                loadExtractor(
-                        url = url,
-                        subtitleCallback = subtitleCallback,
-                        callback = callback
-                )
+            //Log.i(this.name, "ApiError => (link url) $linkUrl")
+            loadExtractor(
+                    url = url,
+                    subtitleCallback = subtitleCallback,
+                    callback = callback
+            )
         } catch (e: Exception) {
             e.printStackTrace()
             logError(e)
         }
         return false
-    }
-    private fun fetchImgUrl(imgsrc: Element?): String? {
-        return try { imgsrc?.attr("data-src")
-                ?: imgsrc?.attr("data-mediabook")
-                ?: imgsrc?.attr("alt")
-                ?: imgsrc?.attr("data-mediumthumb")
-                ?: imgsrc?.attr("data-thumb_url")
-                ?: imgsrc?.attr("src")
-        } catch (e:Exception) { null }
     }
 }
