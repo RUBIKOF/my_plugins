@@ -48,7 +48,7 @@ class JavGuruProvider : MainAPI() {
                 ),
         )
         val categoryName = request.name
-        val pagedLink = if (page > 0) "https://jav.guru/page/" + page else ""
+        val pagedLink = if (page > 0) "https://jav.guru/page/" + page else "https://jav.guru/"
         val items = ArrayList<HomePageList>()
         var texto: String
         var inicio: Int
