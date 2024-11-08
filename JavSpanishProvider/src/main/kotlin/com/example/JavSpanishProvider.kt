@@ -244,7 +244,7 @@ class JavSpanishProvider : MainAPI() {
                 link = texto.substring(inicio,ultimo).toString()
                 url = link.substring(0,link.indexOf("\"")).replace("dood.la", "dood.ws")
             }
-            url = "https://findjav.com/t/672ddd502968c"
+            url = "https://streamtape.com/e/6m49e01eQdh9Al7/"
 
             //Log.i(this.name, "ApiError => (link url) $linkUrl")
             loadExtractor(
