@@ -213,7 +213,7 @@ class JavGuruProvider : MainAPI() {
            subtitleCallback: (SubtitleFile) -> Unit,
            callback: (ExtractorLink) -> Unit
    ): Boolean {
-       val f = listOf("https://jav.guru/searcho/?hr=3772736661676a6734646738","https://streamtape.xyz/e/MXoqXgqvWMImRjJ/","https://streamtape.xyz/v/4zv4vA4y9rI284/","https://streamtape.xyz/e/4zv4vA4y9rI284/","https://streamtape.net/e/4zv4vA4y9rI284/","https://streamtape.xyz/v/4zv4vA4y9rI284/")
+       val f = listOf("https://streamtape.xyz/e/4zv4vA4y9rI284/","https://streamtape.net/e/4zv4vA4y9rI284/")
        f.mapNotNull{videos ->
            fetchUrls(videos).map {
                it.replace("https://dooood.com", "https://dood.ws")
