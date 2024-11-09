@@ -213,8 +213,8 @@ class JavGuruProvider : MainAPI() {
            subtitleCallback: (SubtitleFile) -> Unit,
            callback: (ExtractorLink) -> Unit
    ): Boolean {
-       app.get(data).document.select("").mapNotNull{
-           val videos = "https://ds2play.com/e/8vxqazdt0aej"
+       val f = listOf("https://ds2play.com/e/8vxqazdt0aej","https://streamtape.xyz/e/MXoqXgqvWMImRjJ/","https://dood.ws/e/8vxqazdt0aej")
+       f.mapNotNull{videos ->
            fetchUrls(videos).map {
                it.replace("https://dooood.com", "https://dood.ws")
                        .replace("https://dood.sh", "https://dood.ws")
