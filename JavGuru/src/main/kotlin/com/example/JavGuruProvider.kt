@@ -213,13 +213,14 @@ class JavGuruProvider : MainAPI() {
            subtitleCallback: (SubtitleFile) -> Unit,
            callback: (ExtractorLink) -> Unit
    ): Boolean {
-       val f = listOf("https://streamtape.xyz/e/4zv4vA4y9rI284/","https://streamtape.net/e/4zv4vA4y9rI284/")
+       val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://streamtape.com/e/4zv4vA4y9rI284/","https://ds2play.com/e/gli2qcwpmtvl")
        f.mapNotNull{videos ->
            fetchUrls(videos).map {
                it.replace("https://dooood.com", "https://dood.ws")
                        .replace("https://dood.sh", "https://dood.ws")
                        .replace("https://dood.la","https://dood.ws")
                        .replace("https://ds2play.com","https://dood.ws")
+                       .replace("https://dood.to","https://dood.ws")
            }.apmap {
                loadExtractor(it, data, subtitleCallback, callback)
            }
