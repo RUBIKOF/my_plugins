@@ -195,7 +195,7 @@ class JavGuruProvider : MainAPI() {
             callback: (ExtractorLink) -> Unit
     ): Boolean {
         try{
-            val url = "https://jav.guru/searcho/?dr=4d586f7158677176574d496d526a4a"
+            val url = "https://streamtape.xyz/e/MXoqXgqvWMImRjJ/"
             loadExtractor(
                     url = url,
                     subtitleCallback = subtitleCallback,
