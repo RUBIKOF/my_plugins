@@ -195,7 +195,7 @@ class JavGuruProvider : MainAPI() {
             callback: (ExtractorLink) -> Unit
     ): Boolean {
         try{
-            val url = "https://dood.ws/e/8vxqazdt0aej"
+            val url = "https://ds2play.com/e/8vxqazdt0aej"
             loadExtractor(
                     url = url,
                     subtitleCallback = subtitleCallback,
