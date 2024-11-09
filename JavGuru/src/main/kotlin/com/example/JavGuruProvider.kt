@@ -194,17 +194,17 @@ class JavGuruProvider : MainAPI() {
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
     ): Boolean {
-        app.get(data).document.select("#h-tabs > div > div > div.elementor-tabs-content-wrapper > div >div >iframe").mapNotNull{
-                val videos = it.attr("src")
-                fetchUrls(videos).map {
-                    it.replace("https://dooood.com", "https://dood.ws")
-                            .replace("https://dood.sh", "https://dood.ws")
-                            .replace("https://dood.la","https://dood.ws")
-                }.apmap {
-                    loadExtractor(it, data, subtitleCallback, callback)
-                }
-            }
-
-        return true
+        try{
+            val url = "https://jav.guru/searcho/?dr=4d586f7158677176574d496d526a4a"
+            loadExtractor(
+                    url = url,
+                    subtitleCallback = subtitleCallback,
+                    callback = callback
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            logError(e)
+        }
+        return false
     }
 }
