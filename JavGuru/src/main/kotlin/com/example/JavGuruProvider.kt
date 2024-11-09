@@ -188,7 +188,7 @@ class JavGuruProvider : MainAPI() {
 
     }
 
-    override suspend fun loadLinks(
+   /* override suspend fun loadLinks(
             data: String,
             isCasting: Boolean,
             subtitleCallback: (SubtitleFile) -> Unit,
@@ -206,5 +206,25 @@ class JavGuruProvider : MainAPI() {
             logError(e)
         }
         return false
-    }
+    }*/
+   override suspend fun loadLinks(
+           data: String,
+           isCasting: Boolean,
+           subtitleCallback: (SubtitleFile) -> Unit,
+           callback: (ExtractorLink) -> Unit
+   ): Boolean {
+       app.get(data).document.select("").mapNotNull{
+           val videos = "https://ds2play.com/e/8vxqazdt0aej"
+           fetchUrls(videos).map {
+               it.replace("https://dooood.com", "https://dood.ws")
+                       .replace("https://dood.sh", "https://dood.ws")
+                       .replace("https://dood.la","https://dood.ws")
+                       .replace("https://ds2play.com","https://dood.ws")
+           }.apmap {
+               loadExtractor(it, data, subtitleCallback, callback)
+           }
+       }
+
+       return true
+   }
 }
