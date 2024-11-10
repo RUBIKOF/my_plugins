@@ -33,7 +33,7 @@ class BestJavPornProvider : MainAPI() {
     )
     //https://bestjavporn.me/page/1?filter=latest
     override val mainPage = mainPageOf(
-            "$mainUrl/page/" to "Main Page",
+            "$mainUrl/page/1?filter=latest" to "Main Page",
     )
     val saveImage = "";
 
@@ -49,7 +49,7 @@ class BestJavPornProvider : MainAPI() {
                 ),
         )
 
-        val pagedLink = if (page > 0) "https://jav.guru/page/" + page + "?filter=latest" else "https://bestjavporn.me/?filter=latest"
+        val pagedLink = if (page > 0) "https://bestjavporn.me/page/" + page + "?filter=latest" else "https://bestjavporn.me/?filter=latest"
         val items = ArrayList<HomePageList>()
         items.add(
                 HomePageList(
