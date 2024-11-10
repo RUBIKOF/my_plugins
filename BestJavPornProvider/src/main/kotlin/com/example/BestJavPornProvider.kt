@@ -51,12 +51,20 @@ class BestJavPornProvider : MainAPI() {
 
         val pagedLink = if (page > 0) "https://bestjavporn.me/page/" + page + "?filter=latest" else "https://bestjavporn.me/?filter=latest"
         val items = ArrayList<HomePageList>()
+        var texto: String
+        var inicio: Int
+        var ultimo: Int
+        var link: String
         items.add(
                 HomePageList(
                         "Recientes",
                         app.get(pagedLink).document.select(".videos-list article").map {
-                            val title = it.selectFirst("img")?.attr("alt")
-                            val poster = it.selectFirst("img")?.attr("src")
+                            val title = it.selectFirst("header span")?.text()
+                            texto = it.selectFirst("a div div").toString()
+                            inicio = texto.indexOf("data-lazy-srcset") + 18
+                            ultimo = texto.length
+                            link = texto.substring(inicio, ultimo).toString()
+                            val poster = link.substring(0, link.indexOf(" ")).replace("\"","")
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
                             //val poster = it.selectFirst("a div img")?.attr("src") ?: ""

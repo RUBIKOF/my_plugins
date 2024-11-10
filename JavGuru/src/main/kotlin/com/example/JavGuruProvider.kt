@@ -50,23 +50,12 @@ class JavGuruProvider : MainAPI() {
 
         val pagedLink = if (page > 0) "https://jav.guru/page/" + page else "https://jav.guru/"
         val items = ArrayList<HomePageList>()
-        var texto: String
-        var inicio: Int
-        var ultimo: Int
-        var link: String
-        var z: Int
         items.add(
                 HomePageList(
                         "Recientes",
-
-                        app.get(pagedLink).document.select("#main > div.videos-list article").map {
-
-                            val title = it.selectFirst("header span")?.text()
-                            texto = it.selectFirst("a div div").toString()
-                            inicio = texto.indexOf("data-lazy-srcset") + 18
-                            ultimo = texto.length
-                            link = texto.substring(inicio, ultimo).toString()
-                            val poster = link.substring(0, link.indexOf(" ")).replace("\"","")
+                        app.get(pagedLink).document.select("#main > div").map {
+                            val title = it.selectFirst("h2")?.text()
+                            val poster = it.selectFirst("img")?.attr("src")
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
                             //val poster = it.selectFirst("a div img")?.attr("src") ?: ""
