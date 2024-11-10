@@ -61,7 +61,7 @@ class BestJavPornProvider : MainAPI() {
                         app.get(pagedLink).document.select(".videos-list article").map {
                             val title = it.selectFirst("header span")?.text()
                             texto = it.selectFirst("a div div").toString()
-                            inicio = texto.indexOf("data-lazy-srcset") + 18
+                            inicio = texto.indexOf("data-src=") + 10
                             ultimo = texto.length
                             link = texto.substring(inicio, ultimo).toString()
                             val poster = link.substring(0, link.indexOf(" ")).replace("\"","")
