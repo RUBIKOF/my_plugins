@@ -10,6 +10,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
+import kotlinx.coroutines.selects.select
 import java.util.*
 
 
@@ -89,7 +90,7 @@ class BestJavPornProvider : MainAPI() {
             }else if(url.contains("censored")){
                 pagedLink = if (page > 0) "https://bestjavporn.me/category/censored/page/" + page else "https://bestjavporn.me/category/censored/"
             }else if(url.contains("amateur")){
-                pagedLink = if (page > 0) "https://bestjavporn.me/category/amateur/page/" + page else "https://bestjavporn.me/category/censored/"
+                pagedLink = if (page > 0) "https://bestjavporn.me/category/amateur/page/" + page else "https://bestjavporn.me/category/amateur/"
             }
             val soup = app.get(pagedLink).document
             var texto: String
@@ -158,14 +159,9 @@ class BestJavPornProvider : MainAPI() {
         var poster = ""
 
             return app.get("$mainUrl//?s=$query").document
-                    .select(".elementor-posts-container").select(".elementor-post__card").mapNotNull {
-                        texto = it.selectFirst(".elementor-post__thumbnail img").toString()
-                        inicio = texto.indexOf("srcset=") + 7
-                        ultimo = texto.length
-                        link = texto.substring(inicio, ultimo).toString()
-                        z = link.indexOf(" ")
-                        val image = link.substring(0, z).replace("\"","")
-                        val title = it.selectFirst(".elementor-post__title > a")?.text().toString()
+                    .select("#main").select("article").mapNotNull {
+                        val image = it.selectFirst(" div div img")?.attr("src")
+                        val title = it.selectFirst("header span")?.text().toString()
                         val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
 
 
