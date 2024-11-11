@@ -192,13 +192,15 @@ class BestJavPornProvider : MainAPI() {
 
         //test tmp
         var description=""
-        val ss= doc.selectFirst("div.box-server > a ")?.attr("onclick")?.replace("go('https://v.javmix.me/vod/player.php?","").toString()
-        if(ss.contains("ST=")){
-            description = ss.replace("ST=","https://streamtape.com/e/")
-        }else if(ss.contains("emt=")){
-            description= ss.replace("emt=","https://dood.ws/e/")
+        var ss =""
+        ss= doc.selectFirst("div.box-server > a ")?.attr("onclick").toString()
+        var ss1 = ss.replace("go('https://v.javmix.me/vod/player.php?","")
+        if(ss1.contains("ST=")){
+            description = ss1.replace("ST=","https://streamtape.com/e/")
+        }else if(ss1.contains("emt=")){
+            description= ss1.replace("emt=","https://dood.ws/e/")
         }else{
-            description= ss.replace("","")
+            description= ss1.replace("","")
         }
 
 
