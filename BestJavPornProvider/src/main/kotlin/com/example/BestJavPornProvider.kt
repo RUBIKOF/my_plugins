@@ -191,8 +191,15 @@ class BestJavPornProvider : MainAPI() {
         //val description = doc.selectFirst("article p")?.text()
 
         //test tmp
-        val description= doc.selectFirst("div.box-server > a ")?.attr("onclick")
-
+        var description=""
+        val ss= doc.selectFirst("div.box-server > a ")?.attr("onclick").toString()
+        if(ss.contains("ST=")){
+            description = ss.replace("ST=","https://streamtape.com/e/")
+        }else if(ss.contains("emt=")){
+            description= ss.replace("do=","https://dood.ws/e/")
+        }else{
+            description= ss.replace("","")
+        }
 
 
         ///////
@@ -246,19 +253,19 @@ class BestJavPornProvider : MainAPI() {
 
        app.get(data).document.select("div.box-server > a ").mapNotNull{
            val videos =it.attr("onclick")
-           var link =""
+
            fetchUrls(videos).map {
 
-               link = it.replace("go('https://v.javmix.me/vod/player.php?","")
-               if(link.contains("ST=")){
-                   link.replace("ST=","https://streamtape.com/e/")
-               }
-               if(link.contains("do=")){
-                   link.replace("do=","https://dood.ws/e/")
+               if(it.contains("ST=")){
+                   it.replace("ST=","https://streamtape.com/e/")
+               }else if(it.contains("do=")){
+                   it.replace("do=","https://dood.ws/e/")
+               }else{
+                   it.replace("","")
                }
 
            }.apmap {
-               loadExtractor(link, data, subtitleCallback, callback)
+               loadExtractor(it, data, subtitleCallback, callback)
            }
        }
 
