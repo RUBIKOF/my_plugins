@@ -192,15 +192,15 @@ class BestJavPornProvider : MainAPI() {
 
         //test tmp
         var description=""
-        var ss =""
-        ss= doc.selectFirst("div.box-server > a ")?.attr("onclick").toString()
-        var ss1 = ss.replace("go('https://v.javmix.me/vod/player.php?","")
-        if(ss1.contains("ST=")){
-            description = ss1.replace("ST=","https://streamtape.com/e/")
-        }else if(ss1.contains("emt=")){
-            description= ss1.replace("emt=","https://dood.ws/e/")
+
+        var ss= doc.selectFirst("div.box-server > a ")?.attr("onclick").toString().replace("go('https://v.javmix.me/vod/player.php?","").replace("')","")
+
+        if(ss.contains("ST=")){
+            description = ss.replace("ST=","https://streamtape.com/e/")
+        }else if(ss.contains("emt=")){
+            description= ss.replace("emt=","https://dood.ws/e/")
         }else{
-            description= ss1.replace("","")
+            description= ss.replace("","")
         }
 
 
@@ -254,7 +254,7 @@ class BestJavPornProvider : MainAPI() {
        //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://streamtape.com/e/4zv4vA4y9rI284/","https://ds2play.com/e/gli2qcwpmtvl")
 
        app.get(data).document.select("div.box-server > a ").mapNotNull{
-           val videos =it.attr("onclick").replace("go('https://v.javmix.me/vod/player.php?","").toString()
+           val videos =it.attr("onclick").replace("go('https://v.javmix.me/vod/player.php?","").replace("')","")
 
            fetchUrls(videos).map {
 
