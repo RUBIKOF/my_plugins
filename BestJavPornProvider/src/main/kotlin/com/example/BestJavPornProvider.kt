@@ -40,12 +40,12 @@ class BestJavPornProvider : MainAPI() {
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val urls = listOf(
                 Pair(
-                        "$mainUrl/familia",
-                        "Familia"
+                        "$mainUrl/category/uncensored/page/",
+                        "Uncensored"
                 ),
                 Pair(
-                        "$mainUrl/milf",
-                        "Milf"
+                        "$mainUrl/category/censored/page/",
+                        "Censored"
                 ),
         )
 
@@ -79,22 +79,26 @@ class BestJavPornProvider : MainAPI() {
                         })
         )
         urls.apmap { (url, name) ->
-            val soup = app.get(url).document
+            var pagedLink = ""
+            if(url.contains("uncensored")){
+                pagedLink = if (page > 0) "https://bestjavporn.me/category/uncensored/" + page else "https://bestjavporn.me/category/uncensored/"
+            }else if(url.contains("censored")){
+                pagedLink = if (page > 0) "https://bestjavporn.me/category/censored/" + page else "https://bestjavporn.me/category/censored/"
+            }
+            val soup = app.get(pagedLink).document
             var texto: String
             var inicio: Int
             var ultimo: Int
             var link: String
             var z: Int
             var poster = ""
-            val home = soup.select(".elementor-post__card").map {
-                val title = it.selectFirst(".elementor-post__title")?.text()
-                texto = it.selectFirst(".elementor-post__thumbnail img").toString()
-                inicio = texto.indexOf("data-lazy-srcset") + 18
+            val home = soup.select("videos-list article").map {
+                val title = it.selectFirst("header span")?.text()
+                texto = it.selectFirst("a div div").toString()
+                inicio = texto.indexOf("data-src=") + 10
                 ultimo = texto.length
                 link = texto.substring(inicio, ultimo).toString()
-                z = link.indexOf(" ")
-                poster = link.substring(0, z).toString()
-
+                poster = link.substring(0, link.indexOf(" ")).replace("\"","")
                 AnimeSearchResponse(
                         title!!,
                         fixUrl(it.selectFirst("a")?.attr("href") ?: ""),
