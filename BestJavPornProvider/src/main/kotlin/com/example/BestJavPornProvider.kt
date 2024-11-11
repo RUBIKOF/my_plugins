@@ -188,8 +188,14 @@ class BestJavPornProvider : MainAPI() {
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
         val title = doc.selectFirst("article h1")?.text()?:""
         val type = "NFSW"
-        val description = doc.selectFirst("article p")?.text()
+        //val description = doc.selectFirst("article p")?.text()
 
+        //test tmp
+        val description= doc.selectFirst("div.box-server > a ")?.attr("onclick")
+
+
+
+        ///////
 
         texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
         inicio = texto.indexOf("http")
