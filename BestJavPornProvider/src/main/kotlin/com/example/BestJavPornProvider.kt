@@ -76,7 +76,7 @@ class BestJavPornProvider : MainAPI() {
                                 this.posterUrl = poster
                                 addDubStatus(dubstat)
                             }
-                        })
+                        },isHorizontalImages = true)
         )
         urls.apmap { (url, name) ->
             var pagedLink = ""
@@ -111,7 +111,7 @@ class BestJavPornProvider : MainAPI() {
                         ) else EnumSet.of(DubStatus.Subbed),
                 )
             }
-            items.add(HomePageList(name, home))
+            items.add(HomePageList(name, home,isHorizontalImages = false))
         }
 
         if (items.size <= 0) throw ErrorLoadingException()

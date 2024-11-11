@@ -37,8 +37,8 @@ class HentaiJKProvider : MainAPI() {
                         "En emisión"
                 ),
                 Pair(
-                        "$mainUrl/directorio/?filtro=fecha&tipo=none&estado=none&fecha=none&temporada=none&orden=none",
-                        "Hentai"
+                        "$mainUrl/directorio/finalizados/",
+                        "Finalizados"
                 ),
         )
 
