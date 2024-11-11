@@ -47,6 +47,10 @@ class BestJavPornProvider : MainAPI() {
                         "$mainUrl/category/censored/",
                         "Censored"
                 ),
+                Pair(
+                        "$mainUrl/category/amateur/",
+                        "Amateur"
+                ),
         )
 
         val pagedLink = if (page > 0) "https://bestjavporn.me/page/" + page + "?filter=latest" else "https://bestjavporn.me/?filter=latest"
@@ -84,6 +88,8 @@ class BestJavPornProvider : MainAPI() {
                 pagedLink = if (page > 0) "https://bestjavporn.me/category/uncensored/page/" + page else "https://bestjavporn.me/category/uncensored/"
             }else if(url.contains("censored")){
                 pagedLink = if (page > 0) "https://bestjavporn.me/category/censored/page/" + page else "https://bestjavporn.me/category/censored/"
+            }else if(url.contains("amateur")){
+                pagedLink = if (page > 0) "https://bestjavporn.me/category/amateur/page/" + page else "https://bestjavporn.me/category/censored/"
             }
             val soup = app.get(pagedLink).document
             var texto: String
