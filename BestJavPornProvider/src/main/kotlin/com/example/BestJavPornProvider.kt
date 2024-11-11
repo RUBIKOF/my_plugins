@@ -255,19 +255,19 @@ class BestJavPornProvider : MainAPI() {
 
        app.get(data).document.select("div.box-server > a ").mapNotNull{
            val videos =it.attr("onclick").replace("go('https://v.javmix.me/vod/player.php?","").replace("')","")
-
+           var video = "https://dood.ws/e/z1w466sgeg4x"
            fetchUrls(videos).map {
 
                if(it.contains("ST=")){
-                   it.replace("ST=","https://streamtape.com/e/")
+                   video = it.replace("ST=","https://streamtape.com/e/")
                }else if(it.contains("do=")){
-                   it.replace("do=","https://dood.ws/e/")
+                   video = it.replace("do=","https://dood.ws/e/")
                }else{
-                   it.replace("","")
+                   video = it.replace("","")
                }
 
            }.apmap {
-               loadExtractor(it, data, subtitleCallback, callback)
+               loadExtractor(video, data, subtitleCallback, callback)
            }
        }
 
