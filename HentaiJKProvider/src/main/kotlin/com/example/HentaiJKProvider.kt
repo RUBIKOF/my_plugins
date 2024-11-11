@@ -155,7 +155,7 @@ class HentaiJKProvider : MainAPI() {
 
         //Espacio Prueba
         val m = doc.getElementsByTag("script")
-        val xx =doc.select("head > script:nth-child(32)")
+        val xx =doc.select("head > script:nth-child(33)")
         val mm = xx.toString();
         val nn = mm.substring(mm.lastIndexOf("ajax/")).replace("ajax/social_counter/","");
 
