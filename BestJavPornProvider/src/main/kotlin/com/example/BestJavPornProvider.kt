@@ -40,11 +40,11 @@ class BestJavPornProvider : MainAPI() {
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val urls = listOf(
                 Pair(
-                        "$mainUrl/category/uncensored/page/",
+                        "$mainUrl/category/uncensored/",
                         "Uncensored"
                 ),
                 Pair(
-                        "$mainUrl/category/censored/page/",
+                        "$mainUrl/category/censored/",
                         "Censored"
                 ),
         )
@@ -85,14 +85,14 @@ class BestJavPornProvider : MainAPI() {
             }else if(url.contains("censored")){
                 pagedLink = if (page > 0) "https://bestjavporn.me/category/censored/page/" + page else "https://bestjavporn.me/category/censored/"
             }
-            val soup = app.get("https://bestjavporn.me/category/uncensored/page/2").document
+            val soup = app.get(pagedLink).document
             var texto: String
             var inicio: Int
             var ultimo: Int
             var link: String
             var z: Int
             var poster = ""
-            val home = soup.select("videos-list article").map {
+            val home = soup.select(".videos-list article").map {
                 val title = it.selectFirst("header span")?.text()
                 texto = it.selectFirst("a div div").toString()
                 inicio = texto.indexOf("data-src=") + 10
