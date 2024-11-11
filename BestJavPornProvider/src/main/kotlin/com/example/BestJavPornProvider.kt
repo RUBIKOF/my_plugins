@@ -191,12 +191,12 @@ class BestJavPornProvider : MainAPI() {
         //val description = doc.selectFirst("article p")?.text()
 
 
-        val description = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
-        /*inicio = texto.indexOf("http")
+        texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
+        inicio = texto.indexOf("http")
         ultimo = texto.length
         link = texto.substring(inicio, ultimo).toString()
 
-        val poster = link.substring(0, link.indexOf("&quo")).replace("\"","")*/
+        val description = link.substring(0, link.indexOf("&quo")).replace("\"","")
         val poster =""
         //Fin espacio prueba
         return MovieLoadResponse(
