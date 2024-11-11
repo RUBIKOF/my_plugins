@@ -193,7 +193,7 @@ class BestJavPornProvider : MainAPI() {
         //test tmp
         var description=""
 
-        var ss= doc.selectFirst("div.box-server > a ")?.attr("onclick").toString().replace("go('https://v.javmix.me/vod/player.php?","").replace("')","")
+        /*var ss= doc.selectFirst("div.box-server > a ")?.attr("onclick").toString().replace("go('https://v.javmix.me/vod/player.php?","").replace("')","")
 
         if(ss.contains("ST=")){
             description = ss.replace("ST=","https://streamtape.com/e/")
@@ -201,8 +201,17 @@ class BestJavPornProvider : MainAPI() {
             description= ss.replace("emt=","https://dood.ws/e/")
         }else{
             description= ss.replace("","")
-        }
+        }*/
+        app.get(url).document.select("div.box-server > a ").mapNotNull {
+            val videos = it.attr("onclick")
+            fetchUrls(videos).map {
+               description += it.replace("go('https://v.javmix.me/vod/player.php?", "")
+                        .replace("')", "")
+                        .replace("stp=", "https://streamtape.com/e/")
+                        .replace("do=", "https://dood.ws/e/")
 
+            }
+        }
 
         ///////
 
