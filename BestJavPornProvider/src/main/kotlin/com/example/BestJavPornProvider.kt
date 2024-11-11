@@ -81,11 +81,11 @@ class BestJavPornProvider : MainAPI() {
         urls.apmap { (url, name) ->
             var pagedLink = ""
             if(url.contains("uncensored")){
-                pagedLink = if (page > 0) "https://bestjavporn.me/category/uncensored/" + page else "https://bestjavporn.me/category/uncensored/"
+                pagedLink = if (page > 0) "https://bestjavporn.me/category/uncensored/page/" + page else "https://bestjavporn.me/category/uncensored/"
             }else if(url.contains("censored")){
-                pagedLink = if (page > 0) "https://bestjavporn.me/category/censored/" + page else "https://bestjavporn.me/category/censored/"
+                pagedLink = if (page > 0) "https://bestjavporn.me/category/censored/page/" + page else "https://bestjavporn.me/category/censored/"
             }
-            val soup = app.get("https://bestjavporn.me/category/uncensored/1").document
+            val soup = app.get(pagedLink).document
             var texto: String
             var inicio: Int
             var ultimo: Int
