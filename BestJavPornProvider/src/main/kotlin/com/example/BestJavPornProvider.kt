@@ -191,12 +191,13 @@ class BestJavPornProvider : MainAPI() {
         val description = doc.selectFirst("article p")?.text()
 
 
-        texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
+        /*texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
         inicio = texto.indexOf("http")
         ultimo = texto.length
         link = texto.substring(inicio, ultimo).toString()
 
-        val poster = link.substring(0, link.indexOf("&quo")).replace("\"","")
+        val poster = link.substring(0, link.indexOf("&quo")).replace("\"","")*/
+        val poster =""
         //Fin espacio prueba
         return MovieLoadResponse(
                 name = title,
@@ -204,7 +205,9 @@ class BestJavPornProvider : MainAPI() {
                 apiName = this.name,
                 type = TvType.NSFW,
                 dataUrl = url,
-                posterUrl = poster
+                posterUrl = poster,
+                plot = description
+
         )
 
     }
@@ -234,8 +237,10 @@ class BestJavPornProvider : MainAPI() {
            subtitleCallback: (SubtitleFile) -> Unit,
            callback: (ExtractorLink) -> Unit
    ): Boolean {
-       val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://streamtape.com/e/4zv4vA4y9rI284/","https://ds2play.com/e/gli2qcwpmtvl")
-       f.mapNotNull{videos ->
+       //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://streamtape.com/e/4zv4vA4y9rI284/","https://ds2play.com/e/gli2qcwpmtvl")
+
+       app.get(data).document.select("header > div > div > div.box-server > a").mapNotNull{
+           val videos =it.attr("")
            fetchUrls(videos).map {
                it.replace("https://dooood.com", "https://dood.ws")
                        .replace("https://dood.sh", "https://dood.ws")
