@@ -254,20 +254,15 @@ class BestJavPornProvider : MainAPI() {
        //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://streamtape.com/e/4zv4vA4y9rI284/","https://ds2play.com/e/gli2qcwpmtvl")
 
        app.get(data).document.select("div.box-server > a ").mapNotNull{
-           val videos =it.attr("onclick").replace("go('https://v.javmix.me/vod/player.php?","").replace("')","")
-           var video = "https://dood.ws/e/z1w466sgeg4x"
+           val videos =it.attr("onclick")
            fetchUrls(videos).map {
-
-               if(it.contains("ST=")){
-                   video = it.replace("ST=","https://streamtape.com/e/")
-               }else if(it.contains("do=")){
-                   video = it.replace("do=","https://dood.ws/e/")
-               }else{
-                   video = it.replace("","")
-               }
+               it.replace("go('https://v.javmix.me/vod/player.php?","")
+                       .replace("')","")
+                       .replace("stp=","https://streamtape.com/e/")
+                       .replace("do=","https://dood.ws/e/")
 
            }.apmap {
-               loadExtractor(video, data, subtitleCallback, callback)
+               loadExtractor(it, data, subtitleCallback, callback)
            }
        }
 
