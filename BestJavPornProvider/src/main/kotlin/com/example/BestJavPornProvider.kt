@@ -195,7 +195,6 @@ class BestJavPornProvider : MainAPI() {
         inicio = texto.indexOf("http")
         ultimo = texto.length
         link = texto.substring(inicio, ultimo).toString()
-
         val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
         //val poster =""
         //Fin espacio prueba
@@ -239,16 +238,21 @@ class BestJavPornProvider : MainAPI() {
    ): Boolean {
        //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://streamtape.com/e/4zv4vA4y9rI284/","https://ds2play.com/e/gli2qcwpmtvl")
 
-       app.get(data).document.select("header > div > div > div.box-server > a").mapNotNull{
-           val videos =it.attr("")
+       app.get(data).document.select("div.box-server > a ").mapNotNull{
+           val videos =it.attr("onclick")
+           var link =""
            fetchUrls(videos).map {
-               it.replace("https://dooood.com", "https://dood.ws")
-                       .replace("https://dood.sh", "https://dood.ws")
-                       .replace("https://dood.la","https://dood.ws")
-                       .replace("https://ds2play.com","https://dood.ws")
-                       .replace("https://dood.to","https://dood.ws")
+
+               link = it.replace("go('https://v.javmix.me/vod/player.php?","")
+               if(link.contains("ST=")){
+                   link.replace("ST=","https://streamtape.com/e/")
+               }
+               if(link.contains("do=")){
+                   link.replace("do=","https://dood.ws/e/")
+               }
+
            }.apmap {
-               loadExtractor(it, data, subtitleCallback, callback)
+               loadExtractor(link, data, subtitleCallback, callback)
            }
        }
 
