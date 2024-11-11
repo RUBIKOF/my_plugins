@@ -205,7 +205,7 @@ class BestJavPornProvider : MainAPI() {
         app.get(url).document.select("div.box-server > a ").mapNotNull {
             val videos = it.attr("onclick")
             fetchUrls(videos).map {
-               description += it
+               description += it.replace("https://v.javmix.me/vod/player.php?","")
                         .replace("')", "")
                         .replace("stp=", "https://streamtape.com/e/")
                         .replace("do=", "https://dood.ws/e/") + "\n"
@@ -265,7 +265,7 @@ class BestJavPornProvider : MainAPI() {
        app.get(data).document.select("div.box-server > a ").mapNotNull{
            val videos =it.attr("onclick")
            fetchUrls(videos).map {
-               it.replace("go('https://v.javmix.me/vod/player.php?","")
+               it.replace("https://v.javmix.me/vod/player.php?","")
                        .replace("')","")
                        .replace("stp=","https://streamtape.com/e/")
                        .replace("do=","https://dood.ws/e/")
