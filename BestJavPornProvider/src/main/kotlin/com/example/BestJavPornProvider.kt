@@ -74,7 +74,7 @@ class BestJavPornProvider : MainAPI() {
 
                             newAnimeSearchResponse(title, url) {
                                 this.posterUrl = poster
-                                addDubStatus(dubstat)
+                                //addDubStatus(dubstat)
                             }
                         },isHorizontalImages = true)
         )
@@ -105,13 +105,10 @@ class BestJavPornProvider : MainAPI() {
                         this.name,
                         TvType.Anime,
                         fixUrl(poster),
-                        null,
-                        if (title.contains("Latino") || title.contains("Castellano")) EnumSet.of(
-                                DubStatus.Dubbed
-                        ) else EnumSet.of(DubStatus.Subbed),
+                        null
                 )
             }
-            items.add(HomePageList(name, home,isHorizontalImages = false))
+            items.add(HomePageList(name, home,isHorizontalImages = true))
         }
 
         if (items.size <= 0) throw ErrorLoadingException()
@@ -182,13 +179,24 @@ class BestJavPornProvider : MainAPI() {
             @JsonProperty("image"  ) var image  : String? = null
     )
     override suspend fun load(url: String): LoadResponse {
+        val texto: String
+        var inicio: Int
+        var ultimo: Int
+        var link: String
+
         val doc = app.get(url, timeout = 120).document
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
-        val title = doc.selectFirst(".inside-article h1")?.text()?:""
+        val title = doc.selectFirst("article h1")?.text()?:""
         val type = "NFSW"
-        val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
+        val description = doc.selectFirst("article p")?.text()
 
-        val poster = doc.selectFirst(".inside-article img")?.attr("src")
+
+        texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
+        inicio = texto.indexOf("http")
+        ultimo = texto.length
+        link = texto.substring(inicio, ultimo).toString()
+
+        val poster = link.substring(0, link.indexOf("&quo")).replace("\"","")
         //Fin espacio prueba
         return MovieLoadResponse(
                 name = title,
