@@ -249,7 +249,7 @@ class JavGuruProvider : MainAPI() {
                    cleanExtractor(
                            "Fireload",
                            "Fireload ",
-                           "https://" + it,
+                           it,
                            callback
                    )
                }
