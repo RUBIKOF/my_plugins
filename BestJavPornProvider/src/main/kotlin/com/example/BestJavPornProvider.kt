@@ -224,15 +224,24 @@ class BestJavPornProvider : MainAPI() {
         val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
         //val poster =""
 
+        val recs = app.get(url).document.select(".under-video-block").mapNotNull {
+            val recTitle = it.selectFirst("header span")?.text() ?: ""
+            val recImg = it.selectFirst("img")?.attr("data-src") ?: ""
+            val recLink = it.selectFirst("a")?.attr("href") ?: ""
+            newTvSeriesSearchResponse(recTitle, recLink, TvType.TvSeries) {
+                this.posterUrl = fixUrl(recImg)
+            }
+        }
 
-        val recs = doc.select(".under-video-block").mapNotNull { rec ->
+
+      /*  val recs = doc.select(".under-video-block").mapNotNull { rec ->
             val recTitle = rec.selectFirst("header span")?.text() ?: ""
             val recImg = rec.selectFirst("img")?.attr("data-src") ?: ""
             val recLink = rec.selectFirst("a")?.attr("href") ?: ""
             newTvSeriesSearchResponse(recTitle, recLink, TvType.TvSeries) {
                 this.posterUrl = fixUrl(recImg)
             }
-        }
+        }*/
 
         return MovieLoadResponse(
                 name = title,
