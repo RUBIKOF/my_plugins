@@ -208,7 +208,24 @@ class JavGuruProvider : MainAPI() {
         }
         return false
     }*/
-
+   private fun cleanExtractor(
+           source: String,
+           name: String,
+           url: String,
+           callback: (ExtractorLink) -> Unit
+   ): Boolean {
+       callback(
+               ExtractorLink(
+                       source,
+                       name,
+                       url,
+                       "",
+                       Qualities.Unknown.value,
+                       false
+               )
+       )
+       return true
+   }
    override suspend fun loadLinks(
            data: String,
            isCasting: Boolean,
@@ -227,6 +244,15 @@ class JavGuruProvider : MainAPI() {
                        .replace("https://dood.to","https://dood.ws")
            }.apmap {
                loadExtractor(it, data, subtitleCallback, callback)
+
+               if (it.contains("flaswish") == true) {
+                   cleanExtractor(
+                           "Fireload",
+                           "Fireload ",
+                           "https://" + it,
+                           callback
+                   )
+               }
 
            }
        }
