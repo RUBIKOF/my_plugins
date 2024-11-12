@@ -54,7 +54,7 @@ class BestJavPornProvider : MainAPI() {
                 ),
         )
 
-        val pagedLink = if (page > 0) "https://bestjavporn.me/page/" + page + "?filter=latest" else "https://bestjavporn.me/?filter=latest"
+        val pagedLink = if (page > 0) "https://bestjavporn.me/page/" + page + "?filter=latest" else "https://bestjavporn.me/"
         val items = ArrayList<HomePageList>()
         var texto: String
         var inicio: Int
