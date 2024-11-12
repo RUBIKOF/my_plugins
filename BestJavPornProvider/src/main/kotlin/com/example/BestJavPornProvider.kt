@@ -63,7 +63,7 @@ class BestJavPornProvider : MainAPI() {
         items.add(
                 HomePageList(
                         "Recientes",
-                        app.get(pagedLink).document.select(".videos-list article").map {
+                        app.get(mainUrl).document.select(".videos-list article").map {
                             val title = it.selectFirst("header span")?.text()
                             texto = it.selectFirst("a div div").toString()
                             inicio = texto.indexOf("data-src=") + 10
