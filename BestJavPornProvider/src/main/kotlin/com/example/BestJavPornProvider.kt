@@ -54,7 +54,7 @@ class BestJavPornProvider : MainAPI() {
                 ),
         )
 
-        val pagedLink = if (page > 0) "https://bestjavporn.me/page/" + page + "?filter=latest" else "https://bestjavporn.me/"
+        val pagedLink = if (page > 0) "https://bestjavporn.me/page/" + page + "?filter=latest" else "https://bestjavporn.me/?filter=latest"
         val items = ArrayList<HomePageList>()
         var texto: String
         var inicio: Int
@@ -224,6 +224,18 @@ class BestJavPornProvider : MainAPI() {
         val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
         //val poster =""
         //Fin espacio prueba
+
+
+        val recs = app.get(url).document.select(".under-video-block").mapNotNull {
+            val recTitle = it.selectFirst("header span")?.text() ?: ""
+            val recImg = it.selectFirst("img")?.attr("data-src") ?: ""
+            val recLink = it.selectFirst("a")?.attr("href") ?: ""
+            newTvSeriesSearchResponse(recTitle, recLink, TvType.TvSeries) {
+                this.posterUrl = fixUrl(recImg)
+            }
+        }
+
+
         return MovieLoadResponse(
                 name = title,
                 url = url,
@@ -231,7 +243,8 @@ class BestJavPornProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = description
+                plot = description,
+                recommendations = recs
 
         )
 
