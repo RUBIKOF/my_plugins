@@ -3,6 +3,7 @@ package com.example
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
+import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
@@ -207,6 +208,25 @@ class JavGuruProvider : MainAPI() {
         }
         return false
     }*/
+
+    private fun cleanExtractor(
+            source: String,
+            name: String,
+            url: String,
+            callback: (ExtractorLink) -> Unit
+    ): Boolean {
+        callback(
+                ExtractorLink(
+                        source,
+                        name,
+                        url,
+                        "",
+                        Qualities.Unknown.value,
+                        false
+                )
+        )
+        return true
+    }
    override suspend fun loadLinks(
            data: String,
            isCasting: Boolean,
@@ -214,7 +234,7 @@ class JavGuruProvider : MainAPI() {
            callback: (ExtractorLink) -> Unit
    ): Boolean {
        //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://streamtape.com/e/4zv4vA4y9rI284/","https://ds2play.com/e/gli2qcwpmtvl","https://v.javmix.me/vod/player.php?fl=w5qy7qg1xc6g")
-       val f = listOf("https://v.javmix.me/vod/player.php?fl=w5qy7qg1xc6g","https://ds2play.com/e/gli2qcwpmtvl")
+       val f = listOf("https://xx.telorku.xyz/lf/w5qy7qg1xc6g","https://ds2play.com/e/gli2qcwpmtvl")
        f.mapNotNull{videos ->
            fetchUrls(videos).map {
                it.replace("https://dooood.com", "https://dood.ws")
@@ -224,6 +244,14 @@ class JavGuruProvider : MainAPI() {
                        .replace("https://dood.to","https://dood.ws")
            }.apmap {
                loadExtractor(it, data, subtitleCallback, callback)
+               if (it.contains("xyz/lf/") == true) {
+                   cleanExtractor(
+                           "Fireload",
+                           "Fireload HD",
+                           it,
+                           callback
+                   )
+               }
            }
        }
 
