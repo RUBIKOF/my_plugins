@@ -248,7 +248,7 @@ class JavGuruProvider : MainAPI() {
                    cleanExtractor(
                            "Fireload",
                            "Fireload HD",
-                           it,
+                           "https://" + it,
                            callback
                    )
                }
