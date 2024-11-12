@@ -180,7 +180,7 @@ class BestJavPornProvider : MainAPI() {
             @JsonProperty("title"  ) var title  : String? = null,
             @JsonProperty("image"  ) var image  : String? = null
     )
-    override suspend fun load(url: String): LoadResponse {
+    override suspend fun load(url: String): MovieLoadResponse? {
         val texto: String
         var inicio: Int
         var ultimo: Int
@@ -188,12 +188,12 @@ class BestJavPornProvider : MainAPI() {
 
         val doc = app.get(url, timeout = 120).document
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
-        val title = doc.selectFirst("article h1")?.text()?:""
+        val title = doc.selectFirst("article h1")?.text() ?: ""
         val type = "NFSW"
         //val description = doc.selectFirst("article p")?.text()
 
         //test tmp
-        var description=""
+        var description = ""
 
         /*var ss= doc.selectFirst("div.box-server > a ")?.attr("onclick").toString().replace("go('https://v.javmix.me/vod/player.php?","").replace("')","")
 
@@ -207,7 +207,7 @@ class BestJavPornProvider : MainAPI() {
         app.get(url).document.select("div.box-server > a ").mapNotNull {
             val videos = it.attr("onclick")
             fetchUrls(videos).map {
-               description += it.replace("https://v.javmix.me/vod/player.php?","")
+                description += it.replace("https://v.javmix.me/vod/player.php?", "")
                         .replace("')", "")
                         .replace("stp=", "https://streamtape.com/e/")
                         .replace("do=", "https://dood.ws/e/") + "\n"
@@ -221,7 +221,7 @@ class BestJavPornProvider : MainAPI() {
         inicio = texto.indexOf("http")
         ultimo = texto.length
         link = texto.substring(inicio, ultimo).toString()
-        val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
+        val poster = link.substring(0, link.indexOf("\"")).replace("\"", "")
         //val poster =""
         //Fin espacio prueba
 
@@ -236,18 +236,20 @@ class BestJavPornProvider : MainAPI() {
         }
 
 
-        return MovieLoadResponse(
-                name = title,
-                url = url,
-                apiName = this.name,
-                type = TvType.NSFW,
-                dataUrl = url,
-                posterUrl = poster,
-                plot = description,
-                recommendations = recs
+        return when (TvType.TvSeries) {
+            TvType.TvSeries -> {
+                newMovieLoadResponse(title,
+                        url, TvType.Movie, url) {
+                    this.posterUrl = fixUrl(poster)
+                    this.plot = plot
+                    this.recommendations = recs
+                    this.dataUrl = url
 
-        )
+                }
+            }
 
+            else -> null
+        }
     }
 
    /* override suspend fun loadLinks(
