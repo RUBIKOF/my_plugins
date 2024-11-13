@@ -13,6 +13,7 @@ import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import kotlinx.coroutines.selects.select
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class BestJavPornProvider : MainAPI() {
@@ -189,22 +190,33 @@ class BestJavPornProvider : MainAPI() {
 
         val doc = app.get(url, timeout = 120).document
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
-        val title = doc.selectFirst("article h1")?.text()?:""
+        val title = doc.selectFirst("article h1")?.text() ?: ""
         val type = "NFSW"
         //val description = doc.selectFirst("article p")?.text()
 
         //test tmp
-        var description=""
+        var description = ""
         app.get(url).document.select("div.box-server > a ").mapNotNull {
             val videos = it.attr("onclick")
             fetchUrls(videos).map {
-               description += it.replace("https://v.javmix.me/vod/player.php?","")
+                description += it.replace("https://v.javmix.me/vod/player.php?", "")
                         .replace("')", "")
                         .replace("stp=", "https://streamtape.com/e/")
                         .replace("do=", "https://dood.ws/e/") + "\n"
 
             }
         }
+
+        var starname = ArrayList<String>()
+        var starimage = ArrayList<String>()
+        doc.select("video-actors a").mapNotNull {
+            starname.add(it.attr("title"))
+        }
+        for (i in 0..starname.size) {
+            starimage.add(app.get("https://www.javdatabase.com/idols/" + starname[i]).document.selectFirst("#main > div.entry-content > div > div > div > a > img")?.attr("data-src").toString())
+        }
+
+        var actors3=Actor("starname","starimage")
 
         var actors2= app.get("https://www.javdatabase.com/idols/Mao-Hamasaki/").document.select(".entry-content").mapNotNull {
             Actor("Mao Hamasaki",it.select(".idol-portrait img").attr("src"))
@@ -253,7 +265,7 @@ class BestJavPornProvider : MainAPI() {
             this.plot = description
             this.recommendations = recomm
             this.duration = null
-            addActors(actors2)
+            addActors(starname)
         }
        /* return MovieLoadResponse(
                 name = title,
