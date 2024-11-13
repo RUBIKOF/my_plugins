@@ -209,11 +209,21 @@ class BestJavPornProvider : MainAPI() {
 
         var starname = ArrayList<String>()
         var starimage = ArrayList<String>()
+        var lista = ArrayList<Actor>()
+
         doc.select("video-actors a").mapNotNull {
             starname.add(it.attr("title"))
         }
-        for (i in 0..starname.size) {
-            starimage.add(app.get("https://www.javdatabase.com/idols/" + starname[i]).document.selectFirst("#main > div.entry-content > div > div > div > a > img")?.attr("data-src").toString())
+        if (starname.size>0) {
+            for (i in 0..starname.size) {
+                starimage.add(app.get("https://www.javdatabase.com/idols/" + starname[i]).document.selectFirst("#main > div.entry-content > div > div > div > a > img")?.attr("data-src").toString())
+            }
+
+            for(i in 0 .. starname.size){
+                app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select(".entry-content").mapNotNull {
+                    lista.add(Actor(starname[i],it.select(".idol-portrait img").attr("src")))
+                }
+            }
         }
 
 
@@ -264,7 +274,7 @@ class BestJavPornProvider : MainAPI() {
             this.plot = description
             this.recommendations = recomm
             this.duration = null
-            addActors(actors2)
+            addActors(lista)
         }
        /* return MovieLoadResponse(
                 name = title,
