@@ -206,7 +206,7 @@ class BestJavPornProvider : MainAPI() {
             }
         }
 
-        var actors2= app.get("").document.select("").mapNotNull {
+        /*var actors2= app.get("").document.select("").mapNotNull {
             Actor("", "")
         }
          app.get(url).document.select("#video-actor a").mapNotNull {
@@ -220,7 +220,7 @@ class BestJavPornProvider : MainAPI() {
                         }
 
             }
-        }
+        }*/
         /////Fin espacio prueba
 
         texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
@@ -253,7 +253,7 @@ class BestJavPornProvider : MainAPI() {
             this.plot = description
             this.recommendations = recomm
             this.duration = null
-            addActors(actors2)
+            //addActors(actors2)
         }
        /* return MovieLoadResponse(
                 name = title,
