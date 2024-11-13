@@ -63,7 +63,7 @@ class BestJavPornProvider : MainAPI() {
         items.add(
                 HomePageList(
                         "Recientes",
-                        app.get(mainUrl).document.select(".videos-list article").map {
+                        app.get(pagedLink).document.select(".videos-list article").map {
                             val title = it.selectFirst("header span")?.text()
                             texto = it.selectFirst("a div div").toString()
                             inicio = texto.indexOf("data-src=") + 10
@@ -180,7 +180,7 @@ class BestJavPornProvider : MainAPI() {
             @JsonProperty("title"  ) var title  : String? = null,
             @JsonProperty("image"  ) var image  : String? = null
     )
-    override suspend fun load(url: String): MovieLoadResponse? {
+    override suspend fun load(url: String): LoadResponse {
         val texto: String
         var inicio: Int
         var ultimo: Int
@@ -188,12 +188,12 @@ class BestJavPornProvider : MainAPI() {
 
         val doc = app.get(url, timeout = 120).document
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
-        val title = doc.selectFirst("article h1")?.text() ?: ""
+        val title = doc.selectFirst("article h1")?.text()?:""
         val type = "NFSW"
         //val description = doc.selectFirst("article p")?.text()
 
         //test tmp
-        var description = ""
+        var description=""
 
         /*var ss= doc.selectFirst("div.box-server > a ")?.attr("onclick").toString().replace("go('https://v.javmix.me/vod/player.php?","").replace("')","")
 
@@ -207,7 +207,7 @@ class BestJavPornProvider : MainAPI() {
         app.get(url).document.select("div.box-server > a ").mapNotNull {
             val videos = it.attr("onclick")
             fetchUrls(videos).map {
-                description += it.replace("https://v.javmix.me/vod/player.php?", "")
+               description += it.replace("https://v.javmix.me/vod/player.php?","")
                         .replace("')", "")
                         .replace("stp=", "https://streamtape.com/e/")
                         .replace("do=", "https://dood.ws/e/") + "\n"
@@ -221,35 +221,47 @@ class BestJavPornProvider : MainAPI() {
         inicio = texto.indexOf("http")
         ultimo = texto.length
         link = texto.substring(inicio, ultimo).toString()
-        val poster = link.substring(0, link.indexOf("\"")).replace("\"", "")
+        val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
         //val poster =""
         //Fin espacio prueba
 
 
-        val recs = app.get(url).document.select(".under-video-block").mapNotNull {
-            val recTitle = it.selectFirst("header span")?.text() ?: ""
-            val recImg = it.selectFirst("img")?.attr("data-src") ?: ""
-            val recLink = it.selectFirst("a")?.attr("href") ?: ""
-            newTvSeriesSearchResponse(recTitle, recLink, TvType.TvSeries) {
-                this.posterUrl = fixUrl(recImg)
-            }
+        val recomm = app.get(url).document.select(".under-video-block").mapNotNull {
+            val href = it.selectFirst("a")!!.attr("href")
+            val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
+            val name = it.selectFirst("header span")?.text() ?: ""
+            MovieSearchResponse(
+                    name,
+                    href,
+                    this.name,
+                    TvType.Movie,
+                    posterUrl
+            )
+
         }
-
-
-        return when (TvType.TvSeries) {
-            TvType.TvSeries -> {
-                newMovieLoadResponse(title,
-                        url, TvType.Movie, url) {
-                    this.posterUrl = fixUrl(poster)
-                    this.plot = plot
-                    this.recommendations = recs
-                    this.dataUrl = url
-
-                }
-            }
-
-            else -> null
+        return newMovieLoadResponse(
+                title,
+                url,
+                TvType.Movie,
+                url
+        ) {
+            posterUrl = fixUrlNull(poster)
+            this.plot = description
+            this.recommendations = recomm
+            this.duration = null
         }
+       /* return MovieLoadResponse(
+                name = title,
+                url = url,
+                apiName = this.name,
+                type = TvType.NSFW,
+                dataUrl = url,
+                posterUrl = poster,
+                plot = description,
+                recommendations = recomm
+
+        )*/
+
     }
 
    /* override suspend fun loadLinks(
