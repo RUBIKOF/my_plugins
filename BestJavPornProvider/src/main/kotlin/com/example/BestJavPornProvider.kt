@@ -226,7 +226,7 @@ class BestJavPornProvider : MainAPI() {
         //Fin espacio prueba
 
 
-        val recomm = app.get(url).document.select(".under-video-block").mapNotNull {
+        val recomm = app.get(url).document.select(".loop-video").mapNotNull {
             val href = it.selectFirst("a")!!.attr("href")
             val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
             val name = it.selectFirst("header span")?.text() ?: ""
