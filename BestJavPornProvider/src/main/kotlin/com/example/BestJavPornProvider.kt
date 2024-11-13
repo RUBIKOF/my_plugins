@@ -211,7 +211,7 @@ class BestJavPornProvider : MainAPI() {
         var starimage = ArrayList<String>()
         var lista = ArrayList<Actor>()
 
-        doc.select("video-actors a").mapNotNull {
+        doc.select("#video-actors a").mapNotNull {
             starname.add(it.attr("title"))
         }
         if (starname.size>0) {
