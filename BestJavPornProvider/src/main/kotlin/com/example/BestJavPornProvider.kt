@@ -206,10 +206,10 @@ class BestJavPornProvider : MainAPI() {
             }
         }
 
-        /*var actors2= app.get("").document.select("").mapNotNull {
-            Actor("", "")
+        var actors2= app.get("https://www.javdatabase.com/idols/Mao-Hamasaki/").document.select(".entry-content").mapNotNull {
+            Actor("Mao Hamasaki",it.select(".idol-portrait img").attr("src"))
         }
-         app.get(url).document.select("#video-actor a").mapNotNull {
+         /*app.get(url).document.select("#video-actor a").mapNotNull {
             val nombre = it.text()
             //Actor(it.text().trim(), it.select("img").attr("src"))
             fetchUrls(nombre).map {
