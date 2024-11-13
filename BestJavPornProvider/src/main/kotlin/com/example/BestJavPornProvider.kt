@@ -216,7 +216,6 @@ class BestJavPornProvider : MainAPI() {
             starimage.add(app.get("https://www.javdatabase.com/idols/" + starname[i]).document.selectFirst("#main > div.entry-content > div > div > div > a > img")?.attr("data-src").toString())
         }
 
-        var actors3=Actor("starname","starimage")
 
         var actors2= app.get("https://www.javdatabase.com/idols/Mao-Hamasaki/").document.select(".entry-content").mapNotNull {
             Actor("Mao Hamasaki",it.select(".idol-portrait img").attr("src"))
@@ -265,7 +264,7 @@ class BestJavPornProvider : MainAPI() {
             this.plot = description
             this.recommendations = recomm
             this.duration = null
-            addActors(starname)
+            addActors(actors2)
         }
        /* return MovieLoadResponse(
                 name = title,
