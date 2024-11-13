@@ -194,16 +194,6 @@ class BestJavPornProvider : MainAPI() {
 
         //test tmp
         var description=""
-
-        /*var ss= doc.selectFirst("div.box-server > a ")?.attr("onclick").toString().replace("go('https://v.javmix.me/vod/player.php?","").replace("')","")
-
-        if(ss.contains("ST=")){
-            description = ss.replace("ST=","https://streamtape.com/e/")
-        }else if(ss.contains("emt=")){
-            description= ss.replace("emt=","https://dood.ws/e/")
-        }else{
-            description= ss.replace("","")
-        }*/
         app.get(url).document.select("div.box-server > a ").mapNotNull {
             val videos = it.attr("onclick")
             fetchUrls(videos).map {
@@ -215,7 +205,7 @@ class BestJavPornProvider : MainAPI() {
             }
         }
 
-        ///////
+        /////Fin espacio prueba
 
         texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
         inicio = texto.indexOf("http")
@@ -223,10 +213,8 @@ class BestJavPornProvider : MainAPI() {
         link = texto.substring(inicio, ultimo).toString()
         val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
         //val poster =""
-        //Fin espacio prueba
 
-
-        val recomm = app.get(url).document.select(".loop-video").mapNotNull {
+            val recomm = doc.select(".loop-video").mapNotNull {
             val href = it.selectFirst("a")!!.attr("href")
             val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
             val name = it.selectFirst("header span")?.text() ?: ""
