@@ -10,6 +10,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
+import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import kotlinx.coroutines.selects.select
 import java.util.*
 
@@ -204,6 +205,22 @@ class BestJavPornProvider : MainAPI() {
 
             }
         }
+
+        var actors2= app.get("").document.select("").mapNotNull {
+            Actor("", "")
+        }
+         app.get(url).document.select("#video-actor a").mapNotNull {
+            val nombre = it.text()
+            //Actor(it.text().trim(), it.select("img").attr("src"))
+            fetchUrls(nombre).map {
+                 actors2 = app.get("https://www.javdatabase.com/idols/" + nombre.replace(" ", "-"))
+                        .document.select(".entry-content").mapNotNull {
+                            val imgstar = doc.selectFirst("img")?.attr("src")
+                            Actor(nombre, imgstar)
+                        }
+
+            }
+        }
         /////Fin espacio prueba
 
         texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
@@ -236,6 +253,7 @@ class BestJavPornProvider : MainAPI() {
             this.plot = description
             this.recommendations = recomm
             this.duration = null
+            addActors(actors2)
         }
        /* return MovieLoadResponse(
                 name = title,
