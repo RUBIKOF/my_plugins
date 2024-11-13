@@ -215,11 +215,11 @@ class BestJavPornProvider : MainAPI() {
             starname.add(it.attr("title"))
         }
         if (starname.size>0) {
-            for (i in 0..starname.size) {
+            for (i in 0..starname.size-1) {
                 starimage.add(app.get("https://www.javdatabase.com/idols/" + starname[i]).document.selectFirst("#main > div.entry-content > div > div > div > a > img")?.attr("data-src").toString())
             }
 
-            for(i in 0 .. starname.size){
+            for(i in 0 .. starname.size-1){
                 app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select(".entry-content").mapNotNull {
                     lista.add(Actor(starname[i],it.select(".idol-portrait img").attr("src")))
                 }
