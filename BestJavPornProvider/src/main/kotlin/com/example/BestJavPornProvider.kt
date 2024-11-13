@@ -253,7 +253,7 @@ class BestJavPornProvider : MainAPI() {
             this.plot = description
             this.recommendations = recomm
             this.duration = null
-            //addActors(actors2)
+            addActors(actors2)
         }
        /* return MovieLoadResponse(
                 name = title,
