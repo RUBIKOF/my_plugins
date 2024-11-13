@@ -204,7 +204,6 @@ class BestJavPornProvider : MainAPI() {
 
             }
         }
-
         /////Fin espacio prueba
 
         texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
