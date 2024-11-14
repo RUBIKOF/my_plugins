@@ -110,12 +110,14 @@ class JavHDProvider : MainAPI() {
     override suspend fun search(query: String): List<SearchResponse> {
 
 
-        return app.get("$mainUrl//?s=$query").document
-                .select("#main").select("article").mapNotNull {
-                    val image = it.selectFirst(" div div img")?.attr("data-src")
-                    val title = it.selectFirst("header span")?.text().toString()
-                    val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "")
+        return app.get("$mainUrl/search/video/?s=$query").document
+                .select(".panel-body.panel-padding").select(".videos li").mapNotNull {
+                    val saveimage = it.selectFirst("img")?.attr("src").toString()
+                    val image = if(saveimage.contains("http")) saveimage else mainUrl + saveimage
+                    val title = it.selectFirst(".video .thumbnail")?.attr("title").toString()
+                    val saveurl = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "")
                             ?: return@mapNotNull null
+                    val url = if(saveurl.contains("http")) saveurl else mainUrl + saveurl
 
 
                     MovieSearchResponse(
