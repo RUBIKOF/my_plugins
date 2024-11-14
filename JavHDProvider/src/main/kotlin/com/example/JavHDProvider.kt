@@ -176,7 +176,7 @@ class JavHDProvider : MainAPI() {
         val title = doc.selectFirst("#video > div.left.content.content-video > div > h1")?.text() ?: ""
         val type = TvType.NSFW
         val des = doc.selectFirst(".description")?.text().toString()
-        val description = des.substring(0,des.indexOf("工"))
+        val description = if(des.contains("工")) des.substring(0,des.indexOf("工")) else des
 
         //test tmp
 
@@ -186,30 +186,15 @@ class JavHDProvider : MainAPI() {
         doc.select("#video-actors a").mapNotNull {
             starname.add(it.attr("title"))
         }
-        if (starname.size>0) {
-
-            for(i in 0 .. starname.size-2){
-                app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select("#main ").mapNotNull {
-                   var save = it.select(".entry-content .idol-portrait img").attr("src")
-                    var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
-                    if(save.contains("http")){
-                        lista.add(Actor(starname[i],save))
-                    }else{
-                        lista.add(Actor(starname[i],otro))
-                    }
-
-                }
-            }
-        }
 
         /////Fin espacio prueba
 
 
         //parte para rellenar la lista recomendados
-            val recomm = doc.select(".loop-video").mapNotNull {
-            val href = it.selectFirst("a")!!.attr("href")
-            val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
-            val name = it.selectFirst("header span")?.text() ?: ""
+            val recomm = doc.select(".videos.related li").mapNotNull {
+            val href = mainUrl +it.selectFirst("a")!!.attr("href")
+            val posterUrl = it.selectFirst("img")?.attr("src") ?: ""
+            val name = it.selectFirst(".video-title")?.text() ?: ""
             MovieSearchResponse(
                     name,
                     href,
