@@ -23,7 +23,7 @@ class JavFreeProvider : MainAPI() {
             page: Int,
             request: MainPageRequest
     ): HomePageResponse {
-        val document = app.get(mainUrl).document
+        val document = app.get(request.data).document
         val all = ArrayList<HomePageList>()
         var elements2: List<SearchResponse>
         document.getElementsByTag("body").select("div#page")
@@ -36,7 +36,7 @@ class JavFreeProvider : MainAPI() {
 
                     val pagedLink = if (page > 0) cate.replace(".html","") +"/page-"+page else cate.replace(".html","")
 
-                    elements2= app.get(pagedLink).document.select(".videos-list article").map{
+                    elements2= app.get(request.data + page).document.select(".videos-list article").map{
 
                         val aa = it.select("a").firstOrNull()
                         val link = aa?.attr("href").toString()
