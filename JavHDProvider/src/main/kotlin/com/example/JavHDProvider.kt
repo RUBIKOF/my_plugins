@@ -41,7 +41,49 @@ class JavHDProvider : MainAPI() {
 
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val urls = listOf(
+        val document = app.get(mainUrl).document
+        val all = ArrayList<HomePageList>()
+        var elements2: List<SearchResponse>
+        document.getElementsByTag("body").select(".panel-default")
+                .forEach { it2 ->
+                    // Fetch row title
+                    val savetitle = it2?.select(".panel-title a")?.text().toString()
+                    val title = savetitle.substring(0,savetitle.indexOf(" +"))
+                    val cate = it2?.select(".panel-title a")?.attr("href").toString()
+
+                    val pagedLink = if (page > 0) cate.replace(".html","") +"/page-"+page else cate.replace(".html","")
+
+                    elements2= app.get(cate).document.select(".videos li").map{
+
+                        val hrefsave = it.selectFirst("a")?.attr("href").toString()
+                        val url = if (hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
+                        val title1 = it.selectFirst(".video-thumb img")?.attr("alt").toString()
+                        val img = it.selectFirst(".video-thumb img")?.attr("src").toString()
+                        val poster = if (img.contains("http")) img else mainUrl + img
+
+                        MovieSearchResponse(
+                                name = title1,
+                                url = url,
+                                apiName = this.name,
+                                type = TvType.NSFW,
+                                posterUrl = img,
+                        )
+                    }
+                    all.add(
+                            HomePageList(
+                                    name = title,
+                                    list = elements2,
+                                    isHorizontalImages = true
+                            )
+                    )
+                    // Fetch list of items and map
+
+
+                }
+        return HomePageResponse(all, hasNext = true)
+
+
+    /* val urls = listOf(
                 Pair(
                         "$mainUrl/mother/",
                         "Mom"
@@ -103,7 +145,7 @@ class JavHDProvider : MainAPI() {
         }
 
         if (items.size <= 0) throw ErrorLoadingException()
-        return HomePageResponse(items, hasNext = true)
+        return HomePageResponse(items, hasNext = true)*/
 
     }
 
