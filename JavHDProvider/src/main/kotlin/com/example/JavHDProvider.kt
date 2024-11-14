@@ -82,9 +82,9 @@ class JavHDProvider : MainAPI() {
         urls.apmap { (url, name) ->
             var pagedLink = ""
             if (url.contains("mother")) {
-                pagedLink = if (page > 1) "$mainUrl/mother/" + page else "$mainUrl/mother/"
+                pagedLink = if (page > 1) "$mainUrl/mother/recent/" + page else "$mainUrl/mother/"
             } else if (url.contains("popular")) {
-                pagedLink = if (page > 1) "$mainUrl/popular/" + page else "$mainUrl/popular/"
+                pagedLink = if (page > 1) "$mainUrl/popular/recent/" + page else "$mainUrl/popular/"
             }
             val soup = app.get(pagedLink).document
 
