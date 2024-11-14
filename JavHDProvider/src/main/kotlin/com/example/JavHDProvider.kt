@@ -53,7 +53,7 @@ class JavHDProvider : MainAPI() {
 
                     val pagedLink = if (page > 0) cate.replace(".html","") +"/page-"+page else cate.replace(".html","")
 
-                    elements2= app.get(cate).document.select(".videos li").map{
+                    elements2= app.get("https://javhd.today/recent/").document.select(".videos li").map{
 
                         val hrefsave = it.selectFirst("a")?.attr("href").toString()
                         val url = if (hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
