@@ -53,7 +53,7 @@ class JavHDProvider : MainAPI() {
 
         )
 
-        val pagedLink = if (page > 1) "https://javhd.today/recent/" + page else "https://javhd.today/recent/"
+        val pagedLink = if (page > 1) "$mainUrl/recent/" + page else "$mainUrl/recent/"
         val items = ArrayList<HomePageList>()
         var texto: String
         var inicio: Int
@@ -71,7 +71,7 @@ class JavHDProvider : MainAPI() {
                                 DubStatus.Dubbed else DubStatus.Subbed
                             //val poster = it.selectFirst("a div img")?.attr("src") ?: ""
 
-                            newAnimeSearchResponse(title, "https://javhd.today" + url) {
+                            newAnimeSearchResponse(title, "$mainUrl" + url) {
                                 this.posterUrl = poster
                                 //addDubStatus(dubstat)
                             }
@@ -80,9 +80,9 @@ class JavHDProvider : MainAPI() {
         urls.apmap { (url, name) ->
             var pagedLink = ""
             if(url.contains("mother")){
-                pagedLink = if (page > 1) "https://javhd.today/mother/" + page else "https://javhd.today/mother/"
+                pagedLink = if (page > 1) "$mainUrl/mother/" + page else "$mainUrl/mother/"
             }else if(url.contains("popular")){
-                pagedLink = if (page > 1) "https://javhd.today/popular/" + page else "https://javhd.today/popular/"
+                pagedLink = if (page > 1) "$mainUrl/popular/" + page else "$mainUrl/popular/"
             }
             val soup = app.get(pagedLink).document
 
@@ -92,7 +92,7 @@ class JavHDProvider : MainAPI() {
                 val poster = it.selectFirst(".video-thumb img")?.attr("src").toString()
                 AnimeSearchResponse(
                         title!!,
-                        fixUrl("https://javhd.today"+ url ),
+                        fixUrl("$mainUrl"+ url ),
                         this.name,
                         TvType.Anime,
                         fixUrl(poster),
