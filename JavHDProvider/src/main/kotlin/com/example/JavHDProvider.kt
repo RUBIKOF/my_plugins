@@ -38,7 +38,7 @@ class JavHDProvider : MainAPI() {
     override val mainPage = mainPageOf(
             "$mainUrl/recent/" to "Main Page",
     )
-    val saveImage = "";
+
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val urls = listOf(
@@ -55,25 +55,21 @@ class JavHDProvider : MainAPI() {
 
         val pagedLink = if (page > 1) "$mainUrl/recent/" + page else "$mainUrl/recent/"
         val items = ArrayList<HomePageList>()
-        var texto: String
-        var inicio: Int
-        var ultimo: Int
-        var link: String
         items.add(
                 HomePageList(
                         "Recientes",
                         app.get(pagedLink).document.select(".videos li").map {
                             val hrefsave = it.selectFirst("a")?.attr("href").toString()
                             val url = if (hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
-                            val title = it.selectFirst(".video-thumb img")?.attr("alt")
+                            val title = it.selectFirst(".video-thumb img")?.attr("alt").toString()
                             val img = it.selectFirst(".video-thumb img")?.attr("src").toString()
                             val poster = if (img.contains("http")) img else mainUrl + img
 
-                            val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
-                                DubStatus.Dubbed else DubStatus.Subbed
+                            /*val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
+                                DubStatus.Dubbed else DubStatus.Subbed*/
                             //val poster = it.selectFirst("a div img")?.attr("src") ?: ""
 
-                            newAnimeSearchResponse(title, mainUrl + url) {
+                            newAnimeSearchResponse(title, url) {
                                 this.posterUrl = poster
                                 this.type = TvType.NSFW
                             }
@@ -89,13 +85,14 @@ class JavHDProvider : MainAPI() {
             val soup = app.get(pagedLink).document
 
             val home = soup.select(".videos li").map {
-                val url = it.selectFirst("a")?.attr("href")
+                val hrefsave = it.selectFirst("a")?.attr("href").toString()
+                var url = if (hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
                 val title = it.selectFirst(".video-thumb img")?.attr("alt")
                 val img = it.selectFirst(".video-thumb img")?.attr("src").toString()
                 val poster = if (img.contains("http")) img else mainUrl + img
                 AnimeSearchResponse(
                         title!!,
-                        fixUrl(mainUrl + url),
+                        fixUrl(url),
                         this.name,
                         TvType.NSFW,
                         fixUrl(poster),
@@ -112,37 +109,28 @@ class JavHDProvider : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
 
-        val soup = app.get("$mainUrl//?s=$query").document
-        var texto: String
-        var inicio: Int
-        var ultimo: Int
-        var link: String
-        var z: Int
-        var poster = ""
 
-            return app.get("$mainUrl//?s=$query").document
-                    .select("#main").select("article").mapNotNull {
-                        val image = it.selectFirst(" div div img")?.attr("data-src")
-                        val title = it.selectFirst("header span")?.text().toString()
-                        val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
+        return app.get("$mainUrl//?s=$query").document
+                .select("#main").select("article").mapNotNull {
+                    val image = it.selectFirst(" div div img")?.attr("data-src")
+                    val title = it.selectFirst("header span")?.text().toString()
+                    val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "")
+                            ?: return@mapNotNull null
 
 
-                        MovieSearchResponse(
-                                title,
-                                url,
-                                this.name,
-                                TvType.NSFW,
-                                image
-                        )
-        }
+                    MovieSearchResponse(
+                            title,
+                            url,
+                            this.name,
+                            TvType.NSFW,
+                            image
+                    )
+                }
 
     }
 
     override suspend fun load(url: String): LoadResponse {
-        val texto: String
-        var inicio: Int
-        var ultimo: Int
-        var link: String
+
 
         val doc = app.get(url, timeout = 120).document
         val poster = doc.selectFirst(".col-xs-12.col-sm-12.col-md-12")?.attr("src")
@@ -153,8 +141,8 @@ class JavHDProvider : MainAPI() {
 
         //test tmp
 
-        var starname = ArrayList<String>()
-        var lista = ArrayList<Actor>()
+        val starname = ArrayList<String>()
+        val lista = ArrayList<Actor>()
 
         doc.select("#video-actors a").mapNotNull {
             starname.add(it.attr("title"))

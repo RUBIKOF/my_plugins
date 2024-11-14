@@ -34,7 +34,7 @@ class JavSpanishProvider : MainAPI() {
     override val mainPage = mainPageOf(
             "$mainUrl/page/" to "Main Page",
     )
-    val saveImage = "";
+    val type = TvType.NSFW
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val urls = listOf(
@@ -166,7 +166,7 @@ class JavSpanishProvider : MainAPI() {
                                 title,
                                 url,
                                 this.name,
-                                TvType.NSFW,
+                                type,
                                 image
                         )
         }
@@ -181,7 +181,6 @@ class JavSpanishProvider : MainAPI() {
         val doc = app.get(url, timeout = 120).document
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
         val title = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-7b148b4.elementor-widget.elementor-widget-heading > div > h1")?.text()?:""
-        val type = "NFSW"
         val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
         var texto: String
         var inicio: Int
@@ -198,7 +197,7 @@ class JavSpanishProvider : MainAPI() {
                 name = title,
                 url = url,
                 apiName = this.name,
-                type = TvType.NSFW,
+                type = type,
                 dataUrl = url,
                 posterUrl = poster
         )
