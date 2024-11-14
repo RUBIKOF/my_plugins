@@ -48,7 +48,7 @@ class JavHDProvider : MainAPI() {
                 .forEach { it2 ->
                     // Fetch row title
                     val savetitle = it2?.select(".panel-title a")?.text().toString()
-                    val title = savetitle.substring(0,savetitle.indexOf(" +"))
+                    val title = if(savetitle.contains("+")) savetitle.substring(0,savetitle.indexOf(" +")) else savetitle
                     val cate = it2?.select(".panel-title a")?.attr("href").toString()
 
                     val pagedLink = if (page > 0) cate.replace(".html","") +"/page-"+page else cate.replace(".html","")
