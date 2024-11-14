@@ -254,6 +254,7 @@ class BestJavPornProvider : MainAPI() {
         val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
         //val poster =""
 
+        //parte para rellenar la lista recomendados
             val recomm = doc.select(".loop-video").mapNotNull {
             val href = it.selectFirst("a")!!.attr("href")
             val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
@@ -267,6 +268,7 @@ class BestJavPornProvider : MainAPI() {
             )
 
         }
+        //finaliza la parte de relleno de recomendados
         return newMovieLoadResponse(
                 title,
                 url,

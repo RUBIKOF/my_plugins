@@ -172,23 +172,12 @@ class JavHDProvider : MainAPI() {
         var link: String
 
         val doc = app.get(url, timeout = 120).document
-        //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
-        val title = doc.selectFirst("article h1")?.text() ?: ""
+        val poster = doc.selectFirst(".col-xs-12.col-sm-12.col-md-12")?.attr("src")
+        val title = doc.selectFirst("#video > div.left.content.content-video > div > h1")?.text() ?: ""
         val type = "NFSW"
-        //val description = doc.selectFirst("article p")?.text()
+        val description = doc.selectFirst(".description")?.text()
 
         //test tmp
-        var description = ""
-        app.get(url).document.select("div.box-server > a ").mapNotNull {
-            val videos = it.attr("onclick")
-            fetchUrls(videos).map {
-                description += it.replace("https://v.javmix.me/vod/player.php?", "")
-                        .replace("')", "")
-                        .replace("stp=", "https://streamtape.com/e/")
-                        .replace("do=", "https://dood.ws/e/") + "\n"
-
-            }
-        }
 
         var starname = ArrayList<String>()
         var lista = ArrayList<Actor>()
@@ -212,31 +201,10 @@ class JavHDProvider : MainAPI() {
             }
         }
 
-
-        var actors2= app.get("https://www.javdatabase.com/idols/Mao-Hamasaki/").document.select(".entry-content").mapNotNull {
-            Actor("Mao Hamasaki",it.select(".idol-portrait img").attr("src"))
-        }
-         /*app.get(url).document.select("#video-actor a").mapNotNull {
-            val nombre = it.text()
-            //Actor(it.text().trim(), it.select("img").attr("src"))
-            fetchUrls(nombre).map {
-                 actors2 = app.get("https://www.javdatabase.com/idols/" + nombre.replace(" ", "-"))
-                        .document.select(".entry-content").mapNotNull {
-                            val imgstar = doc.selectFirst("img")?.attr("src")
-                            Actor(nombre, imgstar)
-                        }
-
-            }
-        }*/
         /////Fin espacio prueba
 
-        texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
-        inicio = texto.indexOf("http")
-        ultimo = texto.length
-        link = texto.substring(inicio, ultimo).toString()
-        val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
-        //val poster =""
 
+        //parte para rellenar la lista recomendados
             val recomm = doc.select(".loop-video").mapNotNull {
             val href = it.selectFirst("a")!!.attr("href")
             val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
@@ -250,6 +218,7 @@ class JavHDProvider : MainAPI() {
             )
 
         }
+        //finaliza la parte de relleno de recomendados
         return newMovieLoadResponse(
                 title,
                 url,
