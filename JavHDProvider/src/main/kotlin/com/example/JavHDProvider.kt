@@ -63,7 +63,8 @@ class JavHDProvider : MainAPI() {
                 HomePageList(
                         "Recientes",
                         app.get(pagedLink).document.select(".videos li").map {
-                            val url = it.selectFirst("a")?.attr("href").toString()
+                            val hrefsave = it.selectFirst("a")?.attr("href").toString()
+                            val url = if(hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
                             val title = it.selectFirst(".video-thumb img")?.attr("alt")
                             val img= it.selectFirst(".video-thumb img")?.attr("src").toString()
                             val poster = if(img.contains("http")) img else "$mainUrl" + img
@@ -90,7 +91,8 @@ class JavHDProvider : MainAPI() {
             val home = soup.select(".videos li").map {
                 val url = it.selectFirst("a")?.attr("href")
                 val title = it.selectFirst(".video-thumb img")?.attr("alt")
-                val poster = it.selectFirst(".video-thumb img")?.attr("src").toString()
+                val img = it.selectFirst(".video-thumb img")?.attr("src").toString()
+                val poster = if(img.contains("http")) img else "$mainUrl" + img
                 AnimeSearchResponse(
                         title!!,
                         fixUrl("$mainUrl"+ url ),
@@ -192,18 +194,20 @@ class JavHDProvider : MainAPI() {
 
         //parte para rellenar la lista recomendados
             val recomm = doc.select(".videos.related li").mapNotNull {
-            val href = mainUrl +it.selectFirst("a")!!.attr("href")
-            val posterUrl = it.selectFirst("img")?.attr("src") ?: ""
-            val name = it.selectFirst(".video-title")?.text() ?: ""
-            MovieSearchResponse(
-                    name,
-                    href,
-                    this.name,
-                    type,
-                    posterUrl
-            )
+                val hrefsave = mainUrl + it.selectFirst("a")!!.attr("href")
+                val href = if(hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
+                val img = it.selectFirst("img")?.attr("src") ?: ""
+                val posterUrl = if(img.contains("http")) img else mainUrl + img
+                val name = it.selectFirst(".video-title")?.text() ?: ""
+                MovieSearchResponse(
+                        name,
+                        href,
+                        this.name,
+                        type,
+                        posterUrl
+                )
 
-        }
+            }
         //finaliza la parte de relleno de recomendados
         return newMovieLoadResponse(
                 title,
