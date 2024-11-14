@@ -174,8 +174,9 @@ class JavHDProvider : MainAPI() {
         val doc = app.get(url, timeout = 120).document
         val poster = doc.selectFirst(".col-xs-12.col-sm-12.col-md-12")?.attr("src")
         val title = doc.selectFirst("#video > div.left.content.content-video > div > h1")?.text() ?: ""
-        val type = "NFSW"
-        val description = doc.selectFirst(".description")?.text()
+        val type = TvType.NSFW
+        val des = doc.selectFirst(".description")?.text().toString()
+        val description = des.substring(0,des.indexOf("工"))
 
         //test tmp
 
@@ -213,7 +214,7 @@ class JavHDProvider : MainAPI() {
                     name,
                     href,
                     this.name,
-                    TvType.Movie,
+                    type,
                     posterUrl
             )
 
@@ -222,7 +223,7 @@ class JavHDProvider : MainAPI() {
         return newMovieLoadResponse(
                 title,
                 url,
-                TvType.Movie,
+                type,
                 url
         ) {
             posterUrl = fixUrlNull(poster)
@@ -272,13 +273,16 @@ class JavHDProvider : MainAPI() {
    ): Boolean {
        //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://streamtape.com/e/4zv4vA4y9rI284/","https://ds2play.com/e/gli2qcwpmtvl")
 
-       app.get(data).document.select("div.box-server > a ").mapNotNull{
+       app.get(data).document.select(".button_style .button_choice_server").mapNotNull{
            val videos =it.attr("onclick")
            fetchUrls(videos).map {
-               it.replace("https://v.javmix.me/vod/player.php?","")
+               it.replace("playEmbed('","")
                        .replace("')","")
-                       .replace("stp=","https://streamtape.com/e/")
-                       .replace("do=","https://dood.ws/e/")
+                       .replace("https://dooood.com","https://dood.ws")
+                       .replace("https://dood.sh", "https://dood.ws")
+                       .replace("https://dood.la","https://dood.ws")
+                       .replace("https://ds2play.com","https://dood.ws")
+                       .replace("https://dood.to","https://dood.ws")
 
            }.apmap {
                loadExtractor(it, data, subtitleCallback, callback)
