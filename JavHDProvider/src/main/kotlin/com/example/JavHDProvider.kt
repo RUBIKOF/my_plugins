@@ -53,7 +53,7 @@ class JavHDProvider : MainAPI() {
 
         )
 
-        val pagedLink = if (page > 0) "https://javhd.today/recent/" + page else "https://javhd.today/recent/"
+        val pagedLink = if (page > 1) "https://javhd.today/recent/" + page else "https://javhd.today/recent/"
         val items = ArrayList<HomePageList>()
         var texto: String
         var inicio: Int
@@ -75,14 +75,14 @@ class JavHDProvider : MainAPI() {
                                 this.posterUrl = poster
                                 //addDubStatus(dubstat)
                             }
-                        },isHorizontalImages = true)
+                        },isHorizontalImages = false)
         )
         urls.apmap { (url, name) ->
             var pagedLink = ""
             if(url.contains("mother")){
-                pagedLink = if (page > 0) "https://javhd.today/mother/" + page else "https://javhd.today/mother/"
+                pagedLink = if (page > 1) "https://javhd.today/mother/" + page else "https://javhd.today/mother/"
             }else if(url.contains("popular")){
-                pagedLink = if (page > 0) "https://javhd.today/popular/" + page else "https://javhd.today/popular/"
+                pagedLink = if (page > 1) "https://javhd.today/popular/" + page else "https://javhd.today/popular/"
             }
             val soup = app.get(pagedLink).document
 
@@ -99,7 +99,7 @@ class JavHDProvider : MainAPI() {
                         null
                 )
             }
-            items.add(HomePageList(name, home,isHorizontalImages = true))
+            items.add(HomePageList(name, home,isHorizontalImages = false))
         }
 
         if (items.size <= 0) throw ErrorLoadingException()
