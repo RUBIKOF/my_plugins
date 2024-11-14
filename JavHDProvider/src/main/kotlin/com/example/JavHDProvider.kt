@@ -47,7 +47,7 @@ class JavHDProvider : MainAPI() {
                         "Mom"
                 ),
                 Pair(
-                        "$mainUrl/category/censored/",
+                        "$mainUrl/popular/",
                         "Best AV"
                 ),
 
