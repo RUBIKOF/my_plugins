@@ -23,7 +23,7 @@ class JavFreeProvider : MainAPI() {
             page: Int,
             request: MainPageRequest
     ): HomePageResponse {
-        val document = app.get(request.data).document
+        val document = app.get(mainUrl).document
         val all = ArrayList<HomePageList>()
         var elements2: List<SearchResponse>
         document.getElementsByTag("body").select("div#page")
