@@ -62,7 +62,7 @@ class JavHDProvider : MainAPI() {
         items.add(
                 HomePageList(
                         "Recientes",
-                        app.get(pagedLink).document.select(".videos").map {
+                        app.get(pagedLink).document.select(".videos li").map {
                             val url = it.selectFirst("a")?.attr("href").toString()
                             val title = it.selectFirst(".video-thumb img")?.attr("alt")
                             val poster = it.selectFirst(".video-thumb img")?.attr("src").toString()
@@ -86,7 +86,7 @@ class JavHDProvider : MainAPI() {
             }
             val soup = app.get(pagedLink).document
 
-            val home = soup.select(".videos").map {
+            val home = soup.select(".videos li").map {
                 val url = it.selectFirst("a")?.attr("href")
                 val title = it.selectFirst(".video-thumb img")?.attr("alt")
                 val poster = it.selectFirst(".video-thumb img")?.attr("src").toString()
