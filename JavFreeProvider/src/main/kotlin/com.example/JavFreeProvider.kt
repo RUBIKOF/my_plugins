@@ -34,7 +34,7 @@ class JavFreeProvider : MainAPI() {
                     val title = it2?.select("h2.widget-title")?.text() ?: "Unnamed Row"
                     val cate = it2?.select(".more-videos.label")?.attr("href").toString()
 
-                    val pagedLink = if (page > 0) cate.replace(".html","") +"/page-"+page else cate.replace("html","")
+                    val pagedLink = if (page > 0) cate.replace(".html","") +"/page-"+page else cate.replace(".html","")
 
                     elements2= app.get(pagedLink).document.select(".videos-list article").map{
 
@@ -68,7 +68,7 @@ class JavFreeProvider : MainAPI() {
 
 
                 }
-        return HomePageResponse(all)
+        return HomePageResponse(all, hasNext = true)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
