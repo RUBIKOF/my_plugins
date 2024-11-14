@@ -51,7 +51,7 @@ class JavHDProvider : MainAPI() {
                         "Best AV"
                 ),
 
-        )
+                )
 
         val pagedLink = if (page > 1) "$mainUrl/recent/" + page else "$mainUrl/recent/"
         val items = ArrayList<HomePageList>()
@@ -64,26 +64,26 @@ class JavHDProvider : MainAPI() {
                         "Recientes",
                         app.get(pagedLink).document.select(".videos li").map {
                             val hrefsave = it.selectFirst("a")?.attr("href").toString()
-                            val url = if(hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
+                            val url = if (hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
                             val title = it.selectFirst(".video-thumb img")?.attr("alt")
-                            val img= it.selectFirst(".video-thumb img")?.attr("src").toString()
-                            val poster = if(img.contains("http")) img else "$mainUrl" + img
+                            val img = it.selectFirst(".video-thumb img")?.attr("src").toString()
+                            val poster = if (img.contains("http")) img else mainUrl + img
 
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
                             //val poster = it.selectFirst("a div img")?.attr("src") ?: ""
 
-                            newAnimeSearchResponse(title, "$mainUrl" + url) {
+                            newAnimeSearchResponse(title, mainUrl + url) {
                                 this.posterUrl = poster
-                                //addDubStatus(dubstat)
+                                this.type = TvType.NSFW
                             }
-                        },isHorizontalImages = false)
+                        }, isHorizontalImages = false)
         )
         urls.apmap { (url, name) ->
             var pagedLink = ""
-            if(url.contains("mother")){
+            if (url.contains("mother")) {
                 pagedLink = if (page > 1) "$mainUrl/mother/" + page else "$mainUrl/mother/"
-            }else if(url.contains("popular")){
+            } else if (url.contains("popular")) {
                 pagedLink = if (page > 1) "$mainUrl/popular/" + page else "$mainUrl/popular/"
             }
             val soup = app.get(pagedLink).document
@@ -92,48 +92,23 @@ class JavHDProvider : MainAPI() {
                 val url = it.selectFirst("a")?.attr("href")
                 val title = it.selectFirst(".video-thumb img")?.attr("alt")
                 val img = it.selectFirst(".video-thumb img")?.attr("src").toString()
-                val poster = if(img.contains("http")) img else "$mainUrl" + img
+                val poster = if (img.contains("http")) img else mainUrl + img
                 AnimeSearchResponse(
                         title!!,
-                        fixUrl("$mainUrl"+ url ),
+                        fixUrl(mainUrl + url),
                         this.name,
-                        TvType.Anime,
+                        TvType.NSFW,
                         fixUrl(poster),
                         null
                 )
             }
-            items.add(HomePageList(name, home,isHorizontalImages = false))
+            items.add(HomePageList(name, home, isHorizontalImages = false))
         }
 
         if (items.size <= 0) throw ErrorLoadingException()
         return HomePageResponse(items, hasNext = true)
 
     }
-
-    data class MainSearch(
-            @JsonProperty("animes") val animes: List<Animes>,
-            @JsonProperty("anime_types") val animeTypes: AnimeTypes
-    )
-
-    data class Animes(
-            @JsonProperty("id") val id: String,
-            @JsonProperty("slug") val slug: String,
-            @JsonProperty("title") val title: String,
-            @JsonProperty("image") val image: String,
-            @JsonProperty("synopsis") val synopsis: String,
-            @JsonProperty("type") val type: String,
-            @JsonProperty("status") val status: String,
-            @JsonProperty("thumbnail") val thumbnail: String
-    )
-
-    data class AnimeTypes(
-            @JsonProperty("TV") val TV: String,
-            @JsonProperty("OVA") val OVA: String,
-            @JsonProperty("Movie") val Movie: String,
-            @JsonProperty("Special") val Special: String,
-            @JsonProperty("ONA") val ONA: String,
-            @JsonProperty("Music") val Music: String
-    )
 
     override suspend fun search(query: String): List<SearchResponse> {
 
@@ -162,11 +137,7 @@ class JavHDProvider : MainAPI() {
         }
 
     }
-    data class EpsInfo (
-            @JsonProperty("number" ) var number : String? = null,
-            @JsonProperty("title"  ) var title  : String? = null,
-            @JsonProperty("image"  ) var image  : String? = null
-    )
+
     override suspend fun load(url: String): LoadResponse {
         val texto: String
         var inicio: Int
