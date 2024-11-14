@@ -11,6 +11,7 @@ import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
+import com.lagradost.cloudstream3.mvvm.throwAbleToResource
 import kotlinx.coroutines.selects.select
 import java.util.*
 import kotlin.collections.ArrayList
@@ -188,99 +189,101 @@ class BestJavPornProvider : MainAPI() {
         var ultimo: Int
         var link: String
 
-        val doc = app.get(url, timeout = 120).document
-        //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
-        val title = doc.selectFirst("article h1")?.text() ?: ""
-        val type = "NFSW"
-        //val description = doc.selectFirst("article p")?.text()
+       try {
+           val doc = app.get(url, timeout = 120).document
+           //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
+           val title = doc.selectFirst("article h1")?.text() ?: ""
+           val type = "NFSW"
+           //val description = doc.selectFirst("article p")?.text()
 
-        //test tmp
-        var description = ""
-        app.get(url).document.select("div.box-server > a ").mapNotNull {
-            val videos = it.attr("onclick")
-            fetchUrls(videos).map {
-                description += it.replace("https://v.javmix.me/vod/player.php?", "")
-                        .replace("')", "")
-                        .replace("stp=", "https://streamtape.com/e/")
-                        .replace("do=", "https://dood.ws/e/") + "\n"
+           //test tmp
+           var description = ""
+           app.get(url).document.select("div.box-server > a ").mapNotNull {
+               val videos = it.attr("onclick")
+               fetchUrls(videos).map {
+                   description += it.replace("https://v.javmix.me/vod/player.php?", "")
+                           .replace("')", "")
+                           .replace("stp=", "https://streamtape.com/e/")
+                           .replace("do=", "https://dood.ws/e/") + "\n"
 
-            }
-        }
+               }
+           }
 
-        var starname = ArrayList<String>()
-        var lista = ArrayList<Actor>()
+           var starname = ArrayList<String>()
+           var lista = ArrayList<Actor>()
 
-        doc.select("#video-actors a").mapNotNull {
-            starname.add(it.attr("title"))
-        }
-        if (starname.size>0) {
+           doc.select("#video-actors a").mapNotNull {
+               starname.add(it.attr("title"))
+           }
+           if (starname.size>0) {
 
-            for(i in 0 .. starname.size-2){
-                app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select("#main ").mapNotNull {
-                   var save = it.select(".entry-content .idol-portrait img").attr("src")
-                    var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
-                    if(save.contains("http")){
-                        lista.add(Actor(starname[i],save))
-                    }else{
-                        lista.add(Actor(starname[i],otro))
-                    }
+               for(i in 0 .. starname.size-2){
+                   app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select("#main ").mapNotNull {
+                       var save = it.select(".entry-content .idol-portrait img").attr("src")
+                       var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
+                       if(save.contains("http")){
+                           lista.add(Actor(starname[i],save))
+                       }else{
+                           lista.add(Actor(starname[i],otro))
+                       }
 
-                }
-            }
-        }
+                   }
+               }
+           }
 
+           /*app.get(url).document.select("#video-actor a").mapNotNull {
+              val nombre = it.text()
+              //Actor(it.text().trim(), it.select("img").attr("src"))
+              fetchUrls(nombre).map {
+                   actors2 = app.get("https://www.javdatabase.com/idols/" + nombre.replace(" ", "-"))
+                          .document.select(".entry-content").mapNotNull {
+                              val imgstar = doc.selectFirst("img")?.attr("src")
+                              Actor(nombre, imgstar)
+                          }
 
-        var actors2= app.get("https://www.javdatabase.com/idols/Mao-Hamasaki/").document.select(".entry-content").mapNotNull {
-            Actor("Mao Hamasaki",it.select(".idol-portrait img").attr("src"))
-        }
-         /*app.get(url).document.select("#video-actor a").mapNotNull {
-            val nombre = it.text()
-            //Actor(it.text().trim(), it.select("img").attr("src"))
-            fetchUrls(nombre).map {
-                 actors2 = app.get("https://www.javdatabase.com/idols/" + nombre.replace(" ", "-"))
-                        .document.select(".entry-content").mapNotNull {
-                            val imgstar = doc.selectFirst("img")?.attr("src")
-                            Actor(nombre, imgstar)
-                        }
+              }
+          }*/
+           /////Fin espacio prueba
 
-            }
-        }*/
-        /////Fin espacio prueba
+           texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
+           inicio = texto.indexOf("http")
+           ultimo = texto.length
+           link = texto.substring(inicio, ultimo).toString()
+           val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
+           //val poster =""
 
-        texto = doc.selectFirst(".video-player .responsive-player")?.attr("style").toString()
-        inicio = texto.indexOf("http")
-        ultimo = texto.length
-        link = texto.substring(inicio, ultimo).toString()
-        val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
-        //val poster =""
+           //parte para rellenar la lista recomendados
+           val recomm = doc.select(".loop-video").mapNotNull {
+               val href = it.selectFirst("a")!!.attr("href")
+               val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
+               val name = it.selectFirst("header span")?.text() ?: ""
+               MovieSearchResponse(
+                       name,
+                       href,
+                       this.name,
+                       TvType.Movie,
+                       posterUrl
+               )
 
-        //parte para rellenar la lista recomendados
-            val recomm = doc.select(".loop-video").mapNotNull {
-            val href = it.selectFirst("a")!!.attr("href")
-            val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
-            val name = it.selectFirst("header span")?.text() ?: ""
-            MovieSearchResponse(
-                    name,
-                    href,
-                    this.name,
-                    TvType.Movie,
-                    posterUrl
-            )
-
-        }
-        //finaliza la parte de relleno de recomendados
-        return newMovieLoadResponse(
-                title,
-                url,
-                TvType.Movie,
-                url
-        ) {
-            posterUrl = fixUrlNull(poster)
-            this.plot = description
-            this.recommendations = recomm
-            this.duration = null
-            addActors(lista)
-        }
+           }
+           //finaliza la parte de relleno de recomendados
+           return newMovieLoadResponse(
+                   title,
+                   url,
+                   TvType.Movie,
+                   url
+           ) {
+               posterUrl = fixUrlNull(poster)
+               this.plot = description
+               this.recommendations = recomm
+               this.duration = null
+               addActors(lista)
+           }
+       }
+       catch (e:Exception) {
+            logError((e))
+       }
+        throw ErrorLoadingException()
        /* return MovieLoadResponse(
                 name = title,
                 url = url,
