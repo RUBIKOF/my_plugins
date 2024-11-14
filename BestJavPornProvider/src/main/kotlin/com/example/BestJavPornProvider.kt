@@ -216,7 +216,7 @@ class BestJavPornProvider : MainAPI() {
         if (starname.size>0) {
 
             for(i in 0 .. starname.size-2){
-                app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select(".entry-content").mapNotNull {
+                app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select(".entry-content").map {
                    var save = it.select(".idol-portrait img").attr("src")
                     var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
                     if(save.contains("http")){
