@@ -65,7 +65,8 @@ class JavHDProvider : MainAPI() {
                         app.get(pagedLink).document.select(".videos li").map {
                             val url = it.selectFirst("a")?.attr("href").toString()
                             val title = it.selectFirst(".video-thumb img")?.attr("alt")
-                            val poster = it.selectFirst(".video-thumb img")?.attr("src").toString()
+                            val img= it.selectFirst(".video-thumb img")?.attr("src").toString()
+                            val poster = if(img.contains("http")) img else "$mainUrl" + img
 
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
