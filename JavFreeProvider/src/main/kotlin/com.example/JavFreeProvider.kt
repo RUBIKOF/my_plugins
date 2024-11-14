@@ -36,7 +36,7 @@ class JavFreeProvider : MainAPI() {
 
                     val pagedLink = if (page > 0) cate.replace(".html","") +"/page-"+page else cate.replace(".html","")
 
-                    elements2= app.get(request.data + page).document.select(".videos-list article").map{
+                    elements2= app.get(pagedLink).document.select(".videos-list article").map{
 
                         val aa = it.select("a").firstOrNull()
                         val link = aa?.attr("href").toString()
