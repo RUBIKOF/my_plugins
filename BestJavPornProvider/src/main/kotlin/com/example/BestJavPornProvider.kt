@@ -208,26 +208,23 @@ class BestJavPornProvider : MainAPI() {
         }
 
         var starname = ArrayList<String>()
-        var starimage = ArrayList<String>()
         var lista = ArrayList<Actor>()
 
         doc.select("#video-actors a").mapNotNull {
             starname.add(it.attr("title"))
         }
         if (starname.size>0) {
-            for (i in 0..starname.size-2) {
-                var save = app.get("https://www.javdatabase.com/idols/" + starname[i]).document.selectFirst("#main > div.entry-content > div > div > div > a > img")?.attr("data-src").toString()
-                if(save.contains("http")){
-                    starimage.add(save)
-                }else{
-                    starname.add("https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg")
-                }
-
-            }
 
             for(i in 0 .. starname.size-2){
                 app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select(".entry-content").mapNotNull {
-                    lista.add(Actor(starname[i],it.select(".idol-portrait img").attr("src")))
+                   var save = it.select(".idol-portrait img").attr("src")
+                    var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
+                    if(save.contains("http")){
+                        lista.add(Actor(starname[i],save))
+                    }else{
+                        lista.add(Actor(starname[i],otro))
+                    }
+
                 }
             }
         }
