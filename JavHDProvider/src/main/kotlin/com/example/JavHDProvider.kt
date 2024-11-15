@@ -42,7 +42,8 @@ class JavHDProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-        val doc = app.get(mainUrl).document
+        //reducido
+       /* val doc = app.get(mainUrl).document
         val all = ArrayList<HomePageList>()
         var elements2: List<SearchResponse>
         doc.getElementsByTag("body").select("#content .panel-default")
@@ -83,7 +84,8 @@ class JavHDProvider : MainAPI() {
                                 )
                             }
                 }
-        return HomePageResponse(all)
+        return HomePageResponse(all)*/
+        /////////////////////////////////////////////////////////////////
     //extrae_todo
     /* val document = app.get(mainUrl).document
         val all = ArrayList<HomePageList>()
@@ -141,7 +143,7 @@ class JavHDProvider : MainAPI() {
 
 
         //original
-    /* val urls = listOf(
+     val urls = listOf(
                 Pair(
                         "$mainUrl/mother/",
                         "Mom"
@@ -203,7 +205,7 @@ class JavHDProvider : MainAPI() {
         }
 
         if (items.size <= 0) throw ErrorLoadingException()
-        return HomePageResponse(items, hasNext = true)*/
+        return HomePageResponse(items, hasNext = true)
 
     }
 
