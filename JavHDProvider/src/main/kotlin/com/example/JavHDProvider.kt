@@ -51,13 +51,13 @@ class JavHDProvider : MainAPI() {
                     val title = savetitle
                     val cate = it2?.select(".panel-title a")?.attr("href").toString()
 
-                    val pagedLink = if (page > 0) cate.replace(".html","") +"/page-"+page else cate.replace(".html","")
+                    val pagedLink = if (page > 1) cate +"/" +page else cate
 
-                    elements2= app.get("https://javhd.today/recent/").document.select(".videos li").map{
+                    elements2= app.get("$mainUrl/recent/").document.select(".videos li").map{
 
                         val hrefsave = it.selectFirst("a")?.attr("href").toString()
                         val url = if (hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
-                        val title1 = "holaaa"
+                        val title1 = cate
                         //val title1 = it.selectFirst(".video-thumb img")?.attr("alt").toString()
                         val img = it.selectFirst(".video-thumb img")?.attr("src").toString()
                         val poster = if (img.contains("http")) img else mainUrl + img
