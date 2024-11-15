@@ -49,8 +49,8 @@ class JavHDProvider : MainAPI() {
                     // Fetch row title
                     val savetitle = it2?.select(".panel-title a")?.text().toString()
                     val title = if(savetitle.contains("+")) savetitle.substring(0,savetitle.indexOf("+")) else savetitle
-                    //val cate = it2?.select(".panel-title a")?.attr("href").toString()
-                    val cate ="https://javhd.today/mother/"
+                    val x = it2?.select(".panel-title a")?.attr("href").toString()
+                    val cate ="https://javhd.today/top-most-searched-jav-movies-on-the-internet/"
 
                     var pagedLink = ""
                            if (page > 1) {
@@ -68,9 +68,10 @@ class JavHDProvider : MainAPI() {
 
                         val hrefsave = it.selectFirst("a")?.attr("href").toString()
                         val url = if (hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
-                        val title1 = it.selectFirst(".video-thumb img")?.attr("alt").toString()
+                        //val title1 = it.selectFirst(".video-thumb img")?.attr("alt").toString()
+                        val title1 = cate
                         val img = it.selectFirst(".video-thumb img")?.attr("src").toString()
-                        val poster = if (img.contains("http")) img else mainUrl + img
+                        //val poster = if (img.contains("http")) img else mainUrl + img
 
                         MovieSearchResponse(
                                 name = title1,
