@@ -64,7 +64,7 @@ class JavHDProvider : MainAPI() {
                         pagedLink = cate
                     }
 
-                    elements2= app.get(pagedLink).document.select(".videos li").map{
+                    elements2= app.get(pagedLink).document.select(".videos li").mapNotNull{
 
                         val hrefsave = it.selectFirst("a")?.attr("href").toString()
                         val url = if (hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
@@ -85,7 +85,7 @@ class JavHDProvider : MainAPI() {
                             HomePageList(
                                     name = title,
                                     list = elements2,
-                                    isHorizontalImages = true
+                                    isHorizontalImages = false
                             )
                     )
                     // Fetch list of items and map
