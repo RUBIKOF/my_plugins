@@ -236,7 +236,7 @@ class JavGuruProvider : MainAPI() {
        //val f = listOf("https://fastbrisk.com/e/pkbr5o5n7hvc","https://strwish.com/e/hlsubpw1u660")
        //val f = listOf("https://streamwish.top/e/k2hzsia9ltjp","https://sfastwish.com/e/ujcmxn1hw8at","https://flaswish.com/e/pkbr5o5n7hvc","https://flaswish.com/e/hlsubpw1u660")
        //val f = listOf("https://streamwish.top/e/k2hzsia9ltjp","https://flaswish.com/e/pkbr5o5n7hvc","https://streamtape.com/e/4zv4vA4y9rI284/","https://filemoon.wf/e/709h63gf9arj/PPPD-786_Seduce_al_novio_de_su_hermana_-_Yuria_Yoshine ")
-       val f = listOf("https://dood.ws/e/aujxzir2eoim","https://dood.sh/e/aujxzir2eoim","https://dood.la/e/aujxzir2eoim","https://dood.to/e/aujxzir2eoim")
+       val f = listOf("https://dood.ws/e/aujxzir2eoim")
        //val x = listOf("https://wishembed.pro/e/tkxnrvvcmr7d","https://emturbovid.com/t/67153f54ab258","https://emturbovid.com/t/J4GYkYjO0QdxWSERr7dJ","https://streamcdn.info/play/4KFi5bH0uv44Dx4LOJhXmb4KH0KmjM2HV8goTBKj8NNZ.html")
        f.mapNotNull{videos ->
            fetchUrls(videos).map {
@@ -246,7 +246,25 @@ class JavGuruProvider : MainAPI() {
                        .replace("https://ds2play.com","https://dood.ws")
                        .replace("https://dood.to","https://dood.ws")
            }.apmap {
-               loadExtractor(it, data, subtitleCallback, callback)
+
+               if(it.contains("dood")){
+                   for (i in 0 .. 3){
+                       if (i ==0){
+                           loadExtractor(it, data, subtitleCallback, callback)
+                       }
+                       if(i == 1){
+                           loadExtractor(it.replace("ws","la"), data, subtitleCallback, callback)
+                       }
+                       if(i == 2){
+                           loadExtractor(it.replace("ws","sh"), data, subtitleCallback, callback)
+                       }
+                       if(i == 3){
+                           loadExtractor(it.replace("ws","to"), data, subtitleCallback, callback)
+                       }
+
+                   }
+               }
+
 
              /*  if (it.contains("flaswish") == true) {
                    cleanExtractor(
