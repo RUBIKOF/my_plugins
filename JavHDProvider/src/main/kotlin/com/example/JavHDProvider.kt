@@ -44,13 +44,13 @@ class JavHDProvider : MainAPI() {
         val document = app.get(mainUrl).document
         val all = ArrayList<HomePageList>()
         var elements2: List<SearchResponse>
-        document.getElementsByTag("body").select(".panel-default")
+        document.getElementsByTag("body").select(" #content .panel-default")
                 .forEach { it2 ->
                     // Fetch row title
                     val savetitle = it2?.select(".panel-title a")?.text().toString()
                     val title = if(savetitle.contains("+")) savetitle.substring(0,savetitle.indexOf("+")) else savetitle
-                    val x = it2?.select(".panel-title a")?.attr("href").toString()
-                    val cate ="https://javhd.today/releaseday/"
+                    val cate = it2?.select(".panel-title a")?.attr("href").toString()
+                    //val cate ="https://javhd.today/releaseday/"
 
                     var pagedLink = ""
                            if (page > 1) {
@@ -68,8 +68,8 @@ class JavHDProvider : MainAPI() {
 
                         val hrefsave = it.selectFirst("a")?.attr("href").toString()
                         val url = if (hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
-                        //val title1 = it.selectFirst(".video-thumb img")?.attr("alt").toString()
-                        val title1 = x
+                        val title1 = it.selectFirst(".video-thumb img")?.attr("alt").toString()
+                        //val title1 = x
                         val img = it.selectFirst(".video-thumb img")?.attr("src").toString()
                         //val poster = if (img.contains("http")) img else mainUrl + img
 
