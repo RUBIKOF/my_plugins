@@ -51,7 +51,17 @@ class JavHDProvider : MainAPI() {
                     val title = savetitle
                     val cate = it2?.select(".panel-title a")?.attr("href").toString()
 
-                    val pagedLink = if (page > 1) cate +"/" +page else cate
+                    var pagedLink = ""
+                           if (page > 1) {
+                               if (cate.contains("releaseday") || cate.contains("popular")|| cate.contains("recent")) {
+                                   pagedLink = cate + "/" + page
+                               } else {
+                                   pagedLink = cate + "/recent/" + page
+                               }
+
+                           }else {
+                        pagedLink = cate
+                    }
 
                     elements2= app.get(pagedLink).document.select(".videos li").map{
 
