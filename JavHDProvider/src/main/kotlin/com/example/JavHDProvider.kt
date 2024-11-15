@@ -49,7 +49,8 @@ class JavHDProvider : MainAPI() {
                     // Fetch row title
                     val savetitle = it2?.select(".panel-title a")?.text().toString()
                     val title = savetitle
-                    val cate = it2?.select(".panel-title a")?.attr("href").toString()
+                    //val cate = it2?.select(".panel-title a")?.attr("href").toString()
+                    val cate ="https://javhd.today/recent/"
 
                     var pagedLink = ""
                            if (page > 1) {
