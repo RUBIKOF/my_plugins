@@ -287,6 +287,7 @@ class JavHDProvider : MainAPI() {
                        .replace("https://dood.la","https://dood.ws")
                        .replace("https://ds2play.com","https://dood.ws")
                        .replace("https://dood.to","https://dood.ws")
+                       .replace("https://turbovid.xyz","https://emturbovid.com")
 
            }.apmap {
                loadExtractor(it, data, subtitleCallback, callback)
