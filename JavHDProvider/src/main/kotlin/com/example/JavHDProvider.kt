@@ -50,7 +50,7 @@ class JavHDProvider : MainAPI() {
                     val savetitle = it2?.select(".panel-title a")?.text().toString()
                     val title = if(savetitle.contains("+")) savetitle.substring(0,savetitle.indexOf("+")) else savetitle
                     //val cate = it2?.select(".panel-title a")?.attr("href").toString()
-                    val cate ="https://javhd.today/jav-sub/"
+                    val cate ="https://javhd.today/mother/"
 
                     var pagedLink = ""
                            if (page > 1) {
