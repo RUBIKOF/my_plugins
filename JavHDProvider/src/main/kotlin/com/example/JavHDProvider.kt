@@ -41,7 +41,51 @@ class JavHDProvider : MainAPI() {
 
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val document = app.get(mainUrl).document
+
+        val doc = app.get(mainUrl).document
+        val all = ArrayList<HomePageList>()
+        var elements2: List<SearchResponse>
+        doc.getElementsByTag("body").select("#content .panel-default")
+                .forEach { it2 ->
+                    // Fetch row title
+                    val savetitle = it2?.select(".panel-title a")?.text().toString()
+                    val title = if (savetitle.contains("+")) savetitle.substring(0, savetitle.indexOf("+")) else savetitle
+                    //val cate = it2?.select(".panel-title a")?.attr("href").toString()
+                    // Fetch list of items and map
+                     it2.select(".videos li")
+                            .let { inner ->
+
+                                val elements: List<SearchResponse> = inner.mapNotNull {
+
+                                    val hrefsave = it.selectFirst("a")?.attr("href").toString()
+                                    val url = if (hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
+                                    val title1 = it.selectFirst(".video-thumb img")?.attr("alt").toString()
+                                    val img = it.selectFirst(".video-thumb img")?.attr("src").toString()
+
+                                    val year = null
+
+                                    MovieSearchResponse(
+                                            name = title1,
+                                            url = url,
+                                            apiName = this.name,
+                                            type = TvType.NSFW,
+                                            posterUrl = img,
+                                            year = year
+                                    )
+                                }
+
+                                all.add(
+                                        HomePageList(
+                                                name = title,
+                                                list = elements,
+                                                isHorizontalImages = true
+                                        )
+                                )
+                            }
+                }
+        return HomePageResponse(all)
+    //extrae_todo
+    /* val document = app.get(mainUrl).document
         val all = ArrayList<HomePageList>()
         var elements2: List<SearchResponse>
         document.getElementsByTag("body").select(" #content .panel-default")
@@ -90,11 +134,13 @@ class JavHDProvider : MainAPI() {
                     )
                     // Fetch list of items and map
 
-
                 }
-        return HomePageResponse(all, hasNext = true)
+        return HomePageResponse(all, hasNext = true)*/
+
+////////////////////////////////////////////////////////
 
 
+        //original
     /* val urls = listOf(
                 Pair(
                         "$mainUrl/mother/",
