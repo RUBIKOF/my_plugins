@@ -237,7 +237,7 @@ class JavGuruProvider : MainAPI() {
        //val f = listOf("https://streamwish.top/e/k2hzsia9ltjp","https://sfastwish.com/e/ujcmxn1hw8at","https://flaswish.com/e/pkbr5o5n7hvc","https://flaswish.com/e/hlsubpw1u660")
        //val f = listOf("https://streamwish.top/e/k2hzsia9ltjp","https://flaswish.com/e/pkbr5o5n7hvc","https://streamtape.com/e/4zv4vA4y9rI284/","https://filemoon.wf/e/709h63gf9arj/PPPD-786_Seduce_al_novio_de_su_hermana_-_Yuria_Yoshine ")
        //val f = listOf("https://dood.ws/e/aujxzir2eoim","https://mixdrop.to/f/4dkx80jmaqln1lj","https://mixdrop.ag/f/4dkx80jmaqln1lj","https://mixdrop.ps/f/4dkx80jmaqln1lj")
-       val f = listOf("https://dood.ws/e/aujxzir2eoim","https://playerwish.com/e/k2hzsia9ltjp","https://wishfast.top/e/k2hzsia9ltjp","https://wishembed.pro/e/k2hzsia9ltjp","https://embedwish.com/e/k2hzsia9ltjp","https://dwish.pro/e/k2hzsia9ltjp","https://mwish.pro/e/k2hzsia9ltjp")
+       val f = listOf("https://playerwish.com/f/k2hzsia9ltjp","https://wishfast.top/f/k2hzsia9ltjp","https://wishembed.pro/f/k2hzsia9ltjp","https://embedwish.com/f/k2hzsia9ltjp","https://dwish.pro/f/k2hzsia9ltjp","https://mwish.pro/f/k2hzsia9ltjp")
 
        //val f = listOf("https://mixdrop.to/e/4dkx80jmaqln1lj","https://mixdrop.ag/e/4dkx80jmaqln1lj")
        //val f = listOf("https://vidhidevip.com/embed/lkbj6k7ipxrf","https://filemoon.wf/e/oytgjufcbzsd/SSNI-469_Stripers_de_fantasia_-_Yumi_Shion","https://moon-4uemks89-embed.com/ptsd/oytgjufcbzsd")
