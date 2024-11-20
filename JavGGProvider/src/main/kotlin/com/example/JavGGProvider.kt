@@ -165,8 +165,8 @@ class JavGGProvider : MainAPI() {
     override suspend fun load(url: String): LoadResponse {
         val doc = app.get(url, timeout = 120).document
         val poster = doc.selectFirst("#contenedor link")?.attr("href")
-        val title = doc.selectFirst("#cover.sbox")?.text()?:""
-        val description = doc.selectFirst("")?.text()
+        val title = doc.selectFirst(".sheader h1")?.text()?:""
+        val description = doc.selectFirst("#cover.sbox")?.text()
 
 
         //Fin espacio prueba
