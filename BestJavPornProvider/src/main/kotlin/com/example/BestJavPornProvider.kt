@@ -57,7 +57,7 @@ class BestJavPornProvider : MainAPI() {
                 ),
         )
 
-        val pagedLink = if (page > 0) "https://bestjavporn.me/page/" + page + "?filter=latest" else "https://bestjavporn.me/?filter=latest"
+        val pagedLink = if (page > 0) "$mainUrl/" + page + "?filter=latest" else "$mainUrl/?filter=latest"
         val items = ArrayList<HomePageList>()
         var texto: String
         var inicio: Int
@@ -89,11 +89,11 @@ class BestJavPornProvider : MainAPI() {
         urls.apmap { (url, name) ->
             var pagedLink = ""
             if(url.contains("uncensored")){
-                pagedLink = if (page > 0) "https://bestjavporn.me/category/uncensored/page/" + page else "https://bestjavporn.me/category/uncensored/"
+                pagedLink = if (page > 0) "$mainUrl/category/uncensored/page/" + page else "$mainUrl/category/uncensored/"
             }else if(url.contains("censored")){
-                pagedLink = if (page > 0) "https://bestjavporn.me/category/censored/page/" + page else "https://bestjavporn.me/category/censored/"
+                pagedLink = if (page > 0) "$mainUrl/category/censored/page/" + page else "$mainUrl/category/censored/"
             }else if(url.contains("amateur")){
-                pagedLink = if (page > 0) "https://bestjavporn.me/category/amateur/page/" + page else "https://bestjavporn.me/category/amateur/"
+                pagedLink = if (page > 0) "$mainUrl/category/amateur/page/" + page else "$mainUrl/category/amateur/"
             }
             val soup = app.get(pagedLink).document
             var texto: String
@@ -332,6 +332,7 @@ class BestJavPornProvider : MainAPI() {
                        .replace("')","")
                        .replace("stp=","https://streamtape.com/e/")
                        .replace("do=","https://dood.ws/e/")
+                       .replace("emt=","https://emturbovid.com/t/")
 
            }.apmap {
                loadExtractor(it, data, subtitleCallback, callback)
