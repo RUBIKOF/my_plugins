@@ -241,7 +241,8 @@ class JavGuruProvider : MainAPI() {
        //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://watchsb.com/v/0eo0wpztwnkz","https://ww7.embedsito.com/e/673826059907","https://streamsb.net/e/0eo0wpztwnkz","https://fastbrisk.com/e/pkbr5o5n7hvc","https://flaswish.com/e/pkbr5o5n7hvc","https://embedwish.com/e/k2hzsia9ltjp","https://mixdrop.ps/f/4dkx80jmaqln1lj","https://fastbrisk.com/e/pkbr5o5n7hvc")
        //siiii vidhidevip val f = listOf("https://dood.ws/e/aujxzir2eoim","https://vidhidevip.com/embed/lkbj6k7ipxrf","https://filemoon.wf/e/oytgjufcbzsd/SSNI-469_Stripers_de_fantasia_-_Yumi_Shion","https://moon-4uemks89-embed.com/ptsd/oytgjufcbzsd")
        //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://wishembed.pro/e/tkxnrvvcmr7d","https://emturbovid.com/t/67153f54ab258","https://emturbovid.com/t/J4GYkYjO0QdxWSERr7dJ","https://streamcdn.info/play/4KFi5bH0uv44Dx4LOJhXmb4KH0KmjM2HV8goTBKj8NNZ.html")
-       val f = listOf("https://dood.ws/e/aujxzir2eoim","https://streamwish.to/e/39vofoptz1f1","https://embedwish.com/e/82vgp2xqywzh","https://playerwish.com/e/82vgp2xqywzh","https://voe.sx/e/11qfeoizpoo7","https://brittneystandardwestern.com/e/11qfeoizpoo7")
+       //val f = listOf("https://dood.ws/e/aujxzir2eoim","https://streamwish.to/e/39vofoptz1f1","https://embedwish.com/e/82vgp2xqywzh","https://playerwish.com/e/82vgp2xqywzh","https://voe.sx/e/11qfeoizpoo7","https://brittneystandardwestern.com/e/11qfeoizpoo7")
+       val f = listOf("https://streamtape.net/e/tk9bv8ko9zgw/","https://vidhidevip.com/embed/5njbrk5z1zdh ")
        f.mapNotNull{videos ->
            fetchUrls(videos).map {
                it.replace("https://dooood.com", "https://dood.ws")

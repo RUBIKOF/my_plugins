@@ -164,19 +164,11 @@ class JavGGProvider : MainAPI() {
     )
     override suspend fun load(url: String): LoadResponse {
         val doc = app.get(url, timeout = 120).document
-        //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
-        val title = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-7b148b4.elementor-widget.elementor-widget-heading > div > h1")?.text()?:""
-        val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
-        var texto: String
-        var inicio: Int
-        var ultimo: Int
-        var link: String
+        val poster = doc.selectFirst("#contenedor link")?.attr("href")
+        val title = doc.selectFirst("#cover.sbox")?.text()?:""
+        val description = doc.selectFirst("")?.text()
 
-        texto = doc.selectFirst("#elementor-frontend-js-before").toString()
-        ultimo = texto.length
-        inicio = texto.indexOf("featuredImage\":\"") + 16
-        link = texto.substring(inicio,ultimo).toString()
-        val poster = link.substring(0,link.indexOf("\"")).replace("\\","")
+
         //Fin espacio prueba
         return MovieLoadResponse(
                 name = title,
