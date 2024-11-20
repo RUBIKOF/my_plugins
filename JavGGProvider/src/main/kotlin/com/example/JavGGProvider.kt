@@ -136,15 +136,10 @@ class JavGGProvider : MainAPI() {
         var poster = ""
 
             return app.get("$mainUrl//?s=$query").document
-                    .select(".elementor-posts-container").select(".elementor-post__card").mapNotNull {
-                        texto = it.selectFirst(".elementor-post__thumbnail img").toString()
-                        inicio = texto.indexOf("srcset=") + 7
-                        ultimo = texto.length
-                        link = texto.substring(inicio, ultimo).toString()
-                        z = link.indexOf(" ")
-                        val image = link.substring(0, z).replace("\"","")
-                        val title = it.selectFirst(".elementor-post__title > a")?.text().toString()
-                        val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
+                    .select(".search-page").select(".result-item").mapNotNull {
+                        val image = it.selectFirst(".image img")?.attr("src")
+                        val title = it.selectFirst(".title a")?.text().toString()
+                        val url = fixUrlNull(it.selectFirst(".image a")?.attr("href") ?: "") ?: return@mapNotNull null
 
 
                         MovieSearchResponse(
