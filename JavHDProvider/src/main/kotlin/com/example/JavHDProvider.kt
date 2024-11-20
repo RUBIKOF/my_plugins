@@ -237,10 +237,11 @@ class JavHDProvider : MainAPI() {
 
 
         val doc = app.get(url, timeout = 120).document
-        val poster = doc.selectFirst(".col-xs-12.col-sm-12.col-md-12")?.attr("src")
-        val title = doc.selectFirst("#video > div.left.content.content-video > div > h1")?.text() ?: ""
+        val poster = doc.selectFirst("#contenedor > link")?.attr("href")
+        val title = doc.selectFirst("#single h1")?.text() ?: ""
         val type = TvType.NSFW
-        val des = doc.selectFirst(".description")?.text().toString()
+        //val des = doc.selectFirst("#cover.sbox")?.text().toString()
+        val des =""
         val description = if(des.contains("工")) des.substring(0,des.indexOf("工")) else des
 
         //test tmp
@@ -254,24 +255,6 @@ class JavHDProvider : MainAPI() {
 
         /////Fin espacio prueba
 
-
-        //parte para rellenar la lista recomendados
-            val recomm = doc.select(".videos.related li").mapNotNull {
-                val hrefsave = mainUrl + it.selectFirst("a")!!.attr("href")
-                val href = if(hrefsave.contains("http")) hrefsave else mainUrl + hrefsave
-                val img = it.selectFirst("img")?.attr("src") ?: ""
-                val posterUrl = if(img.contains("http")) img else mainUrl + img
-                val name = it.selectFirst(".video-title")?.text() ?: ""
-                MovieSearchResponse(
-                        name,
-                        href,
-                        this.name,
-                        type,
-                        posterUrl
-                )
-
-            }
-        //finaliza la parte de relleno de recomendados
         return newMovieLoadResponse(
                 title,
                 url,
@@ -280,7 +263,6 @@ class JavHDProvider : MainAPI() {
         ) {
             posterUrl = fixUrlNull(poster)
             this.plot = description
-            this.recommendations = recomm
             this.duration = null
             addActors(lista)
         }
