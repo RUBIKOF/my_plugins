@@ -76,21 +76,10 @@ class JavGGProvider : MainAPI() {
         )
         urls.apmap { (url, name) ->
             val soup = app.get(url).document
-            var texto: String
-            var inicio: Int
-            var ultimo: Int
-            var link: String
-            var z: Int
-            var poster = ""
-            val home = soup.select(".elementor-post__card").map {
-                val title = it.selectFirst(".elementor-post__title")?.text()
-                texto = it.selectFirst(".elementor-post__thumbnail img").toString()
-                inicio = texto.indexOf("data-lazy-srcset") + 18
-                ultimo = texto.length
-                link = texto.substring(inicio, ultimo).toString()
-                z = link.indexOf(" ")
-                poster = link.substring(0, z).toString()
 
+            val home = soup.select("div.items article").map {
+                val title = it.selectFirst("h3 a")?.text()
+                val poster = it.selectFirst("img")?.attr("src").toString()
                 AnimeSearchResponse(
                         title!!,
                         fixUrl(it.selectFirst("a")?.attr("href") ?: ""),
