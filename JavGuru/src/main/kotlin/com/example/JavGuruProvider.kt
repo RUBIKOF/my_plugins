@@ -238,7 +238,7 @@ class JavGuruProvider : MainAPI() {
        //val f = listOf("https://streamwish.top/e/k2hzsia9ltjp","https://flaswish.com/e/pkbr5o5n7hvc","https://streamtape.com/e/4zv4vA4y9rI284/","https://filemoon.wf/e/709h63gf9arj/PPPD-786_Seduce_al_novio_de_su_hermana_-_Yuria_Yoshine ")
        //val f = listOf("https://dood.ws/e/aujxzir2eoim","https://mixdrop.to/f/4dkx80jmaqln1lj","https://mixdrop.ag/f/4dkx80jmaqln1lj","https://mixdrop.ps/f/4dkx80jmaqln1lj")
        //val f = listOf("https://playerwish.com/f/k2hzsia9ltjp","https://wishfast.top/f/k2hzsia9ltjp","https://wishembed.pro/f/k2hzsia9ltjp","https://embedwish.com/f/k2hzsia9ltjp","https://dwish.pro/f/k2hzsia9ltjp","https://mwish.pro/f/k2hzsia9ltjp")
-        val f = listOf("https://dood.ws/e/aujxzir2eoim","https://streamsb.net/e/0eo0wpztwnkz")
+        val f = listOf("https://watchsb.com/v/0eo0wpztwnkz","https://ww7.embedsito.com/e/673826059907","https://streamsb.net/e/0eo0wpztwnkz","https://fastbrisk.com/e/pkbr5o5n7hvc","https://flaswish.com/e/pkbr5o5n7hvc","https://embedwish.com/e/k2hzsia9ltjp","https://mixdrop.ps/f/4dkx80jmaqln1lj")
        //val f = listOf("https://mixdrop.to/e/4dkx80jmaqln1lj","https://mixdrop.ag/e/4dkx80jmaqln1lj")
        //val f = listOf("https://vidhidevip.com/embed/lkbj6k7ipxrf","https://filemoon.wf/e/oytgjufcbzsd/SSNI-469_Stripers_de_fantasia_-_Yumi_Shion","https://moon-4uemks89-embed.com/ptsd/oytgjufcbzsd")
        //val x = listOf("https://wishembed.pro/e/tkxnrvvcmr7d","https://emturbovid.com/t/67153f54ab258","https://emturbovid.com/t/J4GYkYjO0QdxWSERr7dJ","https://streamcdn.info/play/4KFi5bH0uv44Dx4LOJhXmb4KH0KmjM2HV8goTBKj8NNZ.html")
@@ -250,8 +250,8 @@ class JavGuruProvider : MainAPI() {
                        .replace("https://ds2play.com","https://dood.ws")
                        .replace("https://dood.to","https://dood.ws")
            }.apmap {
-
-               if(it.contains("dood")){
+               loadExtractor(it, data, subtitleCallback, callback)
+               /*if(it.contains("dood")){
                    for (i in 0 .. 3){
                        if (i ==0){
                            loadExtractor(it, data, subtitleCallback, callback)
@@ -267,7 +267,7 @@ class JavGuruProvider : MainAPI() {
                        }
 
                    }
-               }
+               }*/
 
 
              /*  if (it.contains("flaswish") == true) {
