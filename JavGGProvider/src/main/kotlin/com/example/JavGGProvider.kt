@@ -187,12 +187,14 @@ class JavGGProvider : MainAPI() {
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
     ): Boolean {
-        app.get(data).document.select("#h-tabs > div > div > div.elementor-tabs-content-wrapper > div >div >iframe").mapNotNull{
+        app.get(data).document.select("#playaa").mapNotNull{
                 val videos = it.attr("src")
                 fetchUrls(videos).map {
                     it.replace("https://dooood.com", "https://dood.ws")
                             .replace("https://dood.sh", "https://dood.ws")
                             .replace("https://dood.la","https://dood.ws")
+                            .replace("https://javggvideo.xyz/t","https://emturbovid.com/t")
+                            .replace("https://javlion.xyz/v","https://vidhidevip.com/embed")
                 }.apmap {
                     loadExtractor(it, data, subtitleCallback, callback)
                 }
