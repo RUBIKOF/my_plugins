@@ -47,7 +47,7 @@ class JavGGProvider : MainAPI() {
                         "Censored"
                 ),
         )
-        val pagedLink = if (page > 0) "$mainUrl/featured/page/" + page  else mainUrl+"/featured/page/"
+        val pagedLink = if (page > 0) "$mainUrl/featured/page/" + page  else mainUrl+"/featured/"
         val items = ArrayList<HomePageList>()
         var texto: String
         var inicio: Int
@@ -58,7 +58,7 @@ class JavGGProvider : MainAPI() {
         items.add(
                 HomePageList(
                         "Recientes",
-                        app.get(mainUrl+"/featured/page/").document.select("div.items article").map {
+                        app.get(mainUrl+"/featured/").document.select("div.items article").map {
                             val title = it.selectFirst("h3 a")?.text()
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
