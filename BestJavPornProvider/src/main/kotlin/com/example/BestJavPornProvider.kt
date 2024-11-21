@@ -92,19 +92,9 @@ class BestJavPornProvider : MainAPI() {
                 pagedLink = if (page > 0) "$mainUrl/category/amateur/page/" + page else "$mainUrl/category/amateur/"
             }
             val soup = app.get(pagedLink).document
-            var texto: String
-            var inicio: Int
-            var ultimo: Int
-            var link: String
-            var z: Int
-            var poster = ""
             val home = soup.select(".videos-list article").map {
                 val title = it.selectFirst("header span")?.text()
-                texto = it.selectFirst("a div div").toString()
-                inicio = texto.indexOf("data-src=") + 10
-                ultimo = texto.length
-                link = texto.substring(inicio, ultimo).toString()
-                poster = link.substring(0, link.indexOf(" ")).replace("\"","")
+                val poster = it.selectFirst("img")?.attr("src").toString()
                 AnimeSearchResponse(
                         title!!,
                         fixUrl(it.selectFirst("a")?.attr("href") ?: ""),
