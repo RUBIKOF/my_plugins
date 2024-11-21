@@ -243,16 +243,6 @@ class JavHDProvider : MainAPI() {
         val des = doc.selectFirst(".description")?.text().toString()
         val description = if(des.contains("工")) des.substring(0,des.indexOf("工")) else des
 
-        //test tmp
-
-        val starname = ArrayList<String>()
-        val lista = ArrayList<Actor>()
-
-        doc.select("#video-actors a").mapNotNull {
-            starname.add(it.attr("title"))
-        }
-
-        /////Fin espacio prueba
 
 
         //parte para rellenar la lista recomendados
@@ -282,7 +272,6 @@ class JavHDProvider : MainAPI() {
             this.plot = description
             this.recommendations = recomm
             this.duration = null
-            addActors(lista)
         }
        /* return MovieLoadResponse(
                 name = title,

@@ -166,6 +166,20 @@ class JavGGProvider : MainAPI() {
         val dess = des.substring(final+4)
         val descri = dess.substring(0,dess.indexOf("<br>"))
 
+        var starname = ArrayList<String>()
+        var lista = ArrayList<Actor>()
+
+        doc.select("html/body/div[1]/div[2]/div[2]/div[2]/div[9]/div/div[2]/div[2]/a").mapNotNull {
+            starname.add(it.text())
+        }
+
+        var description = ""
+
+        for(i in 0 ..starname.size ) {
+            description += starname[i] + "  \n"
+        }
+
+
         //Fin espacio prueba
         return MovieLoadResponse(
                 name = title,
@@ -173,7 +187,7 @@ class JavGGProvider : MainAPI() {
                 apiName = this.name,
                 type = type,
                 dataUrl = url,
-                plot = descri,
+                plot = description,
                 posterUrl = poster
         )
 
