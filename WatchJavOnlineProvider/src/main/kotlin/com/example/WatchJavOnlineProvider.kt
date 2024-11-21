@@ -170,21 +170,22 @@ class WatchJavOnlineProvider : MainAPI() {
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
     ): Boolean {
-        app.get(data).document.select(".GTTabs_divs iframe").mapNotNull{
 
-            var x =""
-            val url = it.attr("src")
-            app.get(url).document.select("body script").mapNotNull {
-                val video = it.text()
-                if(video.contains("MDCore.ref")){
-                    val i = video.indexOf(";")
-                    x = "https://mixdrop.ps/e/" + video.substring(0,i).replace("\nMDCore.ref = ", "")
-                            .replace("\"","").replace(" ","")
-                }
-            }.apmap {
-                    loadExtractor(x, data, subtitleCallback, callback)
-                }
+        app.get(data).document.select(".GTTabs_divs iframe").mapNotNull{
+            val videos = it.attr("src")
+
+            var vid =""
+            var doc = app.get(videos, timeout = 120).document.body().toString()
+            if(doc.contains("MDCore.ref")){
+                val md = doc.indexOf("MDCore.ref =")
+                val st = doc.substring(md+12)
+                val final = st.indexOf(";")
+                vid = "https://mixdrop.ps/e/" + st.substring(0,final).replace("\"", "").replace(" ", "")
+            }else{
+                vid = ""
             }
+            loadExtractor(vid, data, subtitleCallback, callback)
+        }
 
         return true
     }
