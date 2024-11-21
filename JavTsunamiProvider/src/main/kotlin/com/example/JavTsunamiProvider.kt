@@ -48,17 +48,10 @@ class JavTsunamiProvider : MainAPI() {
                         "Amateur"
                 ),
                 Pair(
-                        "$mainUrl/category/japanese/",
-                        "Japanese"
-                ),
-                Pair(
                         "$mainUrl/category/milf/",
                         "Milf"
                 ),
-                Pair(
-                        "$mainUrl/category/jav-censored/",
-                        "Censored"
-                ),
+
 
         )
         val pagedLink = if (page > 0) "$mainUrl/page/" + page + "?filter=latest" else "$mainUrl/?filter=latest"
@@ -210,7 +203,7 @@ class JavTsunamiProvider : MainAPI() {
             /////Fin espacio prueba
 
             //parte para rellenar la lista recomendados
-            val recomm = doc.select(".loop-video").mapNotNull {
+            val recomm = doc.select(".under-video-block .loop-video").mapNotNull {
                 val href = it.selectFirst("a")!!.attr("href")
                 val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
                 val name = it.selectFirst("header span")?.text() ?: ""
