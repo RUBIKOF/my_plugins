@@ -132,7 +132,6 @@ class WatchJavOnlineProvider : MainAPI() {
         val poster = doc.selectFirst(".entry-inner .g1-frame img")?.attr("src")
         val title = doc.selectFirst(".entry-inner h1")?.text()?:""
 
-
         //Fin espacio prueba
         return MovieLoadResponse(
                 name = title,
