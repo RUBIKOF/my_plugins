@@ -63,7 +63,7 @@ class WatchJavOnlineProvider : MainAPI() {
                                 this.posterUrl = poster
                                 addDubStatus(dubstat)
                             }
-                        })
+                        },isHorizontalImages = true)
         )
 
         return HomePageResponse(items, hasNext = true)
@@ -151,16 +151,19 @@ class WatchJavOnlineProvider : MainAPI() {
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
     ): Boolean {
-        app.get(data).document.select("#playaa").mapNotNull{
-                val videos = it.attr("src")
-                fetchUrls(videos).map {
-                    it.replace("https://dooood.com", "https://dood.ws")
-                            .replace("https://dood.sh", "https://dood.ws")
-                            .replace("https://dood.la","https://dood.ws")
-                            .replace("https://javggvideo.xyz/t","https://emturbovid.com/t")
-                            .replace("https://javlion.xyz/v","https://vidhidevip.com/embed")
-                }.apmap {
-                    loadExtractor(it, data, subtitleCallback, callback)
+        app.get(data).document.select(".GTTabs_divs iframe").mapNotNull{
+
+            var x =""
+            val url = it.attr("src")
+            app.get(url).document.select("body script").mapNotNull {
+                val video = it.text()
+                if(video.contains("MDCore.ref")){
+                    val i = video.indexOf(";")
+                    x = "https://mixdrop.ps/e/" + video.substring(0,i).replace("\nMDCore.ref = ", "")
+                            .replace("\"","").replace(" ","")
+                }
+            }.apmap {
+                    loadExtractor(x, data, subtitleCallback, callback)
                 }
             }
 
