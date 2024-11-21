@@ -132,6 +132,28 @@ class WatchJavOnlineProvider : MainAPI() {
         val poster = doc.selectFirst(".entry-inner .g1-frame img")?.attr("src")
         val title = doc.selectFirst(".entry-inner h1")?.text()?:""
 
+
+        ///espacio prueba
+
+
+
+
+
+            var x =""
+            val xx = doc.selectFirst(".GTTabs_divs iframe")?.attr("src").toString()
+            app.get(xx).document.select("body script").mapNotNull {
+                val video = it.text()
+                if (video.contains("MDCore.ref")) {
+                    val i = video.indexOf(";")
+                    x = "https://mixdrop.ps/e/" + video.substring(0, i).replace("\nMDCore.ref = ", "")
+                            .replace("\"", "").replace(" ", "")
+                }
+            }
+
+
+
+
+
         //Fin espacio prueba
         return MovieLoadResponse(
                 name = title,
@@ -139,7 +161,7 @@ class WatchJavOnlineProvider : MainAPI() {
                 apiName = this.name,
                 type = type,
                 dataUrl = url,
-                plot = "",
+                plot = x,
                 posterUrl = poster
         )
 
