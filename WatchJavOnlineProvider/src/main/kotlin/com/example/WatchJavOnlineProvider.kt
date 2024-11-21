@@ -70,46 +70,14 @@ class WatchJavOnlineProvider : MainAPI() {
 
     }
 
-    data class MainSearch(
-            @JsonProperty("animes") val animes: List<Animes>,
-            @JsonProperty("anime_types") val animeTypes: AnimeTypes
-    )
-
-    data class Animes(
-            @JsonProperty("id") val id: String,
-            @JsonProperty("slug") val slug: String,
-            @JsonProperty("title") val title: String,
-            @JsonProperty("image") val image: String,
-            @JsonProperty("synopsis") val synopsis: String,
-            @JsonProperty("type") val type: String,
-            @JsonProperty("status") val status: String,
-            @JsonProperty("thumbnail") val thumbnail: String
-    )
-
-    data class AnimeTypes(
-            @JsonProperty("TV") val TV: String,
-            @JsonProperty("OVA") val OVA: String,
-            @JsonProperty("Movie") val Movie: String,
-            @JsonProperty("Special") val Special: String,
-            @JsonProperty("ONA") val ONA: String,
-            @JsonProperty("Music") val Music: String
-    )
-
     override suspend fun search(query: String): List<SearchResponse> {
 
         val soup = app.get("$mainUrl//?s=$query").document
-        var texto: String
-        var inicio: Int
-        var ultimo: Int
-        var link: String
-        var z: Int
-        var poster = ""
 
-            return app.get("$mainUrl//?s=$query").document
-                    .select(".search-page").select(".result-item").mapNotNull {
-                        val image = it.selectFirst(".image img")?.attr("src")
-                        val title = it.selectFirst(".title a")?.text().toString()
-                        val url = fixUrlNull(it.selectFirst(".image a")?.attr("href") ?: "") ?: return@mapNotNull null
+            return soup.select(".g1-collection-items").select("li").mapNotNull {
+                        val image = it.selectFirst(".entry-featured-media a img")?.attr("src")
+                        val title = it.selectFirst(" .entry-featured-media  a")?.attr(("title")).toString()
+                        val url = fixUrlNull(it.selectFirst(".entry-featured-media a")?.attr("href") ?: "") ?: return@mapNotNull null
 
 
                         MovieSearchResponse(
@@ -117,7 +85,7 @@ class WatchJavOnlineProvider : MainAPI() {
                                 url,
                                 this.name,
                                 type,
-                                image
+                                image,
                         )
         }
 
@@ -132,33 +100,13 @@ class WatchJavOnlineProvider : MainAPI() {
         val poster = doc.selectFirst(".entry-inner .g1-frame img")?.attr("src")
         val title = doc.selectFirst(".entry-inner h1")?.text() ?: ""
 
-
-        ///espacio prueba
-
-
-        var vid = ""
-        val xx = doc.selectFirst(".GTTabs_divs iframe")?.attr("src").toString()
-        var doc2 = app.get(xx, timeout = 120).document.body().toString()
-
-        if(doc2.contains("MDCore.ref")){
-            val md = doc2.indexOf("MDCore.ref =")
-            val st = doc2.substring(md+12)
-            val final = st.indexOf(";")
-            vid = "https://mixdrop.ps/e/" + st.substring(0,final).replace("\"", "").replace(" ", "")
-        }else{
-            vid = "mmmmm"
-        }
-
-
-
-        //Fin espacio prueba
         return MovieLoadResponse(
                 name = title,
                 url = url,
                 apiName = this.name,
                 type = type,
                 dataUrl = url,
-                plot = "2" + vid,
+                plot = "",
                 posterUrl = poster
         )
 
