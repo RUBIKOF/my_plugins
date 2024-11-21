@@ -57,7 +57,7 @@ class BestJavPornProvider : MainAPI() {
                 ),
         )
 
-        val pagedLink = if (page > 0) "$mainUrl/" + page + "?filter=latest" else "$mainUrl/?filter=latest"
+        val pagedLink = if (page > 0) "$mainUrl/page/" + page + "?filter=latest" else "$mainUrl/?filter=latest"
         val items = ArrayList<HomePageList>()
         var texto: String
         var inicio: Int
