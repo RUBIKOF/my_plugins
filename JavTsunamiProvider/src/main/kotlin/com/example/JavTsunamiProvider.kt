@@ -141,29 +141,23 @@ class JavTsunamiProvider : MainAPI() {
     override suspend fun load(url: String): LoadResponse {
         val texto: String
         var inicio: Int
-        var ultimo: Int
         var link: String
-
+        var poster =""
         try {
             val doc = app.get(url, timeout = 120).document
             val title = doc.selectFirst("article h1")?.text() ?: ""
             val type = "NFSW"
-            val poster = doc.selectFirst("#video-about .video-description img")?.attr("data-lazy-src")
-            //val poster =""
-            //val description = doc.selectFirst("article p")?.text()
+            texto = doc.selectFirst("#video-about .video-description figure").toString()
+            inicio = texto.lastIndexOf("src") + 5
+            link = texto.substring(inicio)
+            poster = link.substring(0, link.indexOf("\""))
+            //val poster = doc.selectFirst("#video-about .video-description img")?.attr("data-lazy-src")
+
 
             //test tmp
-            var description = ""
-            app.get(url).document.select("div.box-server > a ").mapNotNull {
-                val videos = it.attr("onclick")
-                fetchUrls(videos).map {
-                    description += it.replace("https://v.javmix.me/vod/player.php?", "")
-                            .replace("')", "")
-                            .replace("stp=", "https://streamtape.com/e/")
-                            .replace("do=", "https://dood.ws/e/") + "\n"
+            var des = doc.selectFirst(".tab-content .video-description .desc").toString()
+            var description = des.substring(0,des.indexOf("<figure"))
 
-                }
-            }
 
             var starname = ArrayList<String>()
             var lista = ArrayList<Actor>()
@@ -173,7 +167,7 @@ class JavTsunamiProvider : MainAPI() {
             }
             if (starname.size>0) {
 
-                for(i in 0 .. starname.size-2){
+                for(i in 0 .. starname.size-1){
                     app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select("#main ").mapNotNull {
                         var save = it.select(".entry-content .idol-portrait img").attr("src")
                         //var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
@@ -188,18 +182,6 @@ class JavTsunamiProvider : MainAPI() {
                 }
             }
 
-            /*app.get(url).document.select("#video-actor a").mapNotNull {
-               val nombre = it.text()
-               //Actor(it.text().trim(), it.select("img").attr("src"))
-               fetchUrls(nombre).map {
-                    actors2 = app.get("https://www.javdatabase.com/idols/" + nombre.replace(" ", "-"))
-                           .document.select(".entry-content").mapNotNull {
-                               val imgstar = doc.selectFirst("img")?.attr("src")
-                               Actor(nombre, imgstar)
-                           }
-
-               }
-           }*/
             /////Fin espacio prueba
 
             //parte para rellenar la lista recomendados
