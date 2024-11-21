@@ -41,7 +41,7 @@ class JavTsunamiProvider : MainAPI() {
         val urls = listOf(
                 Pair(
                         "$mainUrl/category/featured/",
-                        "Uncensored"
+                        "Featured"
                 ),
                 Pair(
                         "$mainUrl/category/amateur/",
@@ -49,15 +49,15 @@ class JavTsunamiProvider : MainAPI() {
                 ),
                 Pair(
                         "$mainUrl/category/japanese/",
-                        "Amateur"
+                        "Japanese"
                 ),
                 Pair(
                         "$mainUrl/category/milf/",
-                        "Amateur"
+                        "Milf"
                 ),
                 Pair(
                         "$mainUrl/category/jav-censored/",
-                        "Amateur"
+                        "Censored"
                 ),
 
         )
@@ -155,6 +155,8 @@ class JavTsunamiProvider : MainAPI() {
             val doc = app.get(url, timeout = 120).document
             val title = doc.selectFirst("article h1")?.text() ?: ""
             val type = "NFSW"
+            val poster = doc.selectFirst("#video-about .video-description img")?.attr("data-lazy-src")
+            //val poster =""
             //val description = doc.selectFirst("article p")?.text()
 
             //test tmp
@@ -206,13 +208,6 @@ class JavTsunamiProvider : MainAPI() {
                }
            }*/
             /////Fin espacio prueba
-
-            texto = doc.selectFirst("javtsunami")?.attr("style").toString()
-            inicio = texto.indexOf("http")
-            ultimo = texto.length
-            link = texto.substring(inicio, ultimo).toString()
-            val poster = link.substring(0, link.indexOf("\"")).replace("\"","")
-            //val poster =""
 
             //parte para rellenar la lista recomendados
             val recomm = doc.select(".loop-video").mapNotNull {
