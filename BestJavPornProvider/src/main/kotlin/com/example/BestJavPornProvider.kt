@@ -68,7 +68,11 @@ class BestJavPornProvider : MainAPI() {
                         "Recientes",
                         app.get(pagedLink).document.select(".videos-list article").map {
                             val title = it.selectFirst("header span")?.text()
-                            val poster = it.selectFirst("img")?.attr("src")
+                            texto = it.selectFirst(".post-thumbnail").toString()
+                            inicio = texto.indexOf("data-src=") + 10
+                            ultimo = texto.length
+                            link = texto.substring(inicio, ultimo).toString()
+                            val poster = link.substring(0, link.indexOf(" ")).replace("\"","")
                             val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
                                 DubStatus.Dubbed else DubStatus.Subbed
                             //val poster = it.selectFirst("a div img")?.attr("src") ?: ""
@@ -92,9 +96,19 @@ class BestJavPornProvider : MainAPI() {
                 pagedLink = if (page > 0) "$mainUrl/category/amateur/page/" + page else "$mainUrl/category/amateur/"
             }
             val soup = app.get(pagedLink).document
+            var texto: String
+            var inicio: Int
+            var ultimo: Int
+            var link: String
+            var z: Int
+            var poster = ""
             val home = soup.select(".videos-list article").map {
                 val title = it.selectFirst("header span")?.text()
-                val poster = it.selectFirst("img")?.attr("src").toString()
+                texto = it.selectFirst(".post-thumbnail").toString()
+                inicio = texto.indexOf("data-src=") + 10
+                ultimo = texto.length
+                link = texto.substring(inicio, ultimo).toString()
+                poster = link.substring(0, link.indexOf(" ")).replace("\"","")
                 AnimeSearchResponse(
                         title!!,
                         fixUrl(it.selectFirst("a")?.attr("href") ?: ""),
