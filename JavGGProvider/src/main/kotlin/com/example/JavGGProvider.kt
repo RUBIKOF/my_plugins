@@ -161,8 +161,10 @@ class JavGGProvider : MainAPI() {
         val doc = app.get(url, timeout = 120).document
         val poster = doc.selectFirst("#contenedor link")?.attr("href")
         val title = doc.selectFirst(".sheader h1")?.text()?:""
-        val description = doc.selectFirst("#cover.sbox")?.text()
-
+        val des= doc.selectFirst("#cover").toString()
+        val final = des.indexOf("<br>")
+        val dess = des.substring(final+4)
+        val descri = dess.substring(0,dess.indexOf("<br>"))
 
         //Fin espacio prueba
         return MovieLoadResponse(
@@ -171,6 +173,7 @@ class JavGGProvider : MainAPI() {
                 apiName = this.name,
                 type = type,
                 dataUrl = url,
+                plot = descri,
                 posterUrl = poster
         )
 
