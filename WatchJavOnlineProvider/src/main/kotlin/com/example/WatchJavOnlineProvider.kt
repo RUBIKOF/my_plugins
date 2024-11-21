@@ -130,28 +130,24 @@ class WatchJavOnlineProvider : MainAPI() {
     override suspend fun load(url: String): LoadResponse {
         val doc = app.get(url, timeout = 120).document
         val poster = doc.selectFirst(".entry-inner .g1-frame img")?.attr("src")
-        val title = doc.selectFirst(".entry-inner h1")?.text()?:""
+        val title = doc.selectFirst(".entry-inner h1")?.text() ?: ""
 
 
         ///espacio prueba
 
 
+        var vid = ""
+        val xx = doc.selectFirst(".GTTabs_divs iframe")?.attr("src").toString()
+        var doc2 = app.get(xx, timeout = 120).document
 
-
-
-            var x =""
-            val xx = doc.selectFirst(".GTTabs_divs iframe")?.attr("src").toString()
-            var video =""
-            app.get(xx).document.select("body script").mapNotNull {
-                video = it.text()
-                if (video.contains("MDCore.ref")) {
-                    val i = video.indexOf(";")
-                    x = "https://mixdrop.ps/e/" + video.substring(0, i).replace("\nMDCore.ref = ", "")
-                            .replace("\"", "").replace(" ", "")
-                }
-            }
-
-
+        if(doc2.text().contains("MDCore.ref")){
+            val md = doc2.text().indexOf("MDCore.ref =")
+            val st = doc2.text().substring(md+12)
+            val final = st.indexOf(";")
+            vid = "https://mixdrop.ps/e/" + st.substring(0,final).replace("\"", "").replace(" ", "")
+        }else{
+            vid = "mmmmm"
+        }
 
 
 
@@ -162,7 +158,7 @@ class WatchJavOnlineProvider : MainAPI() {
                 apiName = this.name,
                 type = type,
                 dataUrl = url,
-                plot = "1"+video,
+                plot = "2" + vid,
                 posterUrl = poster
         )
 

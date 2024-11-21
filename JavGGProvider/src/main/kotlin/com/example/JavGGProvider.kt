@@ -164,7 +164,7 @@ class JavGGProvider : MainAPI() {
         val des= doc.selectFirst("#cover").toString()
         val final = des.indexOf("<br>")
         val dess = des.substring(final+4)
-        val descri = dess.substring(0,dess.indexOf("<br>"))
+        val descri = if(dess.contains("<br>")) dess.substring(0,dess.indexOf("<br>")) else dess.substring(0,dess.indexOf("</p>"))
 
 
         //Fin espacio prueba
