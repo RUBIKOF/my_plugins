@@ -113,7 +113,7 @@ class BestJavPornProvider : MainAPI() {
                         title!!,
                         fixUrl(it.selectFirst("a")?.attr("href") ?: ""),
                         this.name,
-                        TvType.Anime,
+                        TvType.NSFW,
                         fixUrl(poster),
                         null
                 )
@@ -220,7 +220,8 @@ class BestJavPornProvider : MainAPI() {
                for(i in 0 .. starname.size-2){
                    app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select("#main ").mapNotNull {
                        var save = it.select(".entry-content .idol-portrait img").attr("src")
-                       var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
+                       //var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
+                       var otro = "https://tse1.mm.bing.net/th?id=OIP.6_wb2dVFWij-BlgOVLAvnQAAAA&pid=15.1"
                        if(save.contains("http")){
                            lista.add(Actor(starname[i],save))
                        }else{
@@ -261,7 +262,7 @@ class BestJavPornProvider : MainAPI() {
                        name,
                        href,
                        this.name,
-                       TvType.Movie,
+                       TvType.NSFW,
                        posterUrl
                )
 
@@ -270,7 +271,7 @@ class BestJavPornProvider : MainAPI() {
            return newMovieLoadResponse(
                    title,
                    url,
-                   TvType.Movie,
+                   TvType.NSFW,
                    url
            ) {
                posterUrl = fixUrlNull(poster)
