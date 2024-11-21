@@ -66,18 +66,13 @@ class JavTsunamiProvider : MainAPI() {
                 HomePageList(
                         "Recientes",
                         app.get(pagedLink).document.select("#primary .videos-list article").map {
-                            val title = it.selectFirst("header span")?.text()
-                            val dubstat = if (title!!.contains("Latino") || title.contains("Castellano"))
-                                DubStatus.Dubbed else DubStatus.Subbed
-                            //val poster = it.selectFirst("a div img")?.attr("src") ?: ""
-
+                            val title = it.selectFirst("header span")?.text().toString()
                             val poster = it.selectFirst(".post-thumbnail img")?.attr("data-src")
                             val url = it.selectFirst("a")?.attr("href") ?: ""
 
 
                             newAnimeSearchResponse(title, url) {
                                 this.posterUrl = poster
-                                addDubStatus(dubstat)
                             }
                         },isHorizontalImages = true)
         )
@@ -117,19 +112,19 @@ class JavTsunamiProvider : MainAPI() {
 
         val soup = app.get("$mainUrl//?s=$query").document
 
-            return soup.select(".g1-collection-items").select("li").mapNotNull {
-                        val image = it.selectFirst(".entry-featured-media a img")?.attr("src")
-                        val title = it.selectFirst(" .entry-featured-media  a")?.attr(("title")).toString()
-                        val url = fixUrlNull(it.selectFirst(".entry-featured-media a")?.attr("href") ?: "") ?: return@mapNotNull null
+        return soup.select("#main").select("article").mapNotNull {
+            val image = it.selectFirst(" div div img")?.attr("data-src")
+            val title = it.selectFirst("header span")?.text().toString()
+            val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
 
 
-                        MovieSearchResponse(
-                                title,
-                                url,
-                                this.name,
-                                type,
-                                image,
-                        )
+            MovieSearchResponse(
+                    title,
+                    url,
+                    this.name,
+                    type,
+                    image,
+            )
         }
 
     }
@@ -237,22 +232,20 @@ class JavTsunamiProvider : MainAPI() {
             callback: (ExtractorLink) -> Unit
     ): Boolean {
 
-        app.get(data).document.select(".GTTabs_divs iframe").mapNotNull{
+        app.get(data).document.select(".entry-header .responsive-player iframe").mapNotNull{
             val videos = it.attr("src")
+            fetchUrls(videos).map {
+                it.replace("https://dooood.com", "https://dood.ws")
+                        .replace("https://dood.sh", "https://dood.ws")
+                        .replace("https://dood.la","https://dood.ws")
+                        .replace("https://ds2play.com","https://dood.ws")
+                        .replace("https://dood.to","https://dood.ws")
+                        .replace("https://d0000d.com","https://dood.ws")
 
-            var vid =""
-            var doc = app.get(videos, timeout = 120).document.body().toString()
-            if(doc.contains("MDCore.ref")){
-                val md = doc.indexOf("MDCore.ref =")
-                val st = doc.substring(md+12)
-                val final = st.indexOf(";")
-                vid = "https://mixdrop.ps/e/" + st.substring(0,final).replace("\"", "").replace(" ", "")
-            }else{
-                vid = ""
+            }.apmap {
+                loadExtractor(it, data, subtitleCallback, callback)
             }
-            loadExtractor(vid, data, subtitleCallback, callback)
         }
-
         return true
     }
 }
