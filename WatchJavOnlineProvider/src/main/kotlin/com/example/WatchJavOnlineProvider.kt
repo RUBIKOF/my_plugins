@@ -141,7 +141,15 @@ class WatchJavOnlineProvider : MainAPI() {
 
             var x =""
             val xx = doc.selectFirst(".GTTabs_divs iframe")?.attr("src").toString()
-
+            var video =""
+            app.get(xx).document.select("body script").mapNotNull {
+                video = it.text()
+                if (video.contains("MDCore.ref")) {
+                    val i = video.indexOf(";")
+                    x = "https://mixdrop.ps/e/" + video.substring(0, i).replace("\nMDCore.ref = ", "")
+                            .replace("\"", "").replace(" ", "")
+                }
+            }
 
 
 
@@ -154,7 +162,7 @@ class WatchJavOnlineProvider : MainAPI() {
                 apiName = this.name,
                 type = type,
                 dataUrl = url,
-                plot = xx,
+                plot = "1"+video,
                 posterUrl = poster
         )
 
