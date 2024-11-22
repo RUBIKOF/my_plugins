@@ -185,9 +185,26 @@ class JavGuruProvider : MainAPI() {
         var z : String
         val f = app.get("https://www.jpvhub.com/videos/censored").document.selectFirst("#__NEXT_DATA__")
         z = f.toString()
+        val jsonObject = JSONObject(z)
+        val videoList = jsonObject
+                .getJSONObject("props")
+                .getJSONObject("pageProps")
+                .getJSONArray("videoList")
+        var gm =""
+        for (i in 0 until videoList.length()) {
+            val video = videoList.getJSONObject(i)
+            val id = video.getString("Id")
+            val title = video.getJSONObject("title").getString("name")
+            val views = video.getInt("views")
+            val thumbnailPath = video.getString("thumbnailPath")
+
+            if(i == 1){
+                gm = video.getJSONObject("title").getString("name")
+            }
+        }
 
 
-        //Fin espacio prueba
+            //Fin espacio prueba
         return MovieLoadResponse(
                 name = title,
                 url = url,
@@ -195,7 +212,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = "h" +z
+                plot = "h" +gm
         )
 
     }
