@@ -171,12 +171,21 @@ class JavGuruProvider : MainAPI() {
     )
     override suspend fun load(url: String): LoadResponse {
         val doc = app.get(url, timeout = 120).document
+        var test ="";
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
         val title = doc.selectFirst(".inside-article h1")?.text()?:""
         val type = "NFSW"
         val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
 
         val poster = doc.selectFirst(".inside-article img")?.attr("src")
+
+
+
+
+
+        app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__").map {
+            test = it.text()
+        }
         //Fin espacio prueba
         return MovieLoadResponse(
                 name = title,
@@ -184,7 +193,8 @@ class JavGuruProvider : MainAPI() {
                 apiName = this.name,
                 type = TvType.NSFW,
                 dataUrl = url,
-                posterUrl = poster
+                posterUrl = poster,
+                plot = test
         )
 
     }
