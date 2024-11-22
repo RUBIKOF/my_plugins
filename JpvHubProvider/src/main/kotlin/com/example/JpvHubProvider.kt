@@ -11,7 +11,9 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
+import org.json.JSONObject
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class JpvHubProvider : MainAPI() {
@@ -28,6 +30,7 @@ class JpvHubProvider : MainAPI() {
     override var lang = "es"
     override val hasMainPage = true
     override val hasChromecastSupport = true
+    private val globalTvType = TvType.NSFW
     override val hasDownloadSupport = true
     override val supportedTypes = setOf(
             TvType.NSFW
@@ -48,34 +51,44 @@ class JpvHubProvider : MainAPI() {
                         "Censura eliminada"
                 ),
 
-        )
+                )
         val pagedLink = if (page > 0) "$mainUrl/videos/censored/" + page else "$mainUrl/videos/censored/"
         val items = ArrayList<HomePageList>()
-        var texto: String
-        var inicio: Int
-        var ultimo: Int
-        var link: String
-        var z: Int
-        val requestGet = app.get("https://www.jpvhub.com/videos/censored")
-        val data = requestGet.text
-        val jsonText = Regex("""window\.__NUXT__=(.*?);</script>""").find(data)?.destructured?.component1()
+        val lista = ArrayList<SearchResponse>()
 
-                items.add(HomePageList(
-                       "Recientes",
+        app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__").map {
+            val jsonObject = JSONObject(it.text())
+            val videoList = jsonObject
+                    .getJSONObject("props")
+                    .getJSONObject("pageProps")
+                    .getJSONArray("videoList")
 
-                        tryParseJson<VideoHomePage>(jsonText).let { json ->
-                            (json!!.props.pageProps.videoList.mapNotNull {
-                                val url = mainUrl+ it.id
-                                val poster = it.thumb
-                                val title = it.title.name
-                                newAnimeSearchResponse(title, url) {
-                                    this.posterUrl = poster
-                                }
-                            })
+            for (i in 0 until videoList.length()) {
+                val video = videoList.getJSONObject(i)
+                val url = mainUrl + video.getString("Id")
+                val title = video.getJSONObject("title").getString("name")
+                val views = video.getInt("views")
+                val thumb = video.getString("thumbnailPath")
 
-                        },isHorizontalImages = true
-
+                lista.add(
+                        MovieSearchResponse(
+                                name = title,
+                                url = url,
+                                apiName = this.name,
+                                type = globalTvType,
+                                posterUrl = thumb,
+                                year = null
                         ))
+            }
+            items.add(
+                    HomePageList(
+                            name = "Recientes",
+                            list = lista,
+                            isHorizontalImages = true
+                    )
+            )
+        }
+
 
 
         if (items.size <= 0) throw ErrorLoadingException()
