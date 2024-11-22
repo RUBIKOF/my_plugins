@@ -182,10 +182,9 @@ class JavGuruProvider : MainAPI() {
 
 
 
+        val f = app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__")
 
-        app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__").map {
-            test = it.text()
-        }
+
         //Fin espacio prueba
         return MovieLoadResponse(
                 name = title,
@@ -193,7 +192,7 @@ class JavGuruProvider : MainAPI() {
                 apiName = this.name,
                 type = TvType.NSFW,
                 dataUrl = url,
-                posterUrl = poster,
+                posterUrl = "h" + f,
                 plot = test
         )
 
