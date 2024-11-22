@@ -184,11 +184,8 @@ class JavGuruProvider : MainAPI() {
 
 
         val f = app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__").text()
-        val jsonObject = JSONObject(f)
-        val videoList = jsonObject
-                .getJSONObject("props")
-                .getJSONObject("pageProps")
-                .getJSONArray("videoList")
+        //val jsonObject = JSONObject(f)
+
 
 
         //Fin espacio prueba
