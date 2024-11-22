@@ -56,8 +56,8 @@ class JpvHubProvider : MainAPI() {
         val items = ArrayList<HomePageList>()
         val lista = ArrayList<SearchResponse>()
 
-        app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__").map {
-            val jsonObject = JSONObject(it.text())
+        val f = app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__")
+            val jsonObject = JSONObject(f.toString())
             val videoList = jsonObject
                     .getJSONObject("props")
                     .getJSONObject("pageProps")
@@ -87,7 +87,7 @@ class JpvHubProvider : MainAPI() {
                             isHorizontalImages = true
                     )
             )
-        }
+
 
 
 

@@ -11,6 +11,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
+import org.json.JSONObject
 import java.util.*
 
 
@@ -183,7 +184,22 @@ class JavGuruProvider : MainAPI() {
 
 
         val f = app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__")
+        val jsonObject = JSONObject(f.toString())
+        val videoList = jsonObject
+                .getJSONObject("props")
+                .getJSONObject("pageProps")
+                .getJSONArray("videoList")
 
+        for (i in 0 until videoList.length()) {
+            val video = videoList.getJSONObject(i)
+            val url = mainUrl + video.getString("Id")
+            val title = video.getJSONObject("title").getString("name")
+            val views = video.getInt("views")
+            val thumb = video.getString("thumbnailPath")
+            if(i ==1){
+                test = video.getJSONObject("title").getString("name")
+            }
+        }
 
         //Fin espacio prueba
         return MovieLoadResponse(
@@ -193,7 +209,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = "h" + f
+                plot = test
         )
 
     }
