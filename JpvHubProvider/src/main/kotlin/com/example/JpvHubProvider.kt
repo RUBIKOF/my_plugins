@@ -56,8 +56,8 @@ class JpvHubProvider : MainAPI() {
         val items = ArrayList<HomePageList>()
         val lista = ArrayList<SearchResponse>()
 
-        val f = app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__")
-            val jsonObject = JSONObject(f.toString())
+        val f = app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__").text()
+            val jsonObject = JSONObject(f)
             val videoList = jsonObject
                     .getJSONObject("props")
                     .getJSONObject("pageProps")
