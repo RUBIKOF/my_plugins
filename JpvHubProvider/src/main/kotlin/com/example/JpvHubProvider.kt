@@ -56,47 +56,48 @@ class JpvHubProvider : MainAPI() {
         var ultimo: Int
         var link: String
         var z: Int
+        val requestGet = app.get("https://www.jpvhub.com/videos/censored")
+        val data = requestGet.text
+        val jsonText = Regex("""window\.__NUXT__=(.*?);</script>""").find(data)?.destructured?.component1()
 
-        items.add(
-                HomePageList(
-                        "Recientes",
-                        app.get(pagedLink).document.select(".MuiGrid-grid-md-3").map {
-                            val title = it.selectFirst("MuiTypography-h6")?.text().toString()
-                            val poster = it.selectFirst(".lazy-load-image-background img")?.attr("src")
-                            val url = mainUrl + it.selectFirst("a")?.attr("href") ?: ""
+                items.add(HomePageList(
+                       "Recientes",
 
+                        tryParseJson<VideoHomePage>(jsonText).let { json ->
+                            (json!!.props.pageProps.videoList.mapNotNull {
+                                val url = mainUrl+ it.id
+                                val poster = it.thumb
+                                val title = it.title.name
+                                newAnimeSearchResponse(title, url) {
+                                    this.posterUrl = poster
+                                }
+                            })
 
-                            newAnimeSearchResponse(title, url) {
-                                this.posterUrl = poster
-                            }
-                        },isHorizontalImages = true)
-        )
-        urls.apmap { (url, name) ->
+                        },isHorizontalImages = true
 
-            val pagedLink = if (page > 0) url + page else url
+                        ))
 
-            val soup = app.get(pagedLink).document
-
-            val home = soup.select("#primary .videos-list article").map {
-                val title = it.selectFirst("MuiTypography-h6")?.text().toString()
-                val poster = it.selectFirst(".lazy-load-image-background img")?.attr("src").toString()
-                val url = mainUrl + it.selectFirst("a")?.attr("href") ?: ""
-                AnimeSearchResponse(
-                        title!!,
-                        fixUrl(url),
-                        this.name,
-                        TvType.NSFW,
-                        fixUrl(poster),
-                        null
-                )
-            }
-            items.add(HomePageList(name, home,isHorizontalImages = true))
-        }
 
         if (items.size <= 0) throw ErrorLoadingException()
-        return HomePageResponse(items, hasNext = true)
-
+        return HomePageResponse(items)
     }
+    private data class VideoHomePage (
+            @JsonProperty("props") val props : HpProps
+    )
+    private data class HpProps (
+            @JsonProperty("pageProps") val pageProps : HpPageProps
+    )
+    private data class HpPageProps (
+            @JsonProperty("videoList") val videoList : List<HpjavVideos>
+    )
+    private data class HpjavVideos (
+            @JsonProperty("Id") val id : String,
+            @JsonProperty("title") val title : HpName,
+            @JsonProperty("thumbnailPath") val thumb : String
+    )
+    private data class HpName (
+            @JsonProperty("name") val name : String,
+    )
 
     override suspend fun search(query: String): List<SearchResponse> {
 
