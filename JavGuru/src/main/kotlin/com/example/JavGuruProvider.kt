@@ -190,16 +190,6 @@ class JavGuruProvider : MainAPI() {
                 .getJSONObject("pageProps")
                 .getJSONArray("videoList")
 
-        for (i in 0 until videoList.length()) {
-            val video = videoList.getJSONObject(i)
-            val url = mainUrl + video.getString("Id")
-            val title = video.getJSONObject("title").getString("name")
-            val views = video.getInt("views")
-            val thumb = video.getString("thumbnailPath")
-            if(i ==1){
-                test = video.getJSONObject("title").getString("name")
-            }
-        }
 
         //Fin espacio prueba
         return MovieLoadResponse(
@@ -209,7 +199,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = test
+                plot = "h" +f
         )
 
     }
