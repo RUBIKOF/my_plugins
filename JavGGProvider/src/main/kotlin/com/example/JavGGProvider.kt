@@ -43,8 +43,8 @@ class JavGGProvider : MainAPI() {
                         "Random"
                 ),
                 Pair(
-                        "$mainUrl/tag/censored",
-                        "Censored"
+                        "$mainUrl/genre/nasty/",
+                        "Nasty"
                 ),
         )
         val pagedLink = if (page > 0) "$mainUrl/featured/page/" + page  else mainUrl+"/featured/"

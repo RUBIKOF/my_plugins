@@ -192,8 +192,8 @@ class JavGuruProvider : MainAPI() {
                 apiName = this.name,
                 type = TvType.NSFW,
                 dataUrl = url,
-                posterUrl = "h" + f,
-                plot = test
+                posterUrl = poster,
+                plot = "h" + f
         )
 
     }
