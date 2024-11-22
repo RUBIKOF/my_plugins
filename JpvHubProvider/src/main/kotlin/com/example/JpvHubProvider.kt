@@ -56,7 +56,7 @@ class JpvHubProvider : MainAPI() {
         val items = ArrayList<HomePageList>()
         val lista = ArrayList<SearchResponse>()
 
-        val f = app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__").text()
+        /*val f = app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__").text()
             val jsonObject = JSONObject(f)
             val videoList = jsonObject
                     .getJSONObject("props")
@@ -88,6 +88,23 @@ class JpvHubProvider : MainAPI() {
                     )
             )
 
+*/
+        /*val requestGet = app.get("https://www.jpvhub.com/videos/censored")
+        val data = requestGet.text
+        val jsonText = Regex("""window\.__NUXT__=(.*?);</script>""").find(data)?.destructured?.component1()
+        items.add(HomePageList(
+                "Recientes",
+                tryParseJson<VideoHomePage>(jsonText).let { json ->
+                    (json!!.props.pageProps.videoList.mapNotNull {
+                        val url = mainUrl+ it.id
+                        val poster = it.thumb
+                        val title = it.title.name
+                        newAnimeSearchResponse(title, url) {
+                            this.posterUrl = poster
+                        }
+                    })
+                },isHorizontalImages = true
+        ))*/
 
 
 

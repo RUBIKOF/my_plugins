@@ -182,10 +182,9 @@ class JavGuruProvider : MainAPI() {
 
 
 
-
-        val f = app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__").text()
-        //val jsonObject = JSONObject(f)
-
+        var z : String
+        val f = app.get("https://www.jpvhub.com/videos/censored").document.selectFirst("#__NEXT_DATA__")
+        z = f.toString()
 
 
         //Fin espacio prueba
@@ -196,7 +195,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = "h" +f
+                plot = "h" +z
         )
 
     }
