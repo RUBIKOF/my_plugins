@@ -163,7 +163,9 @@ class JavTsunamiProvider : MainAPI() {
             if (starname.size>0) {
 
                 for(i in 0 .. starname.size-1){
-                    app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select("#main ").mapNotNull {
+
+                    var r = starname[i].split(" ")
+                    app.get("https://www.javdatabase.com/idols/" + r.reversed().joinToString("-")).document.select("#main ").mapNotNull {
                         var save = it.select(".entry-content .idol-portrait img").attr("src")
                         //var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
                         var otro = "https://tse1.mm.bing.net/th?id=OIP.6_wb2dVFWij-BlgOVLAvnQAAAA&pid=15.1"
