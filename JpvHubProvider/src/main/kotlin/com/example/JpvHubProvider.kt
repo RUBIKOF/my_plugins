@@ -206,27 +206,24 @@ class JpvHubProvider : MainAPI() {
         var link: String
         var poster =""
         try {
-            val doc = app.get(url, timeout = 120).document
-            val title = doc.selectFirst("article h1")?.text() ?: ""
-            val type = "NFSW"
-            texto = doc.selectFirst("#video-about .video-description figure").toString()
-            inicio = texto.lastIndexOf("src") + 5
-            link = texto.substring(inicio)
-            poster = link.substring(0, link.indexOf("\""))
-            //val poster = doc.selectFirst("#video-about .video-description img")?.attr("data-lazy-src")
-
-
-            //test tmp
-            var des = doc.selectFirst(".tab-content .video-description .desc").toString()
-            var description = des.substring(0,des.indexOf("<figure"))
-
-
+            val f = app.get(url).document.body()
+            val z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
+            val gm = z.substring(0,z.indexOf("</script>"))
+            val jsonObject = JSONObject(gm)
+            val details = jsonObject.getJSONObject("props").getJSONObject("pageProps").getJSONObject("details")
+            val titleName = details.getJSONObject("title").getString("name")
+            val thumb = details.getString("thumbnailPath")
             var starname = ArrayList<String>()
             var lista = ArrayList<Actor>()
 
-            doc.select("#video-actors a").mapNotNull {
-                starname.add(it.attr("title"))
+            val modelsArray = details.getJSONArray("models")
+            for (i in 0 until modelsArray.length()) {
+                val model = modelsArray.getJSONObject(i)
+                val modelName = model.getJSONObject("name").getString("name")
+                starname.add(modelName)
             }
+
+
             if (starname.size>0) {
 
                 for(i in 0 .. starname.size-1){
@@ -249,7 +246,7 @@ class JpvHubProvider : MainAPI() {
             /////Fin espacio prueba
 
             //parte para rellenar la lista recomendados
-            val recomm = doc.select(".under-video-block .loop-video").mapNotNull {
+            /*val recomm = doc.select(".under-video-block .loop-video").mapNotNull {
                 val href = it.selectFirst("a")!!.attr("href")
                 val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
                 val name = it.selectFirst("header span")?.text() ?: ""
@@ -261,17 +258,17 @@ class JpvHubProvider : MainAPI() {
                         posterUrl
                 )
 
-            }
+            }*/
             //finaliza la parte de relleno de recomendados
             return newMovieLoadResponse(
-                    title,
+                    titleName,
                     url,
                     TvType.NSFW,
                     url
             ) {
-                posterUrl = fixUrlNull(poster)
-                this.plot = description
-                this.recommendations = recomm
+                posterUrl = fixUrlNull(thumb)
+                this.plot = null
+                this.recommendations = null
                 this.duration = null
                 addActors(lista)
             }
