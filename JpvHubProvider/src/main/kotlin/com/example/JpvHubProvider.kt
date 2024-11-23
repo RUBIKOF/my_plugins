@@ -189,22 +189,31 @@ class JpvHubProvider : MainAPI() {
     }
     override suspend fun search(query: String): List<SearchResponse> {
 
-        val soup = app.get("$mainUrl//?s=$query").document
+        var json : String
+        var gmd : String
+        val ff = app.get(mainUrl + "search/" + query).document.body()
+        json = ff.toString().substring(ff.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
+        gmd = json.substring(0,json.indexOf("</script>"))
 
-        return soup.select("#main").select("article").mapNotNull {
-            val image = it.selectFirst(" div div img")?.attr("data-src")
-            val title = it.selectFirst("header span")?.text().toString()
-            val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
+        return tryParseJson<VideoHomePage>(gmd).let { json ->
 
+            json!!.props.pageProps.videoList.map {
 
-            MovieSearchResponse(
-                    title,
-                    url,
-                    this.name,
-                    type,
-                    image,
-            )
+                val title = it.title.name
+                val thumb = it.thumb
+                val link = mainUrl +"video/" + it.id
+
+                AnimeSearchResponse(
+                        title!!,
+                        fixUrl(link),
+                        this.name,
+                        TvType.NSFW,
+                        fixUrl(thumb),
+                        null
+                )
+            }
         }
+
 
     }
     data class EpsInfo (
