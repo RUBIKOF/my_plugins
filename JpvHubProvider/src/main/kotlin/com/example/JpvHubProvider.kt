@@ -322,6 +322,44 @@ class JpvHubProvider : MainAPI() {
             callback: (ExtractorLink) -> Unit
     ): Boolean {
 
+        var videoLoad = ArrayList<String>()
+        val f = app.get(data).document.body()
+        val z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
+        val gm = z.substring(0,z.indexOf("</script>"))
+        val jsonObject = JSONObject(gm)
+        val details = jsonObject.getJSONObject("props").getJSONObject("pageProps").getJSONObject("details")
+
+        val resources = details.getJSONObject("resources")
+        val resourceKeys = resources.keys()
+        while (resourceKeys.hasNext()) {
+            val key = resourceKeys.next()
+            val resourceArray = resources.getJSONArray(key)
+            for (i in 0 until resourceArray.length()) {
+                val resource = resourceArray.getJSONObject(i)
+                val resourceUrl = resource.getString("url")
+                println("Resource URL ($key): $resourceUrl")
+                videoLoad.add(resourceUrl)
+            }
+        }
+
+        videoLoad.map { videos ->
+            fetchUrls(videos).map {
+                it.replace("https://dooood.com", "https://dood.ws")
+                        .replace("https://dood.sh", "https://dood.ws")
+                        .replace("https://dood.la", "https://dood.ws")
+                        .replace("https://ds2play.com", "https://dood.ws")
+                        .replace("https://dood.to", "https://dood.ws")
+                        .replace("https://d0000d.com","https://dood.ws")
+            }.apmap {
+                loadExtractor(it, data, subtitleCallback, callback)
+            }
+        }
+
+
+
+
+
+
         app.get(data).document.select(".entry-header .responsive-player iframe").mapNotNull{
             val videos = it.attr("src")
             fetchUrls(videos).map {
