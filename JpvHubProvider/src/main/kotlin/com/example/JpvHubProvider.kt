@@ -320,7 +320,7 @@ class JpvHubProvider : MainAPI() {
                     url
             ) {
                 posterUrl = fixUrlNull(thumb)
-                this.plot = "gg"
+                this.plot = null
                 this.recommendations = recomm
                 this.duration = null
                 addActors(lista)
