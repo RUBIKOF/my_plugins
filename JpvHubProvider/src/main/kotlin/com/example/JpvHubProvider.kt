@@ -95,7 +95,6 @@ class JpvHubProvider : MainAPI() {
             )
         urls.apmap { (url, name) ->
 
-
             val pagedLink = if (page > 0) "$url/" + page else url
             var json : String
             var gmd : String
@@ -126,9 +125,8 @@ class JpvHubProvider : MainAPI() {
                         ))
             }
 
-
-
             items.add(HomePageList(name, listaurl, isHorizontalImages = true))
+            listaurl.clear()
         }
 
 
