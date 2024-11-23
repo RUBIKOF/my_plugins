@@ -226,20 +226,23 @@ class JpvHubProvider : MainAPI() {
         var link: String
         var poster =""
         try {
+            var starname = ArrayList<String>()
+            var lista = ArrayList<Actor>()
             val f = app.get(url).document.body()
             val z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
             val gm = z.substring(0,z.indexOf("</script>"))
-            val jsonObject = JSONObject(gm)
-            val details = jsonObject.getJSONObject("props").getJSONObject("pageProps").getJSONObject("details")
-            val titleName = details.getJSONObject("title").getString("name")
-            val thumb = details.getString("thumbnailPath")
-            var starname = ArrayList<String>()
-            var lista = ArrayList<Actor>()
+            val titlePattern = "\"title\":\\s*\\{[^}]*\"name\":\\s*\"([^\"]+)\"".toRegex()
+            val titleName = titlePattern.find(gm)?.groupValues?.get(1).toString()
 
-            val modelsArray = details.getJSONArray("models")
-            for (i in 0 until modelsArray.length()) {
-                val model = modelsArray.getJSONObject(i)
-                val modelName = model.getJSONObject("name").getString("name")
+            val thumbnailPattern = "\"thumbnailPath\"\\s*:\\s*\"([^\"]+)\"".toRegex()
+            val thumbnailMatch = thumbnailPattern.find(gm)
+            val thumb = thumbnailMatch?.groupValues?.get(1)
+
+
+            val modelPattern = "\"models\"\\s*:\\s*\\[\\s*\\{[^}]*\"name\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
+            val modelMatch = modelPattern.findAll(gm)
+            modelMatch.forEach { matchResult ->
+                val modelName = matchResult.groupValues[1]
                 starname.add(modelName)
             }
 
