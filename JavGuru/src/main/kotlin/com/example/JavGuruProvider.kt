@@ -180,7 +180,7 @@ class JavGuruProvider : MainAPI() {
 
         val poster = doc.selectFirst(".inside-article img")?.attr("src")
 
-        val res = app.get("https://api.jpvhub.com/api/video/video/related/66ac4b01e6f5825352b6715c").text
+
 
             //Fin espacio prueba
         return MovieLoadResponse(
@@ -190,7 +190,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = "h" +res
+                plot = null
         )
 
     }

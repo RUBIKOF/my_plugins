@@ -150,6 +150,18 @@ class JpvHubProvider : MainAPI() {
         if (items.size <= 0) throw ErrorLoadingException()
         return HomePageResponse(items,hasNext = true)
     }
+
+    private data class VideoPageRec (
+            @JsonProperty("list") val list: List<VideosRec>
+    )
+    private data class VideosRec (
+            @JsonProperty("Id") val id : String,
+            @JsonProperty("title") val title : NameRec,
+            @JsonProperty("thumbnailPath") val thumb : String
+    )
+    private data class NameRec (
+            @JsonProperty("name") val name : String,
+    )
     private data class VideoHomePage (
             @JsonProperty("props") val props : HpProps
     )
@@ -246,19 +258,31 @@ class JpvHubProvider : MainAPI() {
             /////Fin espacio prueba
 
             //parte para rellenar la lista recomendados
-            /*val recomm = doc.select(".under-video-block .loop-video").mapNotNull {
-                val href = it.selectFirst("a")!!.attr("href")
-                val posterUrl = it.selectFirst("img")?.attr("data-src") ?: ""
-                val name = it.selectFirst("header span")?.text() ?: ""
-                MovieSearchResponse(
-                        name,
-                        href,
-                        this.name,
-                        TvType.NSFW,
-                        posterUrl
-                )
+            val id = url.replace("https://www.jpvhub.com/video/","")
+            val res = app.get("https://api.jpvhub.com/api/video/video/related/$id").text
 
-            }*/
+            val recomm = tryParseJson<VideoPageRec>(res).let { json ->
+
+                json!!.list.map {
+
+                    val titlerec = it.title.name
+                    val thumbrec = it.thumb
+                    val linkrec = "$mainUrl/video/" + it.id
+
+                    AnimeSearchResponse(
+                            titlerec!!,
+                            fixUrl(linkrec),
+                            this.name,
+                            TvType.NSFW,
+                            fixUrl(thumbrec),
+                            null
+                    )
+
+                }
+
+            }
+
+
             //finaliza la parte de relleno de recomendados
             return newMovieLoadResponse(
                     titleName,
@@ -268,7 +292,7 @@ class JpvHubProvider : MainAPI() {
             ) {
                 posterUrl = fixUrlNull(thumb)
                 this.plot = null
-                this.recommendations = null
+                this.recommendations = recomm
                 this.duration = null
                 addActors(lista)
             }
