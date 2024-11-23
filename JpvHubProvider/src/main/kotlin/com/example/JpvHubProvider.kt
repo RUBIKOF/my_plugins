@@ -59,7 +59,7 @@ class JpvHubProvider : MainAPI() {
         var z : String
         var gm : String
         var gm1 : String = ""
-        val f = app.get("https://www.jpvhub.com/videos/censored").document.body()
+        val f = app.get(pagedLink).document.body()
         z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
         gm = z.substring(0,z.indexOf("</script>"))
         val jsonObject = JSONObject(gm)
@@ -114,7 +114,7 @@ class JpvHubProvider : MainAPI() {
 
 
         if (items.size <= 0) throw ErrorLoadingException()
-        return HomePageResponse(items)
+        return HomePageResponse(items,hasNext = true)
     }
     private data class VideoHomePage (
             @JsonProperty("props") val props : HpProps
