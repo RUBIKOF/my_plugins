@@ -71,7 +71,7 @@ class JpvHubProvider : MainAPI() {
 
             for (i in 0 until videoList.length()) {
                 val video = videoList.getJSONObject(i)
-                val url = "$mainUrl/video/" + video.getString("Id")
+                val url = mainUrl +"video/" + video.getString("Id")
                 val title = video.getJSONObject("title").getString("name")
                 val views = video.getInt("views")
                 val thumb = video.getString("thumbnailPath")
@@ -108,7 +108,7 @@ class JpvHubProvider : MainAPI() {
 
                     val title = it.title.name
                     val thumb = it.thumb
-                    val link = "$mainUrl/video/" + it.id
+                    val link = mainUrl +"video/" + it.id
 
                     AnimeSearchResponse(
                             title!!,
@@ -267,7 +267,7 @@ class JpvHubProvider : MainAPI() {
 
                     val titlerec = it.title.name
                     val thumbrec = it.thumb
-                    val linkrec = "$mainUrl/video/" + it.id
+                    val linkrec = mainUrl +"video/" + it.id
 
                     AnimeSearchResponse(
                             titlerec!!,
