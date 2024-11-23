@@ -185,7 +185,7 @@ class JavGuruProvider : MainAPI() {
         var z : String
         var texto : String
         var gm : String
-        var gm1 : String
+        var gm1 : String = ""
         val f = app.get("https://www.jpvhub.com/videos/censored").document.body()
         z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
         gm = z.substring(0,z.indexOf("</script>"))
@@ -214,7 +214,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = "h" +gm
+                plot = "h" +gm1
         )
 
     }
