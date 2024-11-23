@@ -55,6 +55,7 @@ class JpvHubProvider : MainAPI() {
         val pagedLink = if (page > 0) "$mainUrl/videos/censored/" + page else "$mainUrl/videos/censored/"
         val items = ArrayList<HomePageList>()
         val lista = ArrayList<SearchResponse>()
+        val listaurl = ArrayList<SearchResponse>()
 
         var z : String
         var gm : String
@@ -92,6 +93,43 @@ class JpvHubProvider : MainAPI() {
                             isHorizontalImages = true
                     )
             )
+        urls.apmap { (url, name) ->
+
+
+            val pagedLink = if (page > 0) "$url/" + page else url
+            var json : String
+            var gmd : String
+            val ff = app.get(pagedLink).document.body()
+            json = ff.toString().substring(ff.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
+            gmd = json.substring(0,json.indexOf("</script>"))
+            val jsonObject = JSONObject(gmd)
+            val videoList = jsonObject
+                    .getJSONObject("props")
+                    .getJSONObject("pageProps")
+                    .getJSONArray("videoList")
+
+            for (i in 0 until videoList.length()) {
+                val video = videoList.getJSONObject(i)
+                val url = mainUrl + video.getString("Id")
+                val title = video.getJSONObject("title").getString("name")
+                val views = video.getInt("views")
+                val thumb = video.getString("thumbnailPath")
+
+                listaurl.add(
+                        MovieSearchResponse(
+                                name = title,
+                                url = url,
+                                apiName = this.name,
+                                type = globalTvType,
+                                posterUrl = thumb,
+                                year = null
+                        ))
+            }
+
+
+
+            items.add(HomePageList(name, listaurl, isHorizontalImages = true))
+        }
 
 
         /*val requestGet = app.get("https://www.jpvhub.com/videos/censored")
