@@ -183,7 +183,6 @@ class JavGuruProvider : MainAPI() {
 
 
         var z : String
-        var texto : String
         var gm : String
         var gm1 : String = ""
         val f = app.get("https://www.jpvhub.com/videos/censored").document.body()

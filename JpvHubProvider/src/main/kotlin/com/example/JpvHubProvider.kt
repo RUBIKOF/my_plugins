@@ -56,12 +56,17 @@ class JpvHubProvider : MainAPI() {
         val items = ArrayList<HomePageList>()
         val lista = ArrayList<SearchResponse>()
 
-        /*val f = app.get("https://www.jpvhub.com/videos/censored").document.select("#__NEXT_DATA__").text()
-            val jsonObject = JSONObject(f)
-            val videoList = jsonObject
-                    .getJSONObject("props")
-                    .getJSONObject("pageProps")
-                    .getJSONArray("videoList")
+        var z : String
+        var gm : String
+        var gm1 : String = ""
+        val f = app.get("https://www.jpvhub.com/videos/censored").document.body()
+        z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
+        gm = z.substring(0,z.indexOf("</script>"))
+        val jsonObject = JSONObject(gm)
+        val videoList = jsonObject
+                .getJSONObject("props")
+                .getJSONObject("pageProps")
+                .getJSONArray("videoList")
 
             for (i in 0 until videoList.length()) {
                 val video = videoList.getJSONObject(i)
@@ -88,7 +93,7 @@ class JpvHubProvider : MainAPI() {
                     )
             )
 
-*/
+
         /*val requestGet = app.get("https://www.jpvhub.com/videos/censored")
         val data = requestGet.text
         val jsonText = Regex("""window\.__NUXT__=(.*?);</script>""").find(data)?.destructured?.component1()
