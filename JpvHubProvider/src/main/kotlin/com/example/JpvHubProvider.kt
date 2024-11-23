@@ -102,7 +102,7 @@ class JpvHubProvider : MainAPI() {
             json = ff.toString().substring(ff.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
             gmd = json.substring(0,json.indexOf("</script>"))
 
-            val home = tryParseJson<VideoHomePage>(gm).let { json ->
+            val home = tryParseJson<VideoHomePage>(gmd).let { json ->
 
                 json!!.props.pageProps.videoList.map {
 
@@ -144,7 +144,6 @@ class JpvHubProvider : MainAPI() {
                     })
                 },isHorizontalImages = true
         ))*/
-
 
 
 
