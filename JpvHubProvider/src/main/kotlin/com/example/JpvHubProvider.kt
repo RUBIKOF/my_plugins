@@ -195,26 +195,37 @@ class JpvHubProvider : MainAPI() {
         json = ff.toString().substring(ff.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
         gmd = json.substring(0,json.indexOf("</script>"))
 
-        return tryParseJson<VideoHomePage>(gmd).let { json ->
-            json!!.props.pageProps.videoList.map {
+        val idPattern = "\"Id\":\"([^\"]+)\"".toRegex()
+        val titlePattern = "\"title\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
+        val thumbnailPattern = "\"thumbnailPath\"\\s*:\\s*\"([^\"]+)\"".toRegex()
 
-                val title = it.title.name
-                val thumb = it.thumb
-                val link = mainUrl +"video/" + it.id
+        val idMatches = idPattern.findAll(gmd)
+        val titleMatches = titlePattern.findAll(gmd)
+        val thumbnailMatches = thumbnailPattern.findAll(gmd)
 
-                AnimeSearchResponse(
-                        title!!,
-                        fixUrl(link),
-                        this.name,
-                        TvType.NSFW,
-                        fixUrl(thumb),
-                        null
-                )
-            }
+
+        val videoList = mutableListOf<Video>()
+         idMatches.forEachIndexed { index, matchResult ->
+            val id = matchResult.groupValues[1]
+            val title = titleMatches.elementAtOrNull(index)?.groupValues?.get(1)
+            val thumb = thumbnailMatches.elementAtOrNull(index)?.groupValues?.get(1).toString()
+            videoList.add(Video(id,title,thumb))
         }
 
+        return videoList.map {
+            video -> "Id: ${video.id}, Title Name: ${video.titleName}, Thumbnail Path: ${video.thumbnailPath}"
+            AnimeSearchResponse(
+                    video.titleName!!,
+                    fixUrl(mainUrl +  "video/" + video.id),
+                    this.name,
+                    TvType.NSFW,
+                    fixUrl(video.thumbnailPath.toString()),
+                    null
+            )
+        }
 
     }
+    data class Video(val id: String, val titleName: String?, val thumbnailPath: String?)
     data class EpsInfo (
             @JsonProperty("number" ) var number : String? = null,
             @JsonProperty("title"  ) var title  : String? = null,
@@ -302,7 +313,7 @@ class JpvHubProvider : MainAPI() {
                     url
             ) {
                 posterUrl = fixUrlNull(thumb)
-                this.plot = "null"
+                this.plot = "gg"
                 this.recommendations = recomm
                 this.duration = null
                 addActors(lista)
