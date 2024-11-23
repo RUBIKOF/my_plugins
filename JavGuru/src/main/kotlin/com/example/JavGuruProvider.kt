@@ -180,30 +180,7 @@ class JavGuruProvider : MainAPI() {
 
         val poster = doc.selectFirst(".inside-article img")?.attr("src")
 
-
-
-        var z : String
-        var gm : String
-        var gm1 : String = ""
-        val f = app.get("https://www.jpvhub.com/videos/censored").document.body()
-        z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
-        gm = z.substring(0,z.indexOf("</script>"))
-        val jsonObject = JSONObject(gm)
-        val videoList = jsonObject
-                .getJSONObject("props")
-                .getJSONObject("pageProps")
-                .getJSONArray("videoList")
-        for (i in 0 until videoList.length()) {
-            val video = videoList.getJSONObject(i)
-            val id = video.getString("Id")
-            val title = video.getJSONObject("title").getString("name")
-            val views = video.getInt("views")
-            val thumbnailPath = video.getString("thumbnailPath")
-
-            if(i == 1){
-                gm1 = video.getJSONObject("title").getString("name")
-            }
-        }
+        val res = app.get("https://api.jpvhub.com/api/video/video/related/66ac4b01e6f5825352b6715c").text
 
             //Fin espacio prueba
         return MovieLoadResponse(
@@ -213,7 +190,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = "h" +gm1
+                plot = "h" +res
         )
 
     }
