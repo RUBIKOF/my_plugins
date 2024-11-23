@@ -185,9 +185,26 @@ class JavGuruProvider : MainAPI() {
         var z : String
         var texto : String
         var gm : String
+        var gm1 : String
         val f = app.get("https://www.jpvhub.com/videos/censored").document.body()
         z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
         gm = z.substring(0,z.indexOf("</script>"))
+        val jsonObject = JSONObject(gm)
+        val videoList = jsonObject
+                .getJSONObject("props")
+                .getJSONObject("pageProps")
+                .getJSONArray("videoList")
+        for (i in 0 until videoList.length()) {
+            val video = videoList.getJSONObject(i)
+            val id = video.getString("Id")
+            val title = video.getJSONObject("title").getString("name")
+            val views = video.getInt("views")
+            val thumbnailPath = video.getString("thumbnailPath")
+
+            if(i == 1){
+                gm1 = video.getJSONObject("title").getString("name")
+            }
+        }
 
             //Fin espacio prueba
         return MovieLoadResponse(
