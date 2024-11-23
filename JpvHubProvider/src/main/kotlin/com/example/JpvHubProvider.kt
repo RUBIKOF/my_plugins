@@ -196,7 +196,6 @@ class JpvHubProvider : MainAPI() {
         gmd = json.substring(0,json.indexOf("</script>"))
 
         return tryParseJson<VideoHomePage>(gmd).let { json ->
-
             json!!.props.pageProps.videoList.map {
 
                 val title = it.title.name
