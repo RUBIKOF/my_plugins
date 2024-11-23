@@ -63,30 +63,33 @@ class JpvHubProvider : MainAPI() {
         val f = app.get(pagedLink).document.body()
         z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
         gm = z.substring(0,z.indexOf("</script>"))
-        val jsonObject = JSONObject(gm)
-        val videoList = jsonObject
-                .getJSONObject("props")
-                .getJSONObject("pageProps")
-                .getJSONArray("videoList")
+        val idPattern = "\"Id\":\"([^\"]+)\"".toRegex()
+        val titlePattern = "\"title\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
+        val thumbnailPattern = "\"thumbnailPath\"\\s*:\\s*\"([^\"]+)\"".toRegex()
 
-            for (i in 0 until videoList.length()) {
-                val video = videoList.getJSONObject(i)
-                val url = mainUrl +"video/" + video.getString("Id")
-                val title = video.getJSONObject("title").getString("name")
-                val views = video.getInt("views")
-                val thumb = video.getString("thumbnailPath")
+        val idMatches = idPattern.findAll(gm)
+        val titleMatches = titlePattern.findAll(gm)
+        val thumbnailMatches = thumbnailPattern.findAll(gm)
 
-                lista.add(
-                        MovieSearchResponse(
-                                name = title,
-                                url = url,
-                                apiName = this.name,
-                                type = globalTvType,
-                                posterUrl = thumb,
-                                year = null
-                        ))
-            }
-            items.add(
+
+
+
+        idMatches.forEachIndexed { index, matchResult ->
+            val id = matchResult.groupValues[1]
+            val title = titleMatches.elementAtOrNull(index)?.groupValues?.get(1)
+            val thumb = thumbnailMatches.elementAtOrNull(index)?.groupValues?.get(1).toString()
+
+            lista.add(
+                    MovieSearchResponse(
+                            name = title.toString(),
+                            url = mainUrl + "video/" + id,
+                            apiName = this.name,
+                            type = globalTvType,
+                            posterUrl = thumb,
+                            year = null
+                    ))
+        }
+        items.add(
                     HomePageList(
                             name = "Recientes",
                             list = lista,
@@ -102,25 +105,30 @@ class JpvHubProvider : MainAPI() {
             json = ff.toString().substring(ff.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
             gmd = json.substring(0,json.indexOf("</script>"))
 
-            val home = tryParseJson<VideoHomePage>(gmd).let { json ->
+            val idPattern1 = "\"Id\":\"([^\"]+)\"".toRegex()
+            val titlePattern1 = "\"title\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
+            val thumbnailPattern1 = "\"thumbnailPath\"\\s*:\\s*\"([^\"]+)\"".toRegex()
 
-                json!!.props.pageProps.videoList.map {
+            val idMatches = idPattern1.findAll(gmd)
+            val titleMatches = titlePattern1.findAll(gmd)
+            val thumbnailMatches = thumbnailPattern1.findAll(gmd)
+            val videoList = mutableListOf<Video>()
+            val x = idMatches.forEachIndexed { index, matchResult ->
+                val id = matchResult.groupValues[1]
+                val title = titleMatches.elementAtOrNull(index)?.groupValues?.get(1)
+                val thumb = thumbnailMatches.elementAtOrNull(index)?.groupValues?.get(1).toString()
+                videoList.add(Video(id,title,thumb))
+            }
 
-                    val title = it.title.name
-                    val thumb = it.thumb
-                    val link = mainUrl +"video/" + it.id
-
-                    AnimeSearchResponse(
-                            title!!,
-                            fixUrl(link),
-                            this.name,
-                            TvType.NSFW,
-                            fixUrl(thumb),
-                            null
-                    )
-
-                }
-
+            val home = videoList.map { video ->
+                AnimeSearchResponse(
+                        video.titleName!!,
+                        fixUrl(mainUrl + "video/" + video.id),
+                        this.name,
+                        TvType.NSFW,
+                        fixUrl(video.thumbnailPath.toString()),
+                        null
+                )
             }
 
             items.add(HomePageList(name, home, isHorizontalImages = true))
@@ -212,8 +220,7 @@ class JpvHubProvider : MainAPI() {
             videoList.add(Video(id,title,thumb))
         }
 
-        return videoList.map {
-            video -> "Id: ${video.id}, Title Name: ${video.titleName}, Thumbnail Path: ${video.thumbnailPath}"
+        return videoList.map { video ->
             AnimeSearchResponse(
                     video.titleName!!,
                     fixUrl(mainUrl +  "video/" + video.id),
