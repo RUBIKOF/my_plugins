@@ -101,31 +101,29 @@ class JpvHubProvider : MainAPI() {
             val ff = app.get(pagedLink).document.body()
             json = ff.toString().substring(ff.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
             gmd = json.substring(0,json.indexOf("</script>"))
-            val jsonObject = JSONObject(gmd)
-            val videoList = jsonObject
-                    .getJSONObject("props")
-                    .getJSONObject("pageProps")
-                    .getJSONArray("videoList")
 
-            for (i in 0 until videoList.length()) {
-                val video = videoList.getJSONObject(i)
-                val url = mainUrl + video.getString("Id")
-                val title = video.getJSONObject("title").getString("name")
-                val views = video.getInt("views")
-                val thumb = video.getString("thumbnailPath")
+            val home = tryParseJson<VideoHomePage>(gm).let { json ->
 
-                listaurl.add(
-                        MovieSearchResponse(
-                                name = title,
-                                url = url,
-                                apiName = this.name,
-                                type = globalTvType,
-                                posterUrl = thumb,
-                                year = null
-                        ))
+                json!!.props.pageProps.videoList.map {
+
+                    val title = it.title.name
+                    val thumb = it.thumb
+                    val link = mainUrl + it.id
+
+                    AnimeSearchResponse(
+                            title!!,
+                            fixUrl(link),
+                            this.name,
+                            TvType.NSFW,
+                            fixUrl(thumb),
+                            null
+                    )
+
+                }
+
             }
 
-            items.add(HomePageList(name, listaurl, isHorizontalImages = true))
+            items.add(HomePageList(name, home, isHorizontalImages = true))
             listaurl.clear()
         }
 
@@ -149,6 +147,7 @@ class JpvHubProvider : MainAPI() {
 
 
 
+
         if (items.size <= 0) throw ErrorLoadingException()
         return HomePageResponse(items,hasNext = true)
     }
@@ -169,7 +168,14 @@ class JpvHubProvider : MainAPI() {
     private data class HpName (
             @JsonProperty("name") val name : String,
     )
-
+    private fun getVideoByIdFromList(id: String, list: List<HpjavVideos>): HpjavVideos? {
+        for (item in list) {
+            if (item.id == id) {
+                return item
+            }
+        }
+        return null
+    }
     override suspend fun search(query: String): List<SearchResponse> {
 
         val soup = app.get("$mainUrl//?s=$query").document
