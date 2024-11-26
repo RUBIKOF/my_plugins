@@ -122,8 +122,8 @@ class JavGuruProvider : MainAPI() {
         )
         urls.apmap { (url, name) ->
             val pagedLink = if (page > 0) url + "page/" + page else url
-            val soup = app.get(url).document
-            val home = soup.select(".#main > div").map {
+            val soup = app.get(pagedLink).document
+            val home = soup.select("#main > div").map {
                 val title = it.selectFirst("h2")?.text()
                 val poster = it.selectFirst("img")?.attr("src").toString()
 
