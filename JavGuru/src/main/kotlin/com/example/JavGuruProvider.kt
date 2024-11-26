@@ -197,14 +197,20 @@ class JavGuruProvider : MainAPI() {
                 ur = it.attr("data-localize")
             }
         }
-        val g = doc.body().toString()
-        val regex2 = """<script id="wp-btn-iframe-js-extra" type="text/javascript">(.*?)</script>""".toRegex(RegexOption.DOT_MATCHES_ALL)
-        val match = regex2.find(g)
+        var g = doc.body().toString()
+        var regex2 = """<script id="wp-btn-iframe-js-extra" type="text/javascript">(.*?)</script>""".toRegex(RegexOption.DOT_MATCHES_ALL)
+        var match = regex2.find(g)
 
         if (match != null) {
             content = match.groupValues[1].trim()
         } else {
-            content = "No match found1"
+            regex2 = """<script id="wp-btn-iframe-js-extra">(.*?)</script>""".toRegex(RegexOption.DOT_MATCHES_ALL)
+            match = regex2.find(g)
+            if(match != null){
+                content =match.groupValues[1].trim()
+            }else{
+                content = "No match found"
+            }
         }
         /*val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
         val iframeMap = mutableMapOf<String, String>()
