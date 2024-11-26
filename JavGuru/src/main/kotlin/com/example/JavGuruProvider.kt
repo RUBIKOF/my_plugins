@@ -149,15 +149,10 @@ class JavGuruProvider : MainAPI() {
         var poster = ""
 
             return app.get("$mainUrl//?s=$query").document
-                    .select(".elementor-posts-container").select(".elementor-post__card").mapNotNull {
-                        texto = it.selectFirst(".elementor-post__thumbnail img").toString()
-                        inicio = texto.indexOf("srcset=") + 7
-                        ultimo = texto.length
-                        link = texto.substring(inicio, ultimo).toString()
-                        z = link.indexOf(" ")
-                        val image = link.substring(0, z).replace("\"","")
-                        val title = it.selectFirst(".elementor-post__title > a")?.text().toString()
-                        val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
+                    .select("#main .row").mapNotNull {
+                        val image = it.selectFirst(".imgg img")?.attr("src").toString()
+                        val title = it.selectFirst("h2 a")?.text().toString()
+                        val url = fixUrlNull(it.selectFirst("h2 a")?.attr("href") ?: "") ?: return@mapNotNull null
 
 
                         MovieSearchResponse(
@@ -192,7 +187,6 @@ class JavGuruProvider : MainAPI() {
         var lista = java.util.ArrayList<Actor>()
 
         doc.select(".infoleft > ul > li").mapNotNull {
-            test += "   :" + it.text()
             if(it.text().contains("Actress")){
                 val regex = """<a [^>]+>([^<]+)</a>""".toRegex()
                 val matches = regex.findAll(it.text())
@@ -201,7 +195,7 @@ class JavGuruProvider : MainAPI() {
                     val name = match.groupValues[1]
                     val r = name.split(" ")
                     starname.add(r.reversed().joinToString(" "))
-                    //test += " \n:" + r.reversed().joinToString(" ")
+                    test += " \n:" + r.reversed().joinToString(" ")
                 }
             }
         }
