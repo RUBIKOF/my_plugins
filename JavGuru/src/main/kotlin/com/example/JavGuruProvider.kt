@@ -46,12 +46,56 @@ class JavGuruProvider : MainAPI() {
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val urls = listOf(
                 Pair(
-                        "$mainUrl/familia",
-                        "Familia"
+                        "$mainUrl/tag/cuckold/",
+                        "Cuckold"
                 ),
                 Pair(
-                        "$mainUrl/milf",
-                        "Milf"
+                        "$mainUrl/tag/big-tits/",
+                        "Big Tits"
+                ),
+                Pair(
+                        "$mainUrl/tag/sister/",
+                        "Sister"
+                ),
+                Pair(
+                        "$mainUrl/tag/older-sister/",
+                        "Older Sister"
+                ),
+                Pair(
+                        "$mainUrl/tag/huge-cock/",
+                        "Huge Cock"
+                ),
+                Pair(
+                        "$mainUrl/tag/nampa/",
+                        "Nampa"
+                ),
+                Pair(
+                        "$mainUrl/tag/nurse/",
+                        "Nurse"
+                ),
+                Pair(
+                        "$mainUrl/tag/original-collaboration/",
+                        "Hentai Collab"
+                ),
+                Pair(
+                        "$mainUrl/tag/drama/",
+                        "Drama"
+                ),
+                Pair(
+                        "$mainUrl/tag/incest/",
+                        "Incest"
+                ),
+                Pair(
+                        "$mainUrl/tag/beauty-shop/",
+                        "Beauty Shop"
+                ),
+                Pair(
+                        "$mainUrl/tag/butt/",
+                        "Butt"
+                ),
+                Pair(
+                        "$mainUrl/tag/huge-butt/",
+                        "Huge Butt"
                 ),
         )
 
@@ -74,28 +118,20 @@ class JavGuruProvider : MainAPI() {
                                 this.posterUrl = poster
                                 addDubStatus(dubstat)
                             }
-                        })
+                        }, isHorizontalImages = true)
         )
         urls.apmap { (url, name) ->
+            val pagedLink = if (page > 0) url + "page/" + page else url
             val soup = app.get(url).document
-            var texto: String
-            var inicio: Int
-            var ultimo: Int
-            var link: String
-            var z: Int
-            var poster = ""
-            val home = soup.select(".elementor-post__card").map {
-                val title = it.selectFirst(".elementor-post__title")?.text()
-                texto = it.selectFirst(".elementor-post__thumbnail img").toString()
-                inicio = texto.indexOf("data-lazy-srcset") + 18
-                ultimo = texto.length
-                link = texto.substring(inicio, ultimo).toString()
-                z = link.indexOf(" ")
-                poster = link.substring(0, z).toString()
+            val home = soup.select(".#main > div").map {
+                val title = it.selectFirst("h2")?.text()
+                val poster = it.selectFirst("img")?.attr("src").toString()
+
+                val link = it.selectFirst("a")?.attr("href") ?: ""
 
                 AnimeSearchResponse(
                         title!!,
-                        fixUrl(it.selectFirst("a")?.attr("href") ?: ""),
+                        fixUrl(link),
                         this.name,
                         TvType.Anime,
                         fixUrl(poster),
@@ -105,7 +141,7 @@ class JavGuruProvider : MainAPI() {
                         ) else EnumSet.of(DubStatus.Subbed),
                 )
             }
-            items.add(HomePageList(name, home))
+            items.add(HomePageList(name, home, isHorizontalImages = true))
         }
 
         if (items.size <= 0) throw ErrorLoadingException()
@@ -183,8 +219,8 @@ class JavGuruProvider : MainAPI() {
 
 
 
-        var starname = java.util.ArrayList<String>()
-        var lista = java.util.ArrayList<Actor>()
+        var starname = ArrayList<String>()
+        var lista = ArrayList<Actor>()
 
         doc.select(".infoleft > ul > li").mapNotNull {
             if(it.text().contains("Actress")){
