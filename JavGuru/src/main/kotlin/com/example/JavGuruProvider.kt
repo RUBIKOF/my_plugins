@@ -231,7 +231,7 @@ class JavGuruProvider : MainAPI() {
                 url
         ) {
             posterUrl = fixUrlNull(poster)
-            this.plot = description
+            this.plot = test
             this.recommendations = null
             this.duration = null
             addActors(lista)
