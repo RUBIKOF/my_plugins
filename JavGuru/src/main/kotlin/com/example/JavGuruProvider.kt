@@ -198,25 +198,13 @@ class JavGuruProvider : MainAPI() {
             }
         }
         var g = app.get(url).document.selectFirst("#wp-btn-iframe-js-extra").toString()
-        var regex2 = """<script id="wp-btn-iframe-js-extra" type="text/javascript">(.*?)</script>""".toRegex(RegexOption.DOT_MATCHES_ALL)
-        var match = regex2.find(g)
 
-        if (match != null) {
-            content = match.groupValues[1].trim()
-        } else {
-            regex2 = """<script id="wp-btn-iframe-js-extra">(.*?)</script>""".toRegex(RegexOption.DOT_MATCHES_ALL)
-            match = regex2.find(g)
-            if(match != null){
-                content =match.groupValues[1].trim()
-            }else{
-                content = "No match found"
-            }
-        }
-        /*val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
+
+        val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
         val iframeMap = mutableMapOf<String, String>()
         var uno =""
         var dos = ""
-        regex.findAll(content).forEach { matchResult ->
+        regex.findAll(g).forEach { matchResult ->
             val variableName = matchResult.groups[1]?.value ?: "Unknown"
             val iframeUrl = matchResult.groups[2]?.value ?: "Unknown"
             iframeMap[variableName] = iframeUrl
@@ -233,7 +221,7 @@ class JavGuruProvider : MainAPI() {
                 dos =  "https://jav.guru/searcho/?ur="+link2.reversed()
             }
 
-        }*/
+        }
 
             //Fin espacio prueba
         return MovieLoadResponse(
@@ -243,7 +231,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = content + "\n ///////////////////////////" + g
+                plot = uno + "\n :" + dos
         )
 
     }
