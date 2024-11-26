@@ -1,6 +1,8 @@
 package com.example
 
 
+import android.annotation.TargetApi
+import android.os.Build
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.Qualities
@@ -12,6 +14,7 @@ import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import org.json.JSONObject
+import java.util.Base64
 import java.util.*
 
 
@@ -170,6 +173,7 @@ class JavGuruProvider : MainAPI() {
             @JsonProperty("title"  ) var title  : String? = null,
             @JsonProperty("image"  ) var image  : String? = null
     )
+    @TargetApi(Build.VERSION_CODES.O)
     override suspend fun load(url: String): LoadResponse {
         val doc = app.get(url, timeout = 120).document
         var test ="";
@@ -177,10 +181,45 @@ class JavGuruProvider : MainAPI() {
         val title = doc.selectFirst(".inside-article h1")?.text()?:""
         val type = "NFSW"
         val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
+        var st =""
+        var dd =""
+        var ur =""
 
         val poster = doc.selectFirst(".inside-article img")?.attr("src")
+        doc.select("#wp-btn-iframe").mapNotNull {
+            if(it.text().contains("STREAM ST")){
+                st = it.attr("data-localize")
+            }
+            if(it.text().contains("STREAM DD")){
+                dd = it.attr("data-localize")
+            }
+            if(it.text().contains("STREAM TV")){
+                ur = it.attr("data-localize")
+            }
+        }
+        val g = doc.selectFirst("#wp-btn-iframe-js-extra")?.text().toString()
+        val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
+        val iframeMap = mutableMapOf<String, String>()
+        var uno =""
+        var dos = ""
+        regex.findAll(g).forEach { matchResult ->
+            val variableName = matchResult.groups[1]?.value ?: "Unknown"
+            val iframeUrl = matchResult.groups[2]?.value ?: "Unknown"
+            iframeMap[variableName] = iframeUrl
+            val link = String(Base64.getDecoder().decode(iframeUrl))
+            val inicio = link.indexOf("=")+1
+            val ultimo = link.indexOf("&bg")
+            val link2 = link.substring(inicio,ultimo-inicio)
 
+            if(variableName.contains(st)){
+                 uno = "https://jav.guru/searcho/?dr="+link2.reversed()
 
+            }
+            if(variableName.contains(ur)){
+                dos =  "https://jav.guru/searcho/?ur="+link2.reversed()
+            }
+
+        }
 
             //Fin espacio prueba
         return MovieLoadResponse(
@@ -190,7 +229,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = null
+                plot = uno + "\n :"+ dos
         )
 
     }
