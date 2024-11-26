@@ -204,6 +204,8 @@ class JavGuruProvider : MainAPI() {
         val iframeMap = mutableMapOf<String, String>()
         var uno =""
         var dos = ""
+        var extracted =""
+        var extracted1 =""
         regex.findAll(g).forEach { matchResult ->
             val variableName = matchResult.groups[1]?.value ?: "Unknown"
             val iframeUrl = matchResult.groups[2]?.value ?: "Unknown"
@@ -212,13 +214,39 @@ class JavGuruProvider : MainAPI() {
             val inicio = link.indexOf("=")+1
             val ultimo = link.indexOf("&bg")
             val link2 = link.substring(inicio,ultimo)
+            var video = ""
+            var regex : Regex
+            var matchResult : MatchResult?
 
             if(variableName.contains(st)){
-                 uno = "https://jav.guru/searcho/?dr="+link2.reversed()
+                uno = "https://jav.guru/searcho/?dr="+link2.reversed()
+                video = app.get(uno).document.selectFirst("#ideoolink")?.text().toString()
+                regex = Regex("id=([^&]+)&expires")
+                matchResult = regex.find(video)
+
+                if (matchResult != null) {
+                    extracted = matchResult.groupValues[1]
+
+                } else {
+                    extracted ="No se encontró coincidencia"
+                }
 
             }
             if(variableName.contains(ur)){
                 dos =  "https://jav.guru/searcho/?ur="+link2.reversed()
+                video= app.get(dos).document.selectFirst("#video_player")?.attr("data-hash").toString()
+
+                regex = """data1/([^/]+)/""".toRegex()
+                matchResult = regex.find(video)
+
+                if (matchResult != null) {
+                    extracted1 = matchResult.groupValues[1]
+
+                } else {
+                    extracted1 = "No se encontró coincidencia"
+                }
+
+
             }
 
         }
@@ -231,7 +259,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = uno + "\n :" + dos
+                plot = extracted + "\n ::" + extracted
         )
 
     }
