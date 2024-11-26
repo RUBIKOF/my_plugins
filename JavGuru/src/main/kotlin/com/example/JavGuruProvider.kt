@@ -206,7 +206,7 @@ class JavGuruProvider : MainAPI() {
         } else {
             content = "No match found"
         }
-        val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
+        /*val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
         val iframeMap = mutableMapOf<String, String>()
         var uno =""
         var dos = ""
@@ -227,7 +227,7 @@ class JavGuruProvider : MainAPI() {
                 dos =  "https://jav.guru/searcho/?ur="+link2.reversed()
             }
 
-        }
+        }*/
 
             //Fin espacio prueba
         return MovieLoadResponse(
@@ -237,7 +237,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = uno + ": " + dos
+                plot = content
         )
 
     }
