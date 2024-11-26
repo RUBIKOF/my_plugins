@@ -188,14 +188,11 @@ class JavGuruProvider : MainAPI() {
 
         doc.select(".infoleft > ul > li").mapNotNull {
             if(it.text().contains("Actress")){
-                val regex = """<a [^>]+>([^<]+)</a>""".toRegex()
-                val matches = regex.findAll(it.text())
+                val names = it.text().replace("Actress:", "").trim().split(", ")
 
-                for (match in matches) {
-                    val name = match.groupValues[1]
+                for (name in names){
                     val r = name.split(" ")
                     starname.add(r.reversed().joinToString(" "))
-                    test += " \n:" + r.reversed().joinToString(" ")
                 }
             }
         }
@@ -225,7 +222,7 @@ class JavGuruProvider : MainAPI() {
                 url
         ) {
             posterUrl = fixUrlNull(poster)
-            this.plot = test
+            this.plot = description
             this.recommendations = null
             this.duration = null
             addActors(lista)
