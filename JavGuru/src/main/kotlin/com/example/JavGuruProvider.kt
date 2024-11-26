@@ -365,7 +365,7 @@ class JavGuruProvider : MainAPI() {
            var video = ""
            var regex : Regex
            var matchResult : MatchResult?
-
+//aqui
            if(variableName.contains(st)){
                video = app.get("https://jav.guru/searcho/?dr="+link2.reversed()).document.selectFirst("#ideoolink")?.text().toString()
                regex = Regex("id=([^&]+)&expires")
@@ -377,9 +377,9 @@ class JavGuruProvider : MainAPI() {
 
            }
            if(variableName.contains(emt)){
-               video= app.get("https://jav.guru/searcho/?ur="+link2.reversed()).document.selectFirst("#video_player")?.attr("data-hash").toString()
+               video= app.get("https://jav.guru/searcho/?ur="+link2.reversed()).document.selectFirst("body").toString()
 
-               regex = """data1/([^/]+)/""".toRegex()
+               regex = "var\\s+videoID\\s*=\\s*'(\\w+)'".toRegex()
                matchResult = regex.find(video)
 
                if (matchResult != null) {
