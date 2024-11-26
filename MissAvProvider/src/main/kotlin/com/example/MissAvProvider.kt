@@ -254,80 +254,36 @@ class MissAvProvider : MainAPI() {
        //val f = listOf("https://dood.ws/e/aujxzir2eoim","https://streamwish.to/e/39vofoptz1f1","https://embedwish.com/e/82vgp2xqywzh","https://playerwish.com/e/82vgp2xqywzh","https://voe.sx/e/11qfeoizpoo7","https://brittneystandardwestern.com/e/11qfeoizpoo7")
        //val f = listOf("https://streamtape.net/e/tk9bv8ko9zgw/","https://vidhidevip.com/embed/5njbrk5z1zdh ")
 
-
-       var st =""
-       var dd =""
-       var emt =""
-
-       app.get(data).document.select("#wp-btn-iframe").mapNotNull {
-           if(it.text().contains("STREAM ST")){
-               st = it.attr("data-localize")
-           }
-           if(it.text().contains("STREAM DD")){
-               dd = it.attr("data-localize")
-           }
-           if(it.text().contains("STREAM TV")){
-               emt = it.attr("data-localize")
-           }
+       var value =""
+       var text = app.get(data).document.selectFirst("body").toString()
+       val pattern = "https:\\\\/\\\\/sixyik\\.com\\\\/([^\"]+)\\\\/seek".toRegex()
+       val matchResult = pattern.find(text)
+       if (matchResult != null) {
+           value = matchResult.groupValues[1]
        }
 
-       var g = app.get(data).document.selectFirst("#wp-btn-iframe-js-extra").toString()
-       val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
-       val iframeMap = mutableMapOf<String, String>()
+       var links = listOf("https://surrit.com/" + value +"/1080p/video.m3u8","https://surrit.com/" + value +"/720p/video.m3u8","https://surrit.com/" + value +"/480p/video.m3u8","https://surrit.com/" + value +"/360p/video.m3u8")
 
-       regex.findAll(g).forEach { matchResult ->
-           val variableName = matchResult.groups[1]?.value ?: "Unknown"
-           val iframeUrl = matchResult.groups[2]?.value ?: "Unknown"
-           iframeMap[variableName] = iframeUrl
-           val link = String(Base64.getDecoder().decode(iframeUrl))
-           val inicio = link.indexOf("=")+1
-           val ultimo = link.indexOf("&bg")
-           val link2 = link.substring(inicio,ultimo)
-           var video = ""
-           var regex : Regex
-           var matchResult : MatchResult?
-//aqui
-           if(variableName.contains(st)){
-               video = app.get("https://jav.guru/searcho/?dr="+link2.reversed()).document.selectFirst("#ideoolink")?.text().toString()
-               regex = Regex("id=([^&]+)&expires")
-               matchResult = regex.find(video)
 
-               if (matchResult != null) {
-                   loadExtractor("https://streamtape.net/e/" + matchResult.groupValues[1], data, subtitleCallback, callback)
+       links.mapNotNull { videos ->
+           fetchUrls(videos).map {
+               M3u8Helper().m3u8Generation(
+                       M3u8Helper.M3u8Stream(
+                               it,
+                               headers = app.get(data).headers.toMap()
+                       ), true
+               ).map { stream ->
+                   callback(
+                           ExtractorLink(
+                                   source = this.name,
+                                   name = "${this.name} m3u8",
+                                   url = stream.streamUrl,
+                                   referer = data,
+                                   quality = getQualityFromName(stream.quality?.toString()),
+                                   isM3u8 = true
+                           )
+                   )
                }
-
-           }
-           if(variableName.contains(emt)){
-               video= app.get("https://jav.guru/searcho/?ur="+link2.reversed()).document.selectFirst("body").toString()
-
-               regex = "var\\s+videoID\\s*=\\s*'(\\w+)'".toRegex()
-               matchResult = regex.find(video)
-
-               if (matchResult != null) {
-                   loadExtractor("https://emturbovid.com/t/" + matchResult.groupValues[1],data,subtitleCallback,callback)
-               }
-           }
-
-       }
-
-       var extractedlink = "https://surrit.com/b40413ab-da82-465f-a7dd-de81a78c7c96/480p/video.m3u8"
-       if (extractedlink.isNotBlank()) {
-           M3u8Helper().m3u8Generation(
-                   M3u8Helper.M3u8Stream(
-                           extractedlink,
-                           headers = app.get(data).headers.toMap()
-                   ), true
-           ).map { stream ->
-               callback(
-                       ExtractorLink(
-                               source = this.name,
-                               name = "${this.name} m3u8",
-                               url = stream.streamUrl,
-                               referer = data,
-                               quality = getQualityFromName(stream.quality?.toString()),
-                               isM3u8 = true
-                       )
-               )
            }
        }
 
