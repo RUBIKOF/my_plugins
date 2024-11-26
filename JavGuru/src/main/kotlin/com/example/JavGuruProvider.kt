@@ -16,6 +16,7 @@ import com.lagradost.cloudstream3.utils.loadExtractor
 import org.json.JSONObject
 import java.util.Base64
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class JavGuruProvider : MainAPI() {
@@ -181,75 +182,8 @@ class JavGuruProvider : MainAPI() {
         val title = doc.selectFirst(".inside-article h1")?.text()?:""
         val type = "NFSW"
         val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
-        var st =""
-        var dd =""
-        var ur =""
-        var content =""
         val poster = doc.selectFirst(".inside-article img")?.attr("src")
-        doc.select("#wp-btn-iframe").mapNotNull {
-            if(it.text().contains("STREAM ST")){
-                st = it.attr("data-localize")
-            }
-            if(it.text().contains("STREAM DD")){
-                dd = it.attr("data-localize")
-            }
-            if(it.text().contains("STREAM TV")){
-                ur = it.attr("data-localize")
-            }
-        }
-        var g = app.get(url).document.selectFirst("#wp-btn-iframe-js-extra").toString()
 
-
-        val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
-        val iframeMap = mutableMapOf<String, String>()
-        var uno =""
-        var dos = ""
-        var extracted =""
-        var extracted1 =""
-        regex.findAll(g).forEach { matchResult ->
-            val variableName = matchResult.groups[1]?.value ?: "Unknown"
-            val iframeUrl = matchResult.groups[2]?.value ?: "Unknown"
-            iframeMap[variableName] = iframeUrl
-            val link = String(Base64.getDecoder().decode(iframeUrl))
-            val inicio = link.indexOf("=")+1
-            val ultimo = link.indexOf("&bg")
-            val link2 = link.substring(inicio,ultimo)
-            var video = ""
-            var regex : Regex
-            var matchResult : MatchResult?
-
-            if(variableName.contains(st)){
-                uno = "https://jav.guru/searcho/?dr="+link2.reversed()
-                video = app.get(uno).document.selectFirst("#ideoolink")?.text().toString()
-                regex = Regex("id=([^&]+)&expires")
-                matchResult = regex.find(video)
-
-                if (matchResult != null) {
-                    extracted = matchResult.groupValues[1]
-
-                } else {
-                    extracted ="No se encontró coincidencia"
-                }
-
-            }
-            if(variableName.contains(ur)){
-                dos =  "https://jav.guru/searcho/?ur="+link2.reversed()
-                video= app.get(dos).document.selectFirst("#video_player")?.attr("data-hash").toString()
-
-                regex = """data1/([^/]+)/""".toRegex()
-                matchResult = regex.find(video)
-
-                if (matchResult != null) {
-                    extracted1 = matchResult.groupValues[1]
-
-                } else {
-                    extracted1 = "No se encontró coincidencia"
-                }
-
-
-            }
-
-        }
 
             //Fin espacio prueba
         return MovieLoadResponse(
@@ -259,7 +193,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = extracted + "\n ::" + extracted
+                plot = null
         )
 
     }
@@ -301,6 +235,7 @@ class JavGuruProvider : MainAPI() {
        )
        return true
    }
+   @TargetApi(Build.VERSION_CODES.O)
    override suspend fun loadLinks(
            data: String,
            isCasting: Boolean,
@@ -318,6 +253,69 @@ class JavGuruProvider : MainAPI() {
        //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://wishembed.pro/e/tkxnrvvcmr7d","https://emturbovid.com/t/67153f54ab258","https://emturbovid.com/t/J4GYkYjO0QdxWSERr7dJ","https://streamcdn.info/play/4KFi5bH0uv44Dx4LOJhXmb4KH0KmjM2HV8goTBKj8NNZ.html")
        //val f = listOf("https://dood.ws/e/aujxzir2eoim","https://streamwish.to/e/39vofoptz1f1","https://embedwish.com/e/82vgp2xqywzh","https://playerwish.com/e/82vgp2xqywzh","https://voe.sx/e/11qfeoizpoo7","https://brittneystandardwestern.com/e/11qfeoizpoo7")
        //val f = listOf("https://streamtape.net/e/tk9bv8ko9zgw/","https://vidhidevip.com/embed/5njbrk5z1zdh ")
+
+
+       var st =""
+       var dd =""
+       var emt =""
+       var videolink = ArrayList<String>()
+
+       app.get(data).document.select("#wp-btn-iframe").mapNotNull {
+           if(it.text().contains("STREAM ST")){
+               st = it.attr("data-localize")
+           }
+           if(it.text().contains("STREAM DD")){
+               dd = it.attr("data-localize")
+           }
+           if(it.text().contains("STREAM TV")){
+               emt = it.attr("data-localize")
+           }
+       }
+
+       var g = app.get(data).document.selectFirst("#wp-btn-iframe-js-extra").toString()
+       val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
+       val iframeMap = mutableMapOf<String, String>()
+
+       regex.findAll(g).forEach { matchResult ->
+           val variableName = matchResult.groups[1]?.value ?: "Unknown"
+           val iframeUrl = matchResult.groups[2]?.value ?: "Unknown"
+           iframeMap[variableName] = iframeUrl
+           val link = String(Base64.getDecoder().decode(iframeUrl))
+           val inicio = link.indexOf("=")+1
+           val ultimo = link.indexOf("&bg")
+           val link2 = link.substring(inicio,ultimo)
+           var video = ""
+           var regex : Regex
+           var matchResult : MatchResult?
+
+           if(variableName.contains(st)){
+               video = app.get("https://jav.guru/searcho/?dr="+link2.reversed()).document.selectFirst("#ideoolink")?.text().toString()
+               regex = Regex("id=([^&]+)&expires")
+               matchResult = regex.find(video)
+
+               if (matchResult != null) {
+                   //videolink.add("https://streamtape.net/e/" + matchResult.groupValues[1])
+                   loadExtractor("https://streamtape.net/e/" + matchResult.groupValues[1], data, subtitleCallback, callback)
+
+               }
+
+           }
+           if(variableName.contains(emt)){
+               video= app.get("https://jav.guru/searcho/?ur="+link2.reversed()).document.selectFirst("#video_player")?.attr("data-hash").toString()
+
+               regex = """data1/([^/]+)/""".toRegex()
+               matchResult = regex.find(video)
+
+               if (matchResult != null) {
+                   //videolink.add("https://emturbovid.com/t/" + matchResult.groupValues[1])
+                   loadExtractor("https://emturbovid.com/t/" + matchResult.groupValues[1],data,subtitleCallback,callback)
+
+               }
+           }
+
+       }
+
+
        val f = listOf("https://jav.guru/searcho/?hr=713231747a736e6f76736530","https://jav.guru/searcho/?ur=742f36373433393038363165356363","https://jav.guru/searcho/?dr=656f575a4450724f41567359565761")
        f.mapNotNull{videos ->
            fetchUrls(videos).map {
