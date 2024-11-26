@@ -197,7 +197,7 @@ class JavGuruProvider : MainAPI() {
                 ur = it.attr("data-localize")
             }
         }
-        var g = app.get(url).document.selectFirst("body").toString()
+        var g = app.get(url).document.selectFirst("#wp-btn-iframe-js-extra").toString()
         var regex2 = """<script id="wp-btn-iframe-js-extra" type="text/javascript">(.*?)</script>""".toRegex(RegexOption.DOT_MATCHES_ALL)
         var match = regex2.find(g)
 
