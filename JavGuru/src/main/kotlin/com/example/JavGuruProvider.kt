@@ -5,6 +5,7 @@ import android.annotation.TargetApi
 import android.os.Build
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
+import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
@@ -181,20 +182,70 @@ class JavGuruProvider : MainAPI() {
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
         val title = doc.selectFirst(".inside-article h1")?.text()?:""
         val type = "NFSW"
-        val description = doc.selectFirst("#content > div > div > div > div > section > div > div > div > div > div > div.elementor-element.elementor-element-9da66e1.elementor-widget.elementor-widget-text-editor > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > span")?.text()
+        val description = doc.selectFirst(".wp-content")?.text()
         val poster = doc.selectFirst(".inside-article img")?.attr("src")
 
 
+
+
+        var starname = java.util.ArrayList<String>()
+        var lista = java.util.ArrayList<Actor>()
+
+        doc.select(".infoleft > ul > li").mapNotNull {
+            if(it.text().contains("Actress")){
+                val regex = """<a [^>]+>([^<]+)</a>""".toRegex()
+                val matches = regex.findAll(it.text())
+
+                for (match in matches) {
+                    val name = match.groupValues[1]
+                    val r = name.split(" ")
+                    starname.add(r.reversed().joinToString(" "))
+
+                }
+            }
+        }
+        if (starname.size>0) {
+
+            for(i in 0 .. starname.size-1){
+
+                app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select("#main ").mapNotNull {
+                    var save = it.select(".entry-content .idol-portrait img").attr("src")
+                    //var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
+                    var otro = "https://tse1.mm.bing.net/th?id=OIP.6_wb2dVFWij-BlgOVLAvnQAAAA&pid=15.1"
+                    if(save.contains("http")){
+                        lista.add(Actor(starname[i],save))
+                    }else{
+                        lista.add(Actor(starname[i],otro))
+                    }
+
+                }
+            }
+        }
+
             //Fin espacio prueba
-        return MovieLoadResponse(
+        return newMovieLoadResponse(
+                title,
+                url,
+                TvType.NSFW,
+                url
+        ) {
+            posterUrl = fixUrlNull(poster)
+            this.plot = description
+            this.recommendations = null
+            this.duration = null
+            addActors(lista)
+        }
+
+    /* return MovieLoadResponse(
                 name = title,
                 url = url,
                 apiName = this.name,
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = null
-        )
+                plot = null,
+                actors = lista
+        )*/
 
     }
 
@@ -258,7 +309,6 @@ class JavGuruProvider : MainAPI() {
        var st =""
        var dd =""
        var emt =""
-       var videolink = ArrayList<String>()
 
        app.get(data).document.select("#wp-btn-iframe").mapNotNull {
            if(it.text().contains("STREAM ST")){
@@ -294,9 +344,7 @@ class JavGuruProvider : MainAPI() {
                matchResult = regex.find(video)
 
                if (matchResult != null) {
-                   //videolink.add("https://streamtape.net/e/" + matchResult.groupValues[1])
                    loadExtractor("https://streamtape.net/e/" + matchResult.groupValues[1], data, subtitleCallback, callback)
-
                }
 
            }
@@ -307,15 +355,13 @@ class JavGuruProvider : MainAPI() {
                matchResult = regex.find(video)
 
                if (matchResult != null) {
-                   //videolink.add("https://emturbovid.com/t/" + matchResult.groupValues[1])
                    loadExtractor("https://emturbovid.com/t/" + matchResult.groupValues[1],data,subtitleCallback,callback)
-
                }
            }
 
        }
 
-
+       /*
        val f = listOf("https://jav.guru/searcho/?hr=713231747a736e6f76736530","https://jav.guru/searcho/?ur=742f36373433393038363165356363","https://jav.guru/searcho/?dr=656f575a4450724f41567359565761")
        f.mapNotNull{videos ->
            fetchUrls(videos).map {
@@ -354,8 +400,8 @@ class JavGuruProvider : MainAPI() {
                    )
                }*/
 
-           }
-       }
+
+       */
 
        return true
    }
