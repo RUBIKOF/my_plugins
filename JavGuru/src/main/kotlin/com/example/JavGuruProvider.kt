@@ -197,7 +197,7 @@ class JavGuruProvider : MainAPI() {
                 ur = it.attr("data-localize")
             }
         }
-        var g = doc.body().toString()
+        var g = doc.body().text().toString()
         var regex2 = """<script id="wp-btn-iframe-js-extra" type="text/javascript">(.*?)</script>""".toRegex(RegexOption.DOT_MATCHES_ALL)
         var match = regex2.find(g)
 
@@ -243,7 +243,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = content
+                plot = content + "\n ///////////////////////////" + g
         )
 
     }
