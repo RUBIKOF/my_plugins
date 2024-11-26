@@ -192,6 +192,7 @@ class JavGuruProvider : MainAPI() {
         var lista = java.util.ArrayList<Actor>()
 
         doc.select(".infoleft > ul > li").mapNotNull {
+            test += "   :" + it.text()
             if(it.text().contains("Actress")){
                 val regex = """<a [^>]+>([^<]+)</a>""".toRegex()
                 val matches = regex.findAll(it.text())
@@ -200,7 +201,7 @@ class JavGuruProvider : MainAPI() {
                     val name = match.groupValues[1]
                     val r = name.split(" ")
                     starname.add(r.reversed().joinToString(" "))
-
+                    //test += " \n:" + r.reversed().joinToString(" ")
                 }
             }
         }
