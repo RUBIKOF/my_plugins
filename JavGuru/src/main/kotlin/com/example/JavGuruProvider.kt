@@ -184,7 +184,7 @@ class JavGuruProvider : MainAPI() {
         var st =""
         var dd =""
         var ur =""
-
+        var content =""
         val poster = doc.selectFirst(".inside-article img")?.attr("src")
         doc.select("#wp-btn-iframe").mapNotNull {
             if(it.text().contains("STREAM ST")){
@@ -197,7 +197,15 @@ class JavGuruProvider : MainAPI() {
                 ur = it.attr("data-localize")
             }
         }
-        val g = doc.select("#wp-btn-iframe-js-extra").text().toString()
+        val g = doc.body().toString()
+        val regex2 = """<script id="wp-btn-iframe-js-extra">(.*?)</script>""".toRegex(RegexOption.DOT_MATCHES_ALL)
+        val matchResult = regex2.find(g)
+
+        if (matchResult != null) {
+            content = matchResult.groupValues[1].trim()
+        } else {
+            content = "No match found"
+        }
         val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
         val iframeMap = mutableMapOf<String, String>()
         var uno =""
@@ -229,7 +237,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = g
+                plot = content
         )
 
     }
