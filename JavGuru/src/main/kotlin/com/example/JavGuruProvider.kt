@@ -210,22 +210,13 @@ class JavGuruProvider : MainAPI() {
         val iframeMap = mutableMapOf<String, String>()
         var uno =""
         var dos = ""
+        var s =""
         regex.findAll(content).forEach { matchResult ->
             val variableName = matchResult.groups[1]?.value ?: "Unknown"
             val iframeUrl = matchResult.groups[2]?.value ?: "Unknown"
             iframeMap[variableName] = iframeUrl
             val link = String(Base64.getDecoder().decode(iframeUrl))
-            val inicio = link.indexOf("=")+1
-            val ultimo = link.indexOf("&bg")
-            val link2 = link.substring(inicio,ultimo-inicio)
-
-            if(variableName.contains(st)){
-                 uno = "https://jav.guru/searcho/?dr="+link2.reversed()
-
-            }
-            if(variableName.contains(ur)){
-                dos =  "https://jav.guru/searcho/?ur="+link2.reversed()
-            }
+            s = link
 
         }
 
@@ -237,7 +228,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = uno + ": " + dos
+                plot = s + ":S"
         )
 
     }
