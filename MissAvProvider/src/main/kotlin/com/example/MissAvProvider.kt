@@ -63,14 +63,13 @@ class MissAvProvider : MainAPI() {
                 HomePageList(
                         "Recientes",
                         app.get("https://missav.com/dm509/en/release?page=1").document.select(".gap-5").map {
-                            val title = it.selectFirst(".my-2 a")?.text()
+                            val title = it.selectFirst(".my-2 a")?.text().toString()
                             val poster = it.selectFirst("img")?.attr("data-src")
                             val url = it.selectFirst(".my-2 a")?.attr("href") ?: ""
 
 
                             newAnimeSearchResponse(title, url) {
                                 this.posterUrl = poster
-                                addDubStatus(dubstat)
                             }
                         }, isHorizontalImages = true)
         )
