@@ -197,7 +197,7 @@ class JavGuruProvider : MainAPI() {
                 ur = it.attr("data-localize")
             }
         }
-        val g = doc.selectFirst("#wp-btn-iframe-js-extra")?.text().toString()
+        val g = doc.select("#wp-btn-iframe-js-extra").text().toString()
         val regex = Regex("""var\s+(\w+)\s*=\s*\{.*?"iframe_url":"([^"]+)""")
         val iframeMap = mutableMapOf<String, String>()
         var uno =""
