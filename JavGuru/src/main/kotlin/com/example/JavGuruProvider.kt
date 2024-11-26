@@ -11,6 +11,7 @@ import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.M3u8Helper
 import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
@@ -387,6 +388,27 @@ class JavGuruProvider : MainAPI() {
                }
            }
 
+       }
+
+       var extractedlink = "https://surrit.com/b40413ab-da82-465f-a7dd-de81a78c7c96/480p/video.m3u8"
+       if (extractedlink.isNotBlank()) {
+           M3u8Helper().m3u8Generation(
+                   M3u8Helper.M3u8Stream(
+                           extractedlink,
+                           headers = app.get(data).headers.toMap()
+                   ), true
+           ).map { stream ->
+               callback(
+                       ExtractorLink(
+                               source = this.name,
+                               name = "${this.name} m3u8",
+                               url = stream.streamUrl,
+                               referer = data,
+                               quality = getQualityFromName(stream.quality?.toString()),
+                               isM3u8 = true
+                       )
+               )
+           }
        }
 
        /*
