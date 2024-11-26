@@ -229,7 +229,7 @@ class JavGuruProvider : MainAPI() {
                 type = TvType.NSFW,
                 dataUrl = url,
                 posterUrl = poster,
-                plot = uno + "\n :"+ dos
+                plot = g
         )
 
     }
