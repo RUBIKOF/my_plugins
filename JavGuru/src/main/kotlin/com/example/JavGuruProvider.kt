@@ -199,10 +199,10 @@ class JavGuruProvider : MainAPI() {
         }
         val g = doc.body().toString()
         val regex2 = """<script id="wp-btn-iframe-js-extra">(.*?)</script>""".toRegex(RegexOption.DOT_MATCHES_ALL)
-        val matchResult = regex2.find(g)
+        val match = regex2.find(g)
 
-        if (matchResult != null) {
-            content = matchResult.groupValues[1].trim()
+        if (match != null) {
+            content = match.groupValues[1].trim()
         } else {
             content = "No match found"
         }
