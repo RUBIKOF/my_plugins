@@ -62,7 +62,7 @@ class MissAvProvider : MainAPI() {
         items.add(
                 HomePageList(
                         "Recientes",
-                        app.get("https://missav.com/dm509/en/release?page=1").document.select(".gap-5").map {
+                        app.get("https://missav.com/dm509/en/release?page=1").document.select("..thumbnail.group").map {
                             val title = it.selectFirst(".my-2 a")?.text().toString()
                             val poster = it.selectFirst("img")?.attr("data-src")
                             val url = it.selectFirst(".my-2 a")?.attr("href") ?: ""
@@ -139,7 +139,7 @@ class MissAvProvider : MainAPI() {
 
             return app.get("$mainUrl//?s=$query").document
                     .select("#main .row").mapNotNull {
-                        val image = it.selectFirst(".imgg img")?.attr("src").toString()
+                        val image = it.selectFirst(".imgg img")?.attr("data-src").toString().replace("cover-t","covert-n")
                         val title = it.selectFirst("h2 a")?.text().toString()
                         val url = fixUrlNull(it.selectFirst("h2 a")?.attr("href") ?: "") ?: return@mapNotNull null
 
@@ -164,44 +164,13 @@ class MissAvProvider : MainAPI() {
         val doc = app.get(url, timeout = 120).document
         var test ="";
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
-        val title = doc.selectFirst(".inside-article h1")?.text()?:""
+        val title = doc.selectFirst(".mt-4 h1")?.text()?:""
         val type = "NFSW"
-        val description = doc.selectFirst(".wp-content")?.text()
-        val poster = doc.selectFirst(".inside-article img")?.attr("src")
+        val description = ""
+        //val poster = doc.selectFirst(".inside-article img")?.attr("src")
+        val poster = "https://fivetiu.com/" + url.replace("https://missav.com/en/","") + "/cover-n.jpg"
 
 
-
-
-        var starname = ArrayList<String>()
-        var lista = ArrayList<Actor>()
-
-        doc.select(".infoleft > ul > li").mapNotNull {
-            if(it.text().contains("Actress")){
-                val names = it.text().replace("Actress:", "").trim().split(", ")
-
-                for (name in names){
-                    val r = name.split(" ")
-                    starname.add(r.reversed().joinToString(" "))
-                }
-            }
-        }
-        if (starname.size>0) {
-
-            for(i in 0 .. starname.size-1){
-
-                app.get("https://www.javdatabase.com/idols/" + starname[i].replace(" ","-")).document.select("#main ").mapNotNull {
-                    var save = it.select(".entry-content .idol-portrait img").attr("src")
-                    //var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
-                    var otro = "https://tse1.mm.bing.net/th?id=OIP.6_wb2dVFWij-BlgOVLAvnQAAAA&pid=15.1"
-                    if(save.contains("http")){
-                        lista.add(Actor(starname[i],save))
-                    }else{
-                        lista.add(Actor(starname[i],otro))
-                    }
-
-                }
-            }
-        }
 
             //Fin espacio prueba
         return newMovieLoadResponse(
@@ -214,7 +183,6 @@ class MissAvProvider : MainAPI() {
             this.plot = description
             this.recommendations = null
             this.duration = null
-            addActors(lista)
         }
 
     /* return MovieLoadResponse(
