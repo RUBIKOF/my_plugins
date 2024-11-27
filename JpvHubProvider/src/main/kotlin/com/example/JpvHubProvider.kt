@@ -242,13 +242,13 @@ class JpvHubProvider : MainAPI() {
         val texto: String
         var inicio: Int
         var link: String
-        var poster =""
+        var poster = ""
         try {
             var starname = ArrayList<String>()
             var lista = ArrayList<Actor>()
             val f = app.get(url).document.body()
-            val z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
-            val gm = z.substring(0,z.indexOf("</script>"))
+            val z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">") + 51)
+            val gm = z.substring(0, z.indexOf("</script>"))
             val titlePattern = "\"title\":\\s*\\{[^}]*\"name\":\\s*\"([^\"]+)\"".toRegex()
             val titleName = titlePattern.find(gm)?.groupValues?.get(1).toString()
 
@@ -257,27 +257,36 @@ class JpvHubProvider : MainAPI() {
             val thumb = thumbnailMatch?.groupValues?.get(1)
 
 
-            val modelPattern = "\"models\"\\s*:\\s*\\[\\s*\\{[^}]*\"name\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
+            /*val modelPattern = "\"models\"\\s*:\\s*\\[\\s*\\{[^}]*\"name\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
             val modelMatch = modelPattern.findAll(gm)
             modelMatch.forEach { matchResult ->
                 val modelName = matchResult.groupValues[1]
                 starname.add(modelName)
+            }*/
+            val modelPattern = "\"models\"\\s*:\\s*\\[([^]]*)]".toRegex()
+            val namePattern = "\"name\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
+
+            val modelsBlock = modelPattern.find(gm)?.groupValues?.get(1)
+            val matches = modelsBlock?.let {
+                namePattern.findAll(it)
+            }?.map {
+                starname.add(it.groupValues[1])
             }
 
 
-            if (starname.size>0) {
+            if (starname.size > 0) {
 
-                for(i in 0 .. starname.size-1){
+                for (i in 0..starname.size - 1) {
 
                     var r = starname[i].split(" ")
                     app.get("https://www.javdatabase.com/idols/" + r.reversed().joinToString("-")).document.select("#main ").mapNotNull {
                         var save = it.select(".entry-content .idol-portrait img").attr("src")
                         //var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
                         var otro = "https://tse1.mm.bing.net/th?id=OIP.6_wb2dVFWij-BlgOVLAvnQAAAA&pid=15.1"
-                        if(save.contains("http")){
-                            lista.add(Actor(starname[i],save))
-                        }else{
-                            lista.add(Actor(starname[i],otro))
+                        if (save.contains("http")) {
+                            lista.add(Actor(starname[i], save))
+                        } else {
+                            lista.add(Actor(starname[i], otro))
                         }
 
                     }
@@ -287,7 +296,7 @@ class JpvHubProvider : MainAPI() {
             /////Fin espacio prueba
 
             //parte para rellenar la lista recomendados
-            val id = url.replace("https://www.jpvhub.com/video/","")
+            val id = url.replace("https://www.jpvhub.com/video/", "")
             val res = app.get("https://api.jpvhub.com/api/video/video/related/$id").text
 
             val recomm = tryParseJson<VideoPageRec>(res).let { json ->
@@ -296,7 +305,7 @@ class JpvHubProvider : MainAPI() {
 
                     val titlerec = it.title.name
                     val thumbrec = it.thumb
-                    val linkrec = mainUrl +"video/" + it.id
+                    val linkrec = mainUrl + "video/" + it.id
 
                     AnimeSearchResponse(
                             titlerec!!,
@@ -325,8 +334,7 @@ class JpvHubProvider : MainAPI() {
                 this.duration = null
                 addActors(lista)
             }
-        }
-        catch (e:Exception) {
+        } catch (e: Exception) {
             logError((e))
         }
         throw ErrorLoadingException()

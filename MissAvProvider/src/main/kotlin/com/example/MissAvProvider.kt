@@ -241,19 +241,7 @@ class MissAvProvider : MainAPI() {
            isCasting: Boolean,
            subtitleCallback: (SubtitleFile) -> Unit,
            callback: (ExtractorLink) -> Unit
-   ): Boolean {//https://dood.ws/e/aujxzir2eoim
-       //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://streamtape.com/e/4zv4vA4y9rI284/","https://ds2play.com/e/gli2qcwpmtvl","https://v.javmix.me/vod/player.php?fl=w5qy7qg1xc6g")
-       //val f = listOf("https://fastbrisk.com/e/pkbr5o5n7hvc","https://strwish.com/e/hlsubpw1u660")
-       //val f = listOf("https://streamwish.top/e/k2hzsia9ltjp","https://sfastwish.com/e/ujcmxn1hw8at","https://flaswish.com/e/pkbr5o5n7hvc","https://flaswish.com/e/hlsubpw1u660")
-       //val f = listOf("https://streamwish.top/e/k2hzsia9ltjp","https://flaswish.com/e/pkbr5o5n7hvc","https://streamtape.com/e/4zv4vA4y9rI284/","https://filemoon.wf/e/709h63gf9arj/PPPD-786_Seduce_al_novio_de_su_hermana_-_Yuria_Yoshine ")
-       //SIII mixdrop val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://mixdrop.to/e/4dkx80jmaqln1lj","https://mixdrop.ps/e/4dkx80jmaqln1lj")
-       //val f = listOf("https://dood.ws/e/aujxzir2eoim","https://playerwish.com/e/k2hzsia9ltjp","https://wishfast.top/e/k2hzsia9ltjp","https://wishembed.pro/e/k2hzsia9ltjp","https://embedwish.com/e/k2hzsia9ltjp","https://dwish.pro/e/k2hzsia9ltjp","https://mwish.pro/e/k2hzsia9ltjp")
-       //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://watchsb.com/v/0eo0wpztwnkz","https://ww7.embedsito.com/e/673826059907","https://streamsb.net/e/0eo0wpztwnkz","https://fastbrisk.com/e/pkbr5o5n7hvc","https://flaswish.com/e/pkbr5o5n7hvc","https://embedwish.com/e/k2hzsia9ltjp","https://mixdrop.ps/f/4dkx80jmaqln1lj","https://fastbrisk.com/e/pkbr5o5n7hvc")
-       //siiii vidhidevip val f = listOf("https://dood.ws/e/aujxzir2eoim","https://vidhidevip.com/embed/lkbj6k7ipxrf","https://filemoon.wf/e/oytgjufcbzsd/SSNI-469_Stripers_de_fantasia_-_Yumi_Shion","https://moon-4uemks89-embed.com/ptsd/oytgjufcbzsd")
-       //val f = listOf("https://streamtape.net/e/4zv4vA4y9rI284/","https://wishembed.pro/e/tkxnrvvcmr7d","https://emturbovid.com/t/67153f54ab258","https://emturbovid.com/t/J4GYkYjO0QdxWSERr7dJ","https://streamcdn.info/play/4KFi5bH0uv44Dx4LOJhXmb4KH0KmjM2HV8goTBKj8NNZ.html")
-       //val f = listOf("https://dood.ws/e/aujxzir2eoim","https://streamwish.to/e/39vofoptz1f1","https://embedwish.com/e/82vgp2xqywzh","https://playerwish.com/e/82vgp2xqywzh","https://voe.sx/e/11qfeoizpoo7","https://brittneystandardwestern.com/e/11qfeoizpoo7")
-       //val f = listOf("https://streamtape.net/e/tk9bv8ko9zgw/","https://vidhidevip.com/embed/5njbrk5z1zdh ")
-
+   ): Boolean {
        var value =""
        var text = app.get(data).document.selectFirst("body").toString()
        val pattern = "https:\\\\/\\\\/sixyik\\.com\\\\/([^\"]+)\\\\/seek".toRegex()
@@ -263,7 +251,6 @@ class MissAvProvider : MainAPI() {
        }
 
        var links = listOf("https://surrit.com/" + value +"/1080p/video.m3u8","https://surrit.com/" + value +"/720p/video.m3u8","https://surrit.com/" + value +"/480p/video.m3u8","https://surrit.com/" + value +"/360p/video.m3u8")
-
 
        links.mapNotNull { videos ->
            fetchUrls(videos).map {
@@ -286,49 +273,6 @@ class MissAvProvider : MainAPI() {
                }
            }
        }
-
-       /*
-       val f = listOf("https://jav.guru/searcho/?hr=713231747a736e6f76736530","https://jav.guru/searcho/?ur=742f36373433393038363165356363","https://jav.guru/searcho/?dr=656f575a4450724f41567359565761")
-       f.mapNotNull{videos ->
-           fetchUrls(videos).map {
-               it.replace("https://dooood.com", "https://dood.ws")
-                       .replace("https://dood.sh", "https://dood.ws")
-                       .replace("https://dood.la","https://dood.ws")
-                       .replace("https://ds2play.com","https://dood.ws")
-                       .replace("https://dood.to","https://dood.ws")
-           }.apmap {
-               loadExtractor(it, data, subtitleCallback, callback)
-               /*if(it.contains("dood")){
-                   for (i in 0 .. 3){
-                       if (i ==0){
-                           loadExtractor(it, data, subtitleCallback, callback)
-                       }
-                       if(i == 1){
-                           loadExtractor(it.replace("ws","la"), data, subtitleCallback, callback)
-                       }
-                       if(i == 2){
-                           loadExtractor(it.replace("ws","sh"), data, subtitleCallback, callback)
-                       }
-                       if(i == 3){
-                           loadExtractor(it.replace("ws","to"), data, subtitleCallback, callback)
-                       }
-
-                   }
-               }*/
-
-
-             /*  if (it.contains("flaswish") == true) {
-                   cleanExtractor(
-                           "Fireload",
-                           "Fireload ",
-                           it,
-                           callback
-                   )
-               }*/
-
-
-       */
-
        return true
    }
 }
