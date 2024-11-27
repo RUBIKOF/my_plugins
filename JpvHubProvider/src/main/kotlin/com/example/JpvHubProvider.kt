@@ -289,7 +289,14 @@ class JpvHubProvider : MainAPI() {
                         if (save.contains("http")) {
                             lista.add(Actor(starname[i], save))
                         } else {
-                            lista.add(Actor(starname[i], otro))
+                            app.get("https://www.javdatabase.com/idols/" + r.joinToString("-")).document.select("#main ").mapNotNull {
+                                var save = it.select(".entry-content .idol-portrait img").attr("src")
+                                if(save.contains("http")){
+                                    lista.add(Actor(starname[i], save))
+                                }else{
+                                    lista.add(Actor(starname[i], otro))
+                                }
+                            }
                         }
 
                     }
