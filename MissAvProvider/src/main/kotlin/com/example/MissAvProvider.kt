@@ -250,28 +250,31 @@ class MissAvProvider : MainAPI() {
        }
 
        var links = listOf("https://surrit.com/" + value +"/1080p/video.m3u8","https://surrit.com/" + value +"/720p/video.m3u8","https://surrit.com/" + value +"/480p/video.m3u8","https://surrit.com/" + value +"/360p/video.m3u8")
+       var res = listOf("1080p","720p","480p","360p")
+       val linkres = links.zip(res).toMap()
 
-       links.mapNotNull { videos ->
-           fetchUrls(videos).map {
-               M3u8Helper().m3u8Generation(
-                       M3u8Helper.M3u8Stream(
-                               it,
-                               headers = app.get(data).headers.toMap()
-                       ), true
-               ).map { stream ->
-                   callback(
-                           ExtractorLink(
-                                   source = this.name,
-                                   name = "${this.name} m3u8",
-                                   url = stream.streamUrl,
-                                   referer = data,
-                                   quality = getQualityFromName(stream.quality?.toString()),
-                                   isM3u8 = true
-                           )
-                   )
-               }
+       linkres.forEach { (links, resolution) ->
+
+           M3u8Helper().m3u8Generation(
+                   M3u8Helper.M3u8Stream(
+                           links,
+                           headers = app.get(data).headers.toMap()
+                   ), true
+           ).map { stream ->
+               callback(
+                       ExtractorLink(
+                               source = this.name,
+                               name = "${this.name}" +resolution ,
+                               url = stream.streamUrl,
+                               referer = data,
+                               quality = getQualityFromName(stream.quality?.toString()),
+                               isM3u8 = true
+                       )
+               )
            }
        }
+
+
        return true
    }
 }
