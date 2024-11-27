@@ -139,7 +139,7 @@ class MissAvProvider : MainAPI() {
 
             return app.get("https://missav.com/en/search/$query").document
                     .select(".thumbnail.group").mapNotNull {
-                        val image = it.selectFirst("img")?.attr("data-src").toString().replace("cover-t","covert-n")
+                        val image = it.selectFirst("img")?.attr("data-src").toString()
                         val title = it.selectFirst(".my-2 a")?.text().toString()
                         val url = fixUrlNull(it.selectFirst(".my-2 a")?.attr("href") ?: "") ?: return@mapNotNull null
 
