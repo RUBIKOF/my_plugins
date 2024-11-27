@@ -270,7 +270,10 @@ class JpvHubProvider : MainAPI() {
             val matches = modelsBlock?.let {
                 namePattern.findAll(it)
             }?.map {
-                starname.add(it.groupValues[1])
+                it.groupValues[1]
+            }?.toList() ?: emptyList()
+            matches.forEach {
+                starname.add(it)
             }
 
 
