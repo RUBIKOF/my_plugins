@@ -137,12 +137,11 @@ class MissAvProvider : MainAPI() {
         var z: Int
         var poster = ""
 
-            return app.get("$mainUrl//?s=$query").document
-                    .select("#main .row").mapNotNull {
-                        val image = it.selectFirst(".imgg img")?.attr("data-src").toString().replace("cover-t","covert-n")
+            return app.get("https://missav.com/en/search/$query").document
+                    .select(".thumbnail.group").mapNotNull {
+                        val image = it.selectFirst(".img")?.attr("data-src").toString().replace("cover-t","covert-n")
                         val title = it.selectFirst("h2 a")?.text().toString()
-                        val url = fixUrlNull(it.selectFirst("h2 a")?.attr("href") ?: "") ?: return@mapNotNull null
-
+                        val url = fixUrlNull(it.selectFirst(".my-2 a")?.attr("href") ?: "") ?: return@mapNotNull null
 
                         MovieSearchResponse(
                                 title,
