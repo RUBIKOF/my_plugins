@@ -36,7 +36,9 @@ class JpvHubProvider : MainAPI() {
             TvType.NSFW
     )
     override val mainPage = mainPageOf(
-            "$mainUrl/videos/censored/" to "Main Page",
+            mainUrl + "videos/censored/" to "Recientes",
+            mainUrl + "videos/uncensored-leaked/" to "Sin Censura",
+            mainUrl + "videos/mosaic-removed/" to "Censura eliminada",
     )
     val type = TvType.NSFW
 
@@ -52,88 +54,45 @@ class JpvHubProvider : MainAPI() {
                 ),
 
                 )
-        val pagedLink = if (page > 0) "$mainUrl/videos/censored/" + page else "$mainUrl/videos/censored/"
-        val items = ArrayList<HomePageList>()
-        val lista = ArrayList<SearchResponse>()
-        val listaurl = ArrayList<SearchResponse>()
 
-        var z : String
-        var gm : String
-        var gm1 : String = ""
-        val f = app.get(pagedLink).document.body()
-        z = f.toString().substring(f.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
-        gm = z.substring(0,z.indexOf("</script>"))
-        val idPattern = "\"Id\":\"([^\"]+)\"".toRegex()
-        val titlePattern = "\"title\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
-        val thumbnailPattern = "\"thumbnailPath\"\\s*:\\s*\"([^\"]+)\"".toRegex()
+        var json : String
+        var gmd : String
+        val pagedLink = if (page > 0) request.data + page else request.data
+        val document = app.get(pagedLink).document.body()
+        json = document.toString().substring(document.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
+        gmd = json.substring(0,json.indexOf("</script>"))
+        val idPattern1 = "\"Id\":\"([^\"]+)\"".toRegex()
+        val titlePattern1 = "\"title\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
+        val thumbnailPattern1 = "\"thumbnailPath\"\\s*:\\s*\"([^\"]+)\"".toRegex()
 
-        val idMatches = idPattern.findAll(gm)
-        val titleMatches = titlePattern.findAll(gm)
-        val thumbnailMatches = thumbnailPattern.findAll(gm)
-
-
-
-
+        val idMatches = idPattern1.findAll(gmd)
+        val titleMatches = titlePattern1.findAll(gmd)
+        val thumbnailMatches = thumbnailPattern1.findAll(gmd)
+        val videoList = mutableListOf<Video>()
         idMatches.forEachIndexed { index, matchResult ->
             val id = matchResult.groupValues[1]
             val title = titleMatches.elementAtOrNull(index)?.groupValues?.get(1)
             val thumb = thumbnailMatches.elementAtOrNull(index)?.groupValues?.get(1).toString()
-
-            lista.add(
-                    MovieSearchResponse(
-                            name = title.toString(),
-                            url = mainUrl + "video/" + id,
-                            apiName = this.name,
-                            type = globalTvType,
-                            posterUrl = thumb,
-                            year = null
-                    ))
+            videoList.add(Video(id,title,thumb))
         }
-        items.add(
-                    HomePageList(
-                            name = "Recientes",
-                            list = lista,
-                            isHorizontalImages = true
-                    )
+        val home = videoList.map { video ->
+            AnimeSearchResponse(
+                    video.titleName!!,
+                    fixUrl(mainUrl + "video/" + video.id),
+                    this.name,
+                    TvType.NSFW,
+                    fixUrl(video.thumbnailPath.toString()),
+                    null
             )
-        urls.apmap { (url, name) ->
-
-            val pagedLink = if (page > 0) "$url/" + page else url
-            var json : String
-            var gmd : String
-            val ff = app.get(pagedLink).document.body()
-            json = ff.toString().substring(ff.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
-            gmd = json.substring(0,json.indexOf("</script>"))
-
-            val idPattern1 = "\"Id\":\"([^\"]+)\"".toRegex()
-            val titlePattern1 = "\"title\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
-            val thumbnailPattern1 = "\"thumbnailPath\"\\s*:\\s*\"([^\"]+)\"".toRegex()
-
-            val idMatches = idPattern1.findAll(gmd)
-            val titleMatches = titlePattern1.findAll(gmd)
-            val thumbnailMatches = thumbnailPattern1.findAll(gmd)
-            val videoList = mutableListOf<Video>()
-            val x = idMatches.forEachIndexed { index, matchResult ->
-                val id = matchResult.groupValues[1]
-                val title = titleMatches.elementAtOrNull(index)?.groupValues?.get(1)
-                val thumb = thumbnailMatches.elementAtOrNull(index)?.groupValues?.get(1).toString()
-                videoList.add(Video(id,title,thumb))
-            }
-
-            val home = videoList.map { video ->
-                AnimeSearchResponse(
-                        video.titleName!!,
-                        fixUrl(mainUrl + "video/" + video.id),
-                        this.name,
-                        TvType.NSFW,
-                        fixUrl(video.thumbnailPath.toString()),
-                        null
-                )
-            }
-
-            items.add(HomePageList(name, home, isHorizontalImages = true))
-            listaurl.clear()
         }
+        return newHomePageResponse(
+                list = HomePageList(
+                        name               = request.name,
+                        list               = home,
+                        isHorizontalImages = true
+                ),
+                hasNext = true
+        )
 
 
         /*val requestGet = app.get("https://www.jpvhub.com/videos/censored")
@@ -152,11 +111,6 @@ class JpvHubProvider : MainAPI() {
                     })
                 },isHorizontalImages = true
         ))*/
-
-
-
-        if (items.size <= 0) throw ErrorLoadingException()
-        return HomePageResponse(items,hasNext = true)
     }
 
     private data class VideoPageRec (
