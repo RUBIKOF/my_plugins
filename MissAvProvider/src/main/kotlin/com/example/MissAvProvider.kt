@@ -261,7 +261,7 @@ class MissAvProvider : MainAPI() {
        if(check.contains("p")||check.contains("P")){
            links = listOf("https://surrit.com/" + value +"/1080p/video.m3u8","https://surrit.com/" + value +"/720p/video.m3u8","https://surrit.com/" + value +"/480p/video.m3u8","https://surrit.com/" + value +"/360p/video.m3u8")
        }
-       else{
+       if (check.contains("x")||check.contains("X")){
            links = listOf("https://surrit.com/" + value +"/1920x1080/video.m3u8","https://surrit.com/" + value +"/1280x720/video.m3u8","https://surrit.com/" + value +"/842x480/video.m3u8","https://surrit.com/" + value +"/640x360/video.m3u8")
        }
 
