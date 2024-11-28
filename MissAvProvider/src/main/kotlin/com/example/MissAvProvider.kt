@@ -243,6 +243,7 @@ class MissAvProvider : MainAPI() {
            callback: (ExtractorLink) -> Unit
    ): Boolean {
        var value =""
+       var check =""
        var text = app.get(data).document.selectFirst("body").toString()
        val pattern = "https:\\\\/\\\\/sixyik\\.com\\\\/([^\"]+)\\\\/seek".toRegex()
        val matchResult = pattern.find(text)
@@ -250,8 +251,20 @@ class MissAvProvider : MainAPI() {
            value = matchResult.groupValues[1]
        }
 
-       var links = listOf("https://surrit.com/" + value +"/1080p/video.m3u8","https://surrit.com/" + value +"/720p/video.m3u8","https://surrit.com/" + value +"/480p/video.m3u8","https://surrit.com/" + value +"/360p/video.m3u8")
+       val regex = """(\d{3,4}x\d{3,4}|\d{3,4}p)""".toRegex()
+       val resolutions = regex.find(text)
+       if(resolutions != null){
+           check = resolutions?.value.toString()
+       }
+       var links =listOf<String>()
        var res = listOf("1080p","720p","480p","360p")
+       if(check.contains("p")||check.contains("P")){
+           links = listOf("https://surrit.com/" + value +"/1080p/video.m3u8","https://surrit.com/" + value +"/720p/video.m3u8","https://surrit.com/" + value +"/480p/video.m3u8","https://surrit.com/" + value +"/360p/video.m3u8")
+       }
+       else{
+           links = listOf("https://surrit.com/" + value +"/1920x1080/video.m3u8","https://surrit.com/" + value +"/1280x720/video.m3u8","https://surrit.com/" + value +"/842x480/video.m3u8","https://surrit.com/" + value +"/640x360/video.m3u8")
+       }
+
        val linkres = links.zip(res).toMap()
 
        linkres.forEach { (links, resolution) ->
@@ -265,7 +278,7 @@ class MissAvProvider : MainAPI() {
                callback(
                        ExtractorLink(
                                source = this.name,
-                               name = "${this.name}" +resolution ,
+                               name = "${this.name} " +resolution ,
                                url = stream.streamUrl,
                                referer = data,
                                quality = getQualityFromName(stream.quality?.toString()),
