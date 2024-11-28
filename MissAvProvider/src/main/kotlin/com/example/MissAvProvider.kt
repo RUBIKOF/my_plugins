@@ -47,22 +47,38 @@ class MissAvProvider : MainAPI() {
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val urls = listOf(
                 Pair(
-                        "$mainUrl/tag/cuckold/",
-                        "Cuckold"
+                        mainUrl + "dm36/en/genres/Incest",
+                        "Incest"
                 ),
                 Pair(
-                        "$mainUrl/tag/big-tits/",
-                        "Big Tits"
+                        mainUrl + "dm312/en/genres/Slut",
+                        "Slut"
+                ),
+                Pair(
+                        mainUrl + "dm783/en/genres/Sister",
+                        "Sister"
+                ),
+                Pair(
+                        mainUrl + "dm724/en/genres/Ntr",
+                        "NTR"
+                ),
+                Pair(
+                        mainUrl + "dm312/en/genres/Slut",
+                        "Slut"
+                ),
+                Pair(
+                        mainUrl + "dm312/en/genres/Slut",
+                        "Slut"
                 ),
 
         )
 
-        //val pagedLink = if (page > 0) "https://jav.guru/page/" + page else "https://jav.guru/"
+        val pagedLink = if (page > 0) mainUrl+ "dm509/en/release?page=" + page else mainUrl + "dm509/en/release"
         val items = ArrayList<HomePageList>()
         items.add(
                 HomePageList(
                         "Recientes",
-                        app.get("https://missav.com/dm509/en/release?page=1").document.select(".thumbnail.group").map {
+                        app.get(pagedLink).document.select(".thumbnail.group").map {
                             val title = it.selectFirst(".my-2 a")?.text().toString()
                             val poster = it.selectFirst("img")?.attr("data-src")
                             val url = it.selectFirst(".my-2 a")?.attr("href") ?: ""
@@ -74,13 +90,13 @@ class MissAvProvider : MainAPI() {
                         }, isHorizontalImages = true)
         )
         urls.apmap { (url, name) ->
-            val pagedLink = if (page > 0) url + "page/" + page else url
+            val pagedLink = if (page > 0) url + "?page=" + page else url
             val soup = app.get(pagedLink).document
-            val home = soup.select("#main > div").map {
-                val title = it.selectFirst("h2")?.text()
-                val poster = it.selectFirst("img")?.attr("src").toString().replace("cover-t","cover-n")
+            val home = soup.select(".thumbnail.group").map {
+                val title = it.selectFirst(".my-2 a")?.text()
+                val poster = it.selectFirst("img")?.attr("data-src").toString().replace("cover-t","cover-n")
 
-                val link = it.selectFirst("a")?.attr("href") ?: ""
+                val link = it.selectFirst(".my-2 a")?.attr("href") ?: ""
 
                 AnimeSearchResponse(
                         title!!,
