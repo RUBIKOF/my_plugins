@@ -44,7 +44,7 @@ class MissAvProvider : MainAPI() {
             mainUrl + "dm36/en/genres/Incest?page=" to "Incest",
             mainUrl + "dm312/en/genres/Slut?page=" to "Slut",
             mainUrl + "dm783/en/genres/Sister?page=" to "Sister",
-            mainUrl + "dm724/en/genres/Ntr?page=" to "Incest",
+            mainUrl + "dm724/en/genres/Ntr?page=" to "NTR",
 
     )
     val saveImage = "";
