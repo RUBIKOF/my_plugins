@@ -40,7 +40,12 @@ class MissAvProvider : MainAPI() {
             TvType.NSFW
     )
     override val mainPage = mainPageOf(
-            "$mainUrl/page/" to "Main Page",
+            mainUrl+"dm509/en/release?page=" to "Main Page",
+            mainUrl + "dm36/en/genres/Incest?page=" to "Incest",
+            mainUrl + "dm312/en/genres/Slut?page=" to "Slut",
+            mainUrl + "dm783/en/genres/Sister?page=" to "Sister",
+            mainUrl + "dm724/en/genres/Ntr?page=" to "Incest",
+
     )
     val saveImage = "";
 
@@ -64,7 +69,7 @@ class MissAvProvider : MainAPI() {
                 ),
         )
 
-        val pagedLink = if (page > 0) mainUrl+ "dm509/en/release?page=" + page else mainUrl + "dm509/en/release"
+        val pagedLink = if (page > 0) request.data+page else request.data.replace("?page=","")
         val items = ArrayList<HomePageList>()
         items.add(
                 HomePageList(
@@ -80,29 +85,6 @@ class MissAvProvider : MainAPI() {
                             }
                         }, isHorizontalImages = true)
         )
-        urls.apmap { (url, name) ->
-            val pagedLink = if (page > 0) url + "?page=" + page else url
-            val soup = app.get(pagedLink).document
-            val home = soup.select(".thumbnail.group").map {
-                val title = it.selectFirst(".my-2 a")?.text()
-                val poster = it.selectFirst("img")?.attr("data-src").toString().replace("cover-t","cover-n")
-
-                val link = it.selectFirst(".my-2 a")?.attr("href") ?: ""
-
-                AnimeSearchResponse(
-                        title!!,
-                        fixUrl(link),
-                        this.name,
-                        TvType.Anime,
-                        fixUrl(poster),
-                        null,
-                        if (title.contains("Latino") || title.contains("Castellano")) EnumSet.of(
-                                DubStatus.Dubbed
-                        ) else EnumSet.of(DubStatus.Subbed),
-                )
-            }
-            items.add(HomePageList(name, home, isHorizontalImages = true))
-        }
 
         if (items.size <= 0) throw ErrorLoadingException()
         return HomePageResponse(items, hasNext = true)
