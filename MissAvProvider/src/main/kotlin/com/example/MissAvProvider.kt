@@ -71,23 +71,23 @@ class MissAvProvider : MainAPI() {
 
         val pagedLink = if (page > 0) request.data+page else request.data.replace("?page=","")
         val items = ArrayList<HomePageList>()
-        items.add(
-                HomePageList(
-                        "Recientes",
-                        app.get(pagedLink).document.select(".thumbnail.group").map {
-                            val title = it.selectFirst(".my-2 a")?.text().toString()
-                            val poster = it.selectFirst("img")?.attr("data-src")
-                            val url = it.selectFirst(".my-2 a")?.attr("href") ?: ""
 
+        val document = app.get(request.data + page).document
+        val home = document.select(".thumbnail.group").map {
+            val title = it.selectFirst(".my-2 a")?.text()
+            val poster = it.selectFirst("img")?.attr("data-src").toString().replace("cover-t", "cover-n")
 
-                            newAnimeSearchResponse(title, url) {
-                                this.posterUrl = poster
-                            }
-                        }, isHorizontalImages = true)
+            val link = it.selectFirst(".my-2 a")?.attr("href") ?: ""
+            newMovieSearchResponse(title.toString(), link, TvType.NSFW) { this.posterUrl = posterUrl }
+        }
+        return newHomePageResponse(
+                list = HomePageList(
+                        name               = request.name,
+                        list               = home,
+                        isHorizontalImages = true
+                ),
+                hasNext = true
         )
-
-        if (items.size <= 0) throw ErrorLoadingException()
-        return HomePageResponse(items, hasNext = true)
 
     }
 
