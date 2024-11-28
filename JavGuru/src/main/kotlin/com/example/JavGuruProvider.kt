@@ -390,26 +390,6 @@ class JavGuruProvider : MainAPI() {
 
        }
 
-       var extractedlink = "https://surrit.com/b40413ab-da82-465f-a7dd-de81a78c7c96/480p/video.m3u8"
-       if (extractedlink.isNotBlank()) {
-           M3u8Helper().m3u8Generation(
-                   M3u8Helper.M3u8Stream(
-                           extractedlink,
-                           headers = app.get(data).headers.toMap()
-                   ), true
-           ).map { stream ->
-               callback(
-                       ExtractorLink(
-                               source = this.name,
-                               name = "${this.name} m3u8",
-                               url = stream.streamUrl,
-                               referer = data,
-                               quality = getQualityFromName(stream.quality?.toString()),
-                               isM3u8 = true
-                       )
-               )
-           }
-       }
 
        /*
        val f = listOf("https://jav.guru/searcho/?hr=713231747a736e6f76736530","https://jav.guru/searcho/?ur=742f36373433393038363165356363","https://jav.guru/searcho/?dr=656f575a4450724f41567359565761")
