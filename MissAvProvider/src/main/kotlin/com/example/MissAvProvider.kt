@@ -292,7 +292,7 @@ class MissAvProvider : MainAPI() {
 
 
 
-
+/*
        var links =listOf<String>()
        var res = listOf("1080p","720p","480p","360p")
        if(check.contains("p")||check.contains("P")){
@@ -324,7 +324,7 @@ class MissAvProvider : MainAPI() {
                )
            }
        }
-
+*/
 
        return true
    }
