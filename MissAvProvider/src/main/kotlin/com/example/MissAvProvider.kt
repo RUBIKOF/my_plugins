@@ -78,7 +78,7 @@ class MissAvProvider : MainAPI() {
             val poster = it.selectFirst("img")?.attr("data-src").toString().replace("cover-t", "cover-n")
 
             val link = it.selectFirst(".my-2 a")?.attr("href") ?: ""
-            newMovieSearchResponse(title.toString(), link, TvType.NSFW) { this.posterUrl = posterUrl }
+            newMovieSearchResponse(title.toString(), link, TvType.NSFW) { this.posterUrl = poster }
         }
         return newHomePageResponse(
                 list = HomePageList(
