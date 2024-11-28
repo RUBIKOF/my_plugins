@@ -78,7 +78,7 @@ class MissAvProvider : MainAPI() {
             val soup = app.get(pagedLink).document
             val home = soup.select("#main > div").map {
                 val title = it.selectFirst("h2")?.text()
-                val poster = it.selectFirst("img")?.attr("src").toString()
+                val poster = it.selectFirst("img")?.attr("src").toString().replace("cover-t","cover-n")
 
                 val link = it.selectFirst("a")?.attr("href") ?: ""
 
@@ -139,7 +139,7 @@ class MissAvProvider : MainAPI() {
 
             return app.get("https://missav.com/en/search/$query").document
                     .select(".thumbnail.group").mapNotNull {
-                        val image = it.selectFirst("img")?.attr("data-src").toString()
+                        val image = it.selectFirst("img")?.attr("data-src").toString().replace("cover-t","cover-n")
                         val title = it.selectFirst(".my-2 a")?.text().toString()
                         val url = fixUrlNull(it.selectFirst(".my-2 a")?.attr("href") ?: "") ?: return@mapNotNull null
 
@@ -167,7 +167,8 @@ class MissAvProvider : MainAPI() {
         val type = "NFSW"
         val description = ""
         //val poster = doc.selectFirst(".inside-article img")?.attr("src")
-        val poster = "https://fivetiu.com/" + url.replace("https://missav.com/en/","") + "/cover-n.jpg"
+        val code = url.substringAfter("/en/").substringBefore("/")
+        val poster = "https://fivetiu.com/" + code + "/cover-n.jpg"
 
 
 
