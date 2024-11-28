@@ -185,11 +185,11 @@ class MissAvProvider : MainAPI() {
             value = matchResult.groupValues[1]
         }
 
+        val m = text.substring(text.indexOf("eval(function(p,a,c,k,e,d)"))
         val regex = """(\d{3,4}x\d{3,4}|\d{3,4}p)""".toRegex()
-        val resolutions = regex.find(text)
+        val resolutions = regex.find(m)
         if(resolutions != null){
             check = resolutions?.value.toString()
-            test+= check
         }
         var links =listOf<String>()
         var res = listOf("1080p","720p","480p","360p")
@@ -281,8 +281,9 @@ class MissAvProvider : MainAPI() {
            value = matchResult.groupValues[1]
        }
 
+       val m = text.substring(text.indexOf("eval(function(p,a,c,k,e,d)"))
        val regex = """(\d{3,4}x\d{3,4}|\d{3,4}p)""".toRegex()
-       val resolutions = regex.find(text)
+       val resolutions = regex.find(m)
        if(resolutions != null){
            check = resolutions?.value.toString()
        }
