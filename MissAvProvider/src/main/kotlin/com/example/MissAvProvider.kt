@@ -189,6 +189,7 @@ class MissAvProvider : MainAPI() {
         val resolutions = regex.find(text)
         if(resolutions != null){
             check = resolutions?.value.toString()
+            test+= check
         }
         var links =listOf<String>()
         var res = listOf("1080p","720p","480p","360p")
