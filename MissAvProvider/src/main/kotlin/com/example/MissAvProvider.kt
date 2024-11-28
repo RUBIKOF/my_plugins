@@ -172,36 +172,6 @@ class MissAvProvider : MainAPI() {
 
 
 
-
-
-
-
-        var value =""
-        var check =""
-        var text = app.get(url).document.selectFirst("body").toString()
-        val pattern = "https:\\\\/\\\\/sixyik\\.com\\\\/([^\"]+)\\\\/seek".toRegex()
-        val matchResult = pattern.find(text)
-        if (matchResult != null) {
-            value = matchResult.groupValues[1]
-        }
-
-        val m = text.substring(text.indexOf("eval(function(p,a,c,k,e,d)"))
-        val regex = """(\d{3,4}x\d{3,4}|\d{3,4}p)""".toRegex()
-        val resolutions = regex.find(m)
-        if(resolutions != null){
-            check = resolutions?.value.toString()
-        }
-        var links =listOf<String>()
-        var res = listOf("1080p","720p","480p","360p")
-        if(check.contains("p")||check.contains("P")){
-            links = listOf("https://surrit.com/" + value +"/1080p/video.m3u8","https://surrit.com/" + value +"/720p/video.m3u8","https://surrit.com/" + value +"/480p/video.m3u8","https://surrit.com/" + value +"/360p/video.m3u8")
-        }
-        if (check.contains("x")||check.contains("X")){
-            links = listOf("https://surrit.com/" + value +"/1920x1080/video.m3u8","https://surrit.com/" + value +"/1280x720/video.m3u8","https://surrit.com/" + value +"/842x480/video.m3u8","https://surrit.com/" + value +"/640x360/video.m3u8")
-        }
-        links.forEach {
-            test += ": \n" +it
-        }
             //Fin espacio prueba
         return newMovieLoadResponse(
                 title,
@@ -287,6 +257,42 @@ class MissAvProvider : MainAPI() {
        if(resolutions != null){
            check = resolutions?.value.toString()
        }
+       var lista =listOf<String>()
+       if(check.contains("p")){
+           lista = listOf("1080p", "720p", "480p", "360p")
+       }else{
+           lista = listOf("1920x1080", "1280x720", "842x480", "640x360")
+       }
+       val index = lista.indexOfFirst {
+           it.contains(check, ignoreCase = true)
+       }
+       val resultado = if (index != -1) { lista.subList(index, lista.size) } else { emptyList() }
+
+       resultado.forEach { item ->
+
+           M3u8Helper().m3u8Generation(
+                   M3u8Helper.M3u8Stream(
+                           "https://surrit.com/$value/$item/video.m3u8",
+                           headers = app.get(data).headers.toMap()
+                   ), true
+           ).map { stream ->
+               val res = if(item.contains("x")) item.substring(item.indexOf("x")+1) + "p" else item
+               callback(
+                       ExtractorLink(
+                               source = this.name,
+                               name = "${this.name} " + res,
+                               url = stream.streamUrl,
+                               referer = data,
+                               quality = getQualityFromName(stream.quality?.toString()),
+                               isM3u8 = true
+                       )
+               )
+           }
+       }
+
+
+
+
        var links =listOf<String>()
        var res = listOf("1080p","720p","480p","360p")
        if(check.contains("p")||check.contains("P")){
