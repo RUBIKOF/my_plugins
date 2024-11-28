@@ -45,7 +45,6 @@ class MissAvProvider : MainAPI() {
     val saveImage = "";
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        var numero = page
         val urls = listOf(
                 Pair(
                         mainUrl + "dm36/en/genres/Incest",
@@ -63,15 +62,6 @@ class MissAvProvider : MainAPI() {
                         mainUrl + "dm724/en/genres/Ntr",
                         "NTR"
                 ),
-                Pair(
-                        mainUrl + "dm312/en/genres/Slut",
-                        "Slut"
-                ),
-                Pair(
-                        mainUrl + "dm312/en/genres/Slut",
-                        "Slut"
-                ),
-
         )
 
         val pagedLink = if (page > 0) mainUrl+ "dm509/en/release?page=" + page else mainUrl + "dm509/en/release"
@@ -91,7 +81,7 @@ class MissAvProvider : MainAPI() {
                         }, isHorizontalImages = true)
         )
         urls.apmap { (url, name) ->
-            val pagedLink = if (page > 0) url + "?page=" + numero else url
+            val pagedLink = if (page > 0) url + "?page=" + page else url
             val soup = app.get(pagedLink).document
             val home = soup.select(".thumbnail.group").map {
                 val title = it.selectFirst(".my-2 a")?.text()
