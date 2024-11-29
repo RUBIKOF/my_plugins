@@ -45,7 +45,6 @@ class JavGuruProvider : MainAPI() {
     val saveImage = "";
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        var test = request.data
         val urls = listOf(
                 Pair(
                         "$mainUrl/tag/cuckold/",
@@ -116,7 +115,7 @@ class JavGuruProvider : MainAPI() {
                             val url = it.selectFirst("a")?.attr("href") ?: ""
 
 
-                            newAnimeSearchResponse(test, url) {
+                            newAnimeSearchResponse(title, url) {
                                 this.posterUrl = poster
                                 addDubStatus(dubstat)
                             }
