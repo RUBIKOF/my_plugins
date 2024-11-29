@@ -231,19 +231,12 @@ class MissAvProvider : MainAPI() {
 
         val client = OkHttpClient()
 
-        val json = JSONObject()
-        json.put("q", "Hello, how are you?")
-        json.put("source", "en")
-        json.put("target", "es")
-        json.put("format", "text")
-
-        val body: RequestBody = RequestBody.create(
-                "application/json; charset=utf-8".toMediaTypeOrNull(), json.toString()
-        )
+        val textToTranslate = "Hello, how are you?"
+        val langPair = "en|es"
+        val url = "https://api.mymemory.translated.net/get?q=$textToTranslate&langpair=$langPair"
 
         val request = Request.Builder()
-                .url("https://libretranslate.de/translate")
-                .post(body)
+                .url(url)
                 .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -258,7 +251,7 @@ class MissAvProvider : MainAPI() {
                     val responseData = response.body?.string()
                     if (responseData != null) {
                         val jsonResponse = JSONObject(responseData)
-                        val translatedText = jsonResponse.getString("translatedText")
+                        val translatedText = jsonResponse.getJSONObject("responseData").getString("translatedText")
                         trad = "Texto traducido: $translatedText"
                     } else {
                         trad = "Error en la traducción"
@@ -275,7 +268,7 @@ class MissAvProvider : MainAPI() {
                 url
         ) {
             posterUrl = fixUrlNull(poster)
-            this.plot = trad
+            this.plot = "m: " + trad
             this.recommendations = null
             this.duration = min
             addActors(lista)
