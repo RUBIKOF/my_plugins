@@ -45,6 +45,7 @@ class MissAvProvider : MainAPI() {
             mainUrl + "dm312/en/genres/Slut?page=" to "Slut",
             mainUrl + "dm783/en/genres/Sister?page=" to "Sister",
             mainUrl + "dm724/en/genres/Ntr?page=" to "NTR",
+            mainUrl + "/dm44/en/genres/Black%20Male%20Actor?page=" to "Black Actor",
 
     )
     val saveImage = "";
@@ -70,7 +71,7 @@ class MissAvProvider : MainAPI() {
         )
 
         val pagedLink = if (page > 0) request.data+page else request.data.replace("?page=","")
-        val items = ArrayList<HomePageList>()
+
 
         val document = app.get(request.data + page).document
         val home = document.select(".thumbnail.group").map {
@@ -150,14 +151,22 @@ class MissAvProvider : MainAPI() {
     @TargetApi(Build.VERSION_CODES.O)
     override suspend fun load(url: String): LoadResponse {
         val doc = app.get(url, timeout = 120).document
-        var test ="";
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
         val title = doc.selectFirst(".mt-4 h1")?.text()?:""
         val type = "NFSW"
-        val description = ""
-        //val poster = doc.selectFirst(".inside-article img")?.attr("src")
+        var description =""
         val code = url.substringAfter("/en/").substringBefore("/")
         val poster = "https://fivetiu.com/" + code + "/cover-n.jpg"
+
+        val des = doc.selectFirst(".mb-8")?.text().toString()
+        val regdes = """Magnet\s*(.*?)\s*Show more""".toRegex(RegexOption.DOT_MATCHES_ALL)
+        val matchdes = regdes.find(des)
+
+        if (matchdes != null) {
+            description = matchdes.groups[1]?.value?.trim().toString()
+        }
+
+
 
 
         val x = doc.selectFirst("head").toString()
@@ -171,6 +180,48 @@ class MissAvProvider : MainAPI() {
         }
 
 
+
+        var starname = ArrayList<String>()
+        var lista = ArrayList<Actor>()
+
+        doc.select("div.space-y-2 div").mapNotNull {
+            if(it.text().contains("Actress")){
+                val names = it.text().replace("Actress:", "").trim().split(", ")
+
+                for (name in names){
+                    val r = name.split(" ")
+                    starname.add(r.reversed().joinToString(" "))
+                }
+            }
+        }
+        if (starname.size > 0) {
+
+            for (i in 0..starname.size - 1) {
+
+                var r = starname[i].split(" ")
+                app.get("https://www.javdatabase.com/idols/" + r.reversed().joinToString("-")).document.select("#main ").mapNotNull {
+                    var save = it.select(".entry-content .idol-portrait img").attr("src")
+                    //var otro = "https://st4.depositphotos.com/9998432/23767/v/450/depositphotos_237679112-stock-illustration-person-gray-photo-placeholder-woman.jpg"
+                    var otro = "https://tse1.mm.bing.net/th?id=OIP.6_wb2dVFWij-BlgOVLAvnQAAAA&pid=15.1"
+                    if (save.contains("http")) {
+                        lista.add(Actor(starname[i], save))
+                    } else {
+                        app.get("https://www.javdatabase.com/idols/" + r.joinToString("-")).document.select("#main ").mapNotNull {
+                            var save = it.select(".entry-content .idol-portrait img").attr("src")
+                            if(save.contains("http")){
+                                lista.add(Actor(starname[i], save))
+                            }else{
+                                lista.add(Actor(starname[i], otro))
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+
+
             //Fin espacio prueba
         return newMovieLoadResponse(
                 title,
@@ -179,9 +230,10 @@ class MissAvProvider : MainAPI() {
                 url
         ) {
             posterUrl = fixUrlNull(poster)
-            this.plot = test
+            this.plot = description
             this.recommendations = null
             this.duration = min
+            addActors(lista)
         }
 
     /* return MovieLoadResponse(
