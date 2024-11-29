@@ -15,16 +15,7 @@ import com.lagradost.cloudstream3.utils.M3u8Helper
 import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.Response
 import org.json.JSONObject
-import java.io.IOException
 import java.util.Base64
 import java.util.*
 import kotlin.collections.ArrayList
@@ -226,40 +217,6 @@ class MissAvProvider : MainAPI() {
 
 
 
-        var trad = ""
-
-
-        val client = OkHttpClient()
-
-        val textToTranslate = "Hello, how are you?"
-        val langPair = "en|es"
-        val url = "https://api.mymemory.translated.net/get?q=$textToTranslate&langpair=$langPair"
-
-        val request = Request.Builder()
-                .url(url)
-                .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
-
-                    val responseData = response.body?.string()
-                    if (responseData != null) {
-                        val jsonResponse = JSONObject(responseData)
-                        val translatedText = jsonResponse.getJSONObject("responseData").getString("translatedText")
-                        trad = "Texto traducido: $translatedText"
-                    } else {
-                        trad = "Error en la traducción"
-                    }
-                }
-            }
-        })
-
             //Fin espacio prueba
         return newMovieLoadResponse(
                 title,
@@ -268,7 +225,7 @@ class MissAvProvider : MainAPI() {
                 url
         ) {
             posterUrl = fixUrlNull(poster)
-            this.plot = "m: " + trad
+            this.plot = description
             this.recommendations = null
             this.duration = min
             addActors(lista)
