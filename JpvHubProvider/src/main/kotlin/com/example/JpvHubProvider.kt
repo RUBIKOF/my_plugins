@@ -55,13 +55,14 @@ class JpvHubProvider : MainAPI() {
 
                 )
 
-        var json : String
+        var texto : String
+        var json : JSONObject
         var gmd : String
         val pagedLink = if (page > 0) request.data + page else request.data
         val document = app.get(pagedLink).document.body()
-        json = document.toString().substring(document.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
-        gmd = json.substring(0,json.indexOf("</script>"))
-        val idPattern1 = "\"Id\":\"([^\"]+)\"".toRegex()
+        texto = document.toString().substring(document.toString().indexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">")+51)
+        gmd = texto.substring(0,texto.indexOf("</script>"))
+        /*val idPattern1 = "\"Id\":\"([^\"]+)\"".toRegex()
         val titlePattern1 = "\"title\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
         val thumbnailPattern1 = "\"thumbnailPath\"\\s*:\\s*\"([^\"]+)\"".toRegex()
 
@@ -74,17 +75,31 @@ class JpvHubProvider : MainAPI() {
             val title = titleMatches.elementAtOrNull(index)?.groupValues?.get(1)
             val thumb = thumbnailMatches.elementAtOrNull(index)?.groupValues?.get(1).toString()
             videoList.add(Video(id,title,thumb))
+        }*/
+
+
+        val List = mutableListOf<Video>()
+        json = JSONObject(gmd)
+        val videoList = json.getJSONObject("props").getJSONObject("pageProps").getJSONArray("videoList")
+        for (i in 0 until videoList.length()) {
+            val video = videoList.getJSONObject(i)
+            val id = video.getString("Id")
+            val titleName = video.getJSONObject("title").getString("name")
+            val thumbnailPath = video.getString("thumbnailPath")
+            List.add(Video(id.toString(),titleName,thumbnailPath))
         }
-        val home = videoList.map { video ->
-            AnimeSearchResponse(
-                    video.titleName!!,
-                    fixUrl(mainUrl + "video/" + video.id),
-                    this.name,
-                    TvType.NSFW,
-                    fixUrl(video.thumbnailPath.toString()),
-                    null
-            )
-        }
+
+
+            val home = List.map { video ->
+                AnimeSearchResponse(
+                        video.titleName!!,
+                        fixUrl(mainUrl + "video/" + video.id),
+                        this.name,
+                        TvType.NSFW,
+                        fixUrl(video.thumbnailPath.toString()),
+                        null
+                )
+            }
         return newHomePageResponse(
                 list = HomePageList(
                         name               = request.name,
@@ -218,7 +233,7 @@ class JpvHubProvider : MainAPI() {
                 starname.add(modelName)
             }*/
 
-            /*val modelPattern = "\"models\"\\s*:\\s*\\[([^]]*)]".toRegex()
+            val modelPattern = "\"models\"\\s*:\\s*\\[([^]]*)]".toRegex()
             val namePattern = "\"name\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
 
             val modelsBlock = modelPattern.find(gm)?.groupValues?.get(1)
@@ -229,7 +244,7 @@ class JpvHubProvider : MainAPI() {
             }?.toList() ?: emptyList()
             matches.forEach {
                 starname.add(it)
-            }*/
+            }
 
 
             if (starname.size > 0) {
