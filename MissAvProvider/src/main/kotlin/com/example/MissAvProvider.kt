@@ -15,7 +15,10 @@ import com.lagradost.cloudstream3.utils.M3u8Helper
 import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.json.JSONObject
+import java.io.IOException
 import java.util.Base64
 import java.util.*
 import kotlin.collections.ArrayList
@@ -199,6 +202,46 @@ class MissAvProvider : MainAPI() {
 
 
 
+
+
+        val client = OkHttpClient()
+
+        val url = "https://api.mymemory.translated.net/get?q=Hello%2C%20how%20are%20you%3F&langpair=en|es" // Reemplaza con la URL de tu solicitud GET
+
+        val request = Request.Builder()
+                .url(url)
+                .build()
+
+        client.newCall(request).enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                response.use {
+                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                    val responseData = response.body?.string()
+                    if (responseData != null) {
+                        // Analizar el JSON para extraer translatedText
+                        val json = JSONObject(responseData)
+                        val translatedText = json.getJSONObject("responseData").getString("translatedText")
+
+                        test= "Texto traducido: $translatedText"
+                    } else {
+                        test = "Error al obtener el JSON."
+                    }
+                }
+            }
+        })
+
+
+
+
+
+
+
+
             //Fin espacio prueba
         return newMovieLoadResponse(
                 title,
@@ -207,7 +250,7 @@ class MissAvProvider : MainAPI() {
                 url
         ) {
             posterUrl = fixUrlNull(poster)
-            this.plot = description
+            this.plot = test
             this.recommendations = null
             this.duration = min
             addActors(lista)
