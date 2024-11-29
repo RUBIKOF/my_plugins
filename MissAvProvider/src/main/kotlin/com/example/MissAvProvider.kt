@@ -160,6 +160,12 @@ class MissAvProvider : MainAPI() {
         val poster = "https://fivetiu.com/" + code + "/cover-n.jpg"
 
 
+        val x = doc.selectFirst("head").toString()
+        val regex = """<meta property="og:video:duration" content="(\d+)" ?/?>""".toRegex()
+        val matchResult = regex.find(x)
+        val duracionSegundos = matchResult?.groups?.get(1)?.value?.toIntOrNull()
+
+
 
             //Fin espacio prueba
         return newMovieLoadResponse(
@@ -171,7 +177,7 @@ class MissAvProvider : MainAPI() {
             posterUrl = fixUrlNull(poster)
             this.plot = test
             this.recommendations = null
-            this.duration = null
+            this.duration = duracionSegundos
         }
 
     /* return MovieLoadResponse(
