@@ -154,6 +154,7 @@ class MissAvProvider : MainAPI() {
         //val poster = "https://javenspanish.com/wp-content/uploads/2022/01/JUFE-132.jpg"
         val title = doc.selectFirst(".mt-4 h1")?.text()?:""
         val type = "NFSW"
+        var test =""
         var description =""
         val code = url.substringAfter("/en/").substringBefore("/")
         val poster = "https://fivetiu.com/" + code + "/cover-n.jpg"
@@ -191,6 +192,7 @@ class MissAvProvider : MainAPI() {
                 for (name in names){
                     val r = name.split(" ")
                     starname.add(r.reversed().joinToString(" "))
+                    test +=" :" +r.reversed().joinToString(" ")
                 }
             }
         }
@@ -230,7 +232,7 @@ class MissAvProvider : MainAPI() {
                 url
         ) {
             posterUrl = fixUrlNull(poster)
-            this.plot = description
+            this.plot = "m: " + test
             this.recommendations = null
             this.duration = min
             addActors(lista)
