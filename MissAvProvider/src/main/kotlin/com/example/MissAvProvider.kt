@@ -40,35 +40,17 @@ class MissAvProvider : MainAPI() {
             TvType.NSFW
     )
     override val mainPage = mainPageOf(
-            mainUrl+"dm509/en/release?page=" to "Main Page",
+            mainUrl + "dm509/en/release?page=" to "Main Page",
             mainUrl + "dm36/en/genres/Incest?page=" to "Incest",
             mainUrl + "dm312/en/genres/Slut?page=" to "Slut",
             mainUrl + "dm783/en/genres/Sister?page=" to "Sister",
             mainUrl + "dm724/en/genres/Ntr?page=" to "NTR",
-            mainUrl + "/dm44/en/genres/Black%20Male%20Actor?page=" to "Black Actor",
+            mainUrl + "dm44/en/genres/Black%20Male%20Actor?page=" to "Black Actor",
 
     )
     val saveImage = "";
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val urls = listOf(
-                Pair(
-                        mainUrl + "dm36/en/genres/Incest",
-                        "Incest"
-                ),
-                Pair(
-                        mainUrl + "dm312/en/genres/Slut",
-                        "Slut"
-                ),
-                Pair(
-                        mainUrl + "dm783/en/genres/Sister",
-                        "Sister"
-                ),
-                Pair(
-                        mainUrl + "dm724/en/genres/Ntr",
-                        "NTR"
-                ),
-        )
 
         val pagedLink = if (page > 0) request.data+page else request.data.replace("?page=","")
 
