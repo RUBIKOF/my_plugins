@@ -224,7 +224,7 @@ class JavGuruProvider : MainAPI() {
         var lista = ArrayList<Actor>()
 
         doc.select(".infoleft > ul > li").mapNotNull {
-            if(it.text().contains("Actress")){
+            if(it.text().contains("Actress:")){
                 val names = it.text().replace("Actress:", "").trim().split(", ")
 
                 for (name in names){
