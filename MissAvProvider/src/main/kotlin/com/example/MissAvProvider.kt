@@ -201,9 +201,6 @@ class MissAvProvider : MainAPI() {
         }
 
 
-
-
-
         val client = OkHttpClient()
 
         val url = "https://api.mymemory.translated.net/get?q=Hello%2C%20how%20are%20you%3F&langpair=en|es" // Reemplaza con la URL de tu solicitud GET
@@ -212,28 +209,20 @@ class MissAvProvider : MainAPI() {
                 .url(url)
                 .build()
 
-        client.newCall(request).enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: IOException) {
-                e.printStackTrace()
+        val response = client.newCall(request).execute() // Realiza la solicitud de manera sincrónica
+        if (response.isSuccessful) {
+            val responseData = response.body?.string()
+            if (responseData != null) {
+                // Analizar el JSON para extraer translatedText
+                val json = JSONObject(responseData)
+                val translatedText = json.getJSONObject("responseData").getString("translatedText")
+               test = translatedText
+            } else {
+                test = "Error al obtener el JSON."
             }
-
-            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                response.use {
-                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
-
-                    val responseData = response.body?.string()
-                    if (responseData != null) {
-                        // Analizar el JSON para extraer translatedText
-                        val json = JSONObject(responseData)
-                        val translatedText = json.getJSONObject("responseData").getString("translatedText")
-
-                        test= "Texto traducido: $translatedText"
-                    } else {
-                        test = "Error al obtener el JSON."
-                    }
-                }
-            }
-        })
+        } else {
+            throw IOException("Unexpected code $response")
+        }
 
 
 
@@ -250,7 +239,7 @@ class MissAvProvider : MainAPI() {
                 url
         ) {
             posterUrl = fixUrlNull(poster)
-            this.plot = test
+            this.plot = ": " + test
             this.recommendations = null
             this.duration = min
             addActors(lista)
