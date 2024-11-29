@@ -163,8 +163,12 @@ class MissAvProvider : MainAPI() {
         val x = doc.selectFirst("head").toString()
         val regex = """<meta property="og:video:duration" content="(\d+)" ?/?>""".toRegex()
         val matchResult = regex.find(x)
-        val duracionSegundos = matchResult?.groups?.get(1)?.value?.toIntOrNull()
+        val seg = matchResult?.groups?.get(1)?.value?.toIntOrNull()
 
+        var min =0
+        if(seg !=null){
+            min = seg / 60
+        }
 
 
             //Fin espacio prueba
@@ -177,7 +181,7 @@ class MissAvProvider : MainAPI() {
             posterUrl = fixUrlNull(poster)
             this.plot = test
             this.recommendations = null
-            this.duration = 15
+            this.duration = min
         }
 
     /* return MovieLoadResponse(
