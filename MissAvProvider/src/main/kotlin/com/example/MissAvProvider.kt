@@ -155,17 +155,11 @@ class MissAvProvider : MainAPI() {
         val title = doc.selectFirst(".mt-4 h1")?.text()?:""
         val type = "NFSW"
         var test =""
-        var description =""
         val code = url.substringAfter("/en/").substringBefore("/")
         val poster = "https://fivetiu.com/" + code + "/cover-n.jpg"
 
-        val des = doc.selectFirst(".mb-8")?.text().toString()
-        val regdes = """Magnet\s*(.*?)\s*Show more""".toRegex(RegexOption.DOT_MATCHES_ALL)
-        val matchdes = regdes.find(des)
+        val description = doc.selectFirst(".mb-1")?.text()
 
-        if (matchdes != null) {
-            description = matchdes.groups[1]?.value?.trim().toString()
-        }
 
 
 
@@ -192,7 +186,6 @@ class MissAvProvider : MainAPI() {
                 for (name in names){
                     val r = name.split(" ")
                     starname.add(r.reversed().joinToString(" "))
-                    test +=" :" +r.reversed().joinToString(" ")
                 }
             }
         }
@@ -232,7 +225,7 @@ class MissAvProvider : MainAPI() {
                 url
         ) {
             posterUrl = fixUrlNull(poster)
-            this.plot = "m: " + test
+            this.plot = description
             this.recommendations = null
             this.duration = min
             addActors(lista)
