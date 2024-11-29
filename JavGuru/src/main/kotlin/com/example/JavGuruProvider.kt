@@ -229,7 +229,11 @@ class JavGuruProvider : MainAPI() {
 
                 for (name in names){
                     val r = name.split(" ")
-                    starname.add(r.reversed().joinToString(" "))
+                    val namerev = r.reversed().joinToString(" ")
+                    if(namerev != ""){
+                        starname.add(namerev)
+                    }
+
                 }
             }
         }
