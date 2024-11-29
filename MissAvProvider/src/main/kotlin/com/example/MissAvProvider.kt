@@ -177,7 +177,7 @@ class MissAvProvider : MainAPI() {
             posterUrl = fixUrlNull(poster)
             this.plot = test
             this.recommendations = null
-            this.duration = duracionSegundos
+            this.duration = 15
         }
 
     /* return MovieLoadResponse(
