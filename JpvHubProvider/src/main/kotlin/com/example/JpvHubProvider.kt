@@ -217,7 +217,8 @@ class JpvHubProvider : MainAPI() {
                 val modelName = matchResult.groupValues[1]
                 starname.add(modelName)
             }*/
-            val modelPattern = "\"models\"\\s*:\\s*\\[([^]]*)]".toRegex()
+
+            /*val modelPattern = "\"models\"\\s*:\\s*\\[([^]]*)]".toRegex()
             val namePattern = "\"name\"\\s*:\\s*\\{[^}]*\"name\"\\s*:\\s*\"([^\"]+)\"".toRegex()
 
             val modelsBlock = modelPattern.find(gm)?.groupValues?.get(1)
@@ -228,7 +229,7 @@ class JpvHubProvider : MainAPI() {
             }?.toList() ?: emptyList()
             matches.forEach {
                 starname.add(it)
-            }
+            }*/
 
 
             if (starname.size > 0) {
