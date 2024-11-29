@@ -19,6 +19,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.io.IOException
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.util.Base64
 import java.util.*
 import kotlin.collections.ArrayList
@@ -200,29 +202,30 @@ class MissAvProvider : MainAPI() {
             }
         }
 
-
         val client = OkHttpClient()
+        val partes = dividirTexto(description.toString(), 500)
+        val textoTraducido = StringBuilder()
 
-        val url = "https://api.mymemory.translated.net/get?q=Hello%2C%20how%20are%20you%3F&langpair=en|es" // Reemplaza con la URL de tu solicitud GET
+        for (parte in partes) {
+            val encodedText = URLEncoder.encode(parte, StandardCharsets.UTF_8.toString())
+            val url = "https://api.mymemory.translated.net/get?q=$encodedText&langpair=en|es"
 
-        val request = Request.Builder()
-                .url(url)
-                .build()
+            val request = Request.Builder()
+                    .url(url)
+                    .build()
 
-        val response = client.newCall(request).execute() // Realiza la solicitud de manera sincrónica
-        if (response.isSuccessful) {
-            val responseData = response.body?.string()
-            if (responseData != null) {
-                // Analizar el JSON para extraer translatedText
-                val json = JSONObject(responseData)
-                val translatedText = json.getJSONObject("responseData").getString("translatedText")
-               test = translatedText
-            } else {
-                test = "Error al obtener el JSON."
+            val response = client.newCall(request).execute()
+            if (response.isSuccessful) {
+                val responseData = response.body?.string()
+                if (responseData != null) {
+                    val json = JSONObject(responseData)
+                    val translatedText = json.getJSONObject("responseData").getString("translatedText")
+                    textoTraducido.append(translatedText).append(" ")
+                }
             }
-        } else {
-            throw IOException("Unexpected code $response")
         }
+
+        println("Texto traducido completo: ${textoTraducido.toString().trim()}")
 
 
 
@@ -239,8 +242,8 @@ class MissAvProvider : MainAPI() {
                 url
         ) {
             posterUrl = fixUrlNull(poster)
-            this.plot = ": " + test
-            this.recommendations = null
+            this.plot = textoTraducido.toString().trim()
+        this.recommendations = null
             this.duration = min
             addActors(lista)
         }
@@ -256,6 +259,17 @@ class MissAvProvider : MainAPI() {
                 actors = lista
         )*/
 
+    }
+
+    private fun dividirTexto(texto: String, tamañoParte: Int): List<String> {
+        val partes = mutableListOf<String>()
+        var inicio = 0
+        while (inicio < texto.length) {
+            val fin = Math.min(inicio + tamañoParte, texto.length)
+            partes.add(texto.substring(inicio, fin))
+            inicio += tamañoParte
+        }
+        return partes
     }
 
    /* override suspend fun loadLinks(
