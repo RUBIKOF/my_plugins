@@ -35,7 +35,7 @@ class MissAvProvider : MainAPI() {
         }
     }
 
-    override var mainUrl = "https://missav.com/"
+    override var mainUrl = "https://missav.ws/"
     override var name = "MissAv"
     override var lang = "es"
     override val hasMainPage = true
@@ -114,7 +114,7 @@ class MissAvProvider : MainAPI() {
         var z: Int
         var poster = ""
 
-            return app.get("https://missav.com/en/search/$query").document
+            return app.get(mainUrl+ "en/search/$query").document
                     .select(".thumbnail.group").mapNotNull {
                         val image = it.selectFirst("img")?.attr("data-src").toString().replace("cover-t","cover-n")
                         val title = it.selectFirst(".my-2 a")?.text().toString()
