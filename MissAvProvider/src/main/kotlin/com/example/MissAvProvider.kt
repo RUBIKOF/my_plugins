@@ -150,7 +150,6 @@ class MissAvProvider : MainAPI() {
 
 
 
-
         val x = doc.selectFirst("head").toString()
         val regex = """<meta property="og:video:duration" content="(\d+)" ?/?>""".toRegex()
         val matchResult = regex.find(x)
