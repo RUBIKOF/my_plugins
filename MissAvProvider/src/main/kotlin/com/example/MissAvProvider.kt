@@ -128,7 +128,6 @@ class MissAvProvider : MainAPI() {
                                 image
                         )
         }
-
     }
     data class EpsInfo (
             @JsonProperty("number" ) var number : String? = null,
