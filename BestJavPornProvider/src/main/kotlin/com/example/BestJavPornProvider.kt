@@ -161,21 +161,22 @@ class BestJavPornProvider : MainAPI() {
         var z: Int
         var poster = ""
 
-            return app.get("$mainUrl//?s=$query").document
+        return app.get("$mainUrl//?s=$query").document
                     .select("#main").select("article").mapNotNull {
-                        val image = it.selectFirst(" div div img")?.attr("data-src")
-                        val title = it.selectFirst("header span")?.text().toString()
-                        val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
+                val image = it.selectFirst(" div div img")?.attr("data-src")
+                val title = it.selectFirst("header span")?.text().toString()
+                val url =
+                    fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
 
 
-                        MovieSearchResponse(
-                                title,
-                                url,
-                                this.name,
-                                TvType.NSFW,
-                                image
-                        )
-        }
+                MovieSearchResponse(
+                    title,
+                    url,
+                    this.name,
+                    TvType.NSFW,
+                    image
+                )
+            }
 
     }
     data class EpsInfo (

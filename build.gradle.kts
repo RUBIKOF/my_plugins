@@ -1,5 +1,6 @@
 import com.lagradost.cloudstream3.gradle.CloudstreamExtension
 import com.android.build.gradle.BaseExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     repositories {
@@ -43,8 +44,12 @@ subprojects {
     android {
         compileSdkVersion(33)
 
+        lintOptions {
+            baseline("lint-baseline.xml")
+        }
+
         defaultConfig {
-            minSdk = 21
+            minSdk = 24
             targetSdk = 33
         }
 
@@ -53,7 +58,7 @@ subprojects {
             targetCompatibility = JavaVersion.VERSION_1_8
         }
 
-        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        tasks.withType<KotlinCompile> {
             kotlinOptions {
                 jvmTarget = "1.8" // Required
                 // Disables some unnecessary features

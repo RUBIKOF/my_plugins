@@ -300,7 +300,7 @@ class HentaiJKProvider : MainAPI() {
                                 namedesu,
                                 file!!,
                                 mainUrl,
-                        ).forEach { desurl ->
+                        ).forEach {desurl->
                             streamClean(
                                     namedesu,
                                     desurl.url,

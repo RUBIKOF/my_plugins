@@ -150,26 +150,27 @@ class JavSpanishProvider : MainAPI() {
         var z: Int
         var poster = ""
 
-            return app.get("$mainUrl//?s=$query").document
+        return app.get("$mainUrl//?s=$query").document
                     .select(".elementor-posts-container").select(".elementor-post__card").mapNotNull {
-                        texto = it.selectFirst(".elementor-post__thumbnail img").toString()
-                        inicio = texto.indexOf("srcset=") + 7
-                        ultimo = texto.length
-                        link = texto.substring(inicio, ultimo).toString()
-                        z = link.indexOf(" ")
-                        val image = link.substring(0, z).replace("\"","")
-                        val title = it.selectFirst(".elementor-post__title > a")?.text().toString()
-                        val url = fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
+                texto = it.selectFirst(".elementor-post__thumbnail img").toString()
+                inicio = texto.indexOf("srcset=") + 7
+                ultimo = texto.length
+                link = texto.substring(inicio, ultimo).toString()
+                z = link.indexOf(" ")
+                val image = link.substring(0, z).replace("\"", "")
+                val title = it.selectFirst(".elementor-post__title > a")?.text().toString()
+                val url =
+                    fixUrlNull(it.selectFirst("a")?.attr("href") ?: "") ?: return@mapNotNull null
 
 
-                        MovieSearchResponse(
-                                title,
-                                url,
-                                this.name,
-                                type,
-                                image
-                        )
-        }
+                MovieSearchResponse(
+                    title,
+                    url,
+                    this.name,
+                    type,
+                    image
+                )
+            }
 
     }
     data class EpsInfo (
