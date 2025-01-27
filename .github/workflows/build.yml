@@ -39,6 +39,9 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
+      - name: Verify Java Version
+        run: java -version
+
       - name: Build Plugins
         run: |
           cd $GITHUB_WORKSPACE/src
