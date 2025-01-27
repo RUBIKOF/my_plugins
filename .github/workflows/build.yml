@@ -1,5 +1,6 @@
 name: Build
 
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
 concurrency:
   group: "build"
   cancel-in-progress: true
@@ -7,6 +8,7 @@ concurrency:
 on:
   push:
     branches:
+      # choose your default branch
       - master
       - main
     paths-ignore:
@@ -17,12 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
         with:
           path: "src"
 
       - name: Checkout builds
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
         with:
           ref: "builds"
           path: "builds"
@@ -30,11 +32,10 @@ jobs:
       - name: Clean old builds
         run: rm $GITHUB_WORKSPACE/builds/*.cs3 || true
 
-      - name: Setup JDK 17
-        uses: actions/setup-java@v2
+      - name: Setup JDK 11
+        uses: actions/setup-java@v1
         with:
-          java-version: 17
-          distribution: 'temurin' # Especifica la distribución de JDK
+          java-version: 11
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
@@ -43,7 +44,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
-          ./gradlew make makePluginsJson --info --stacktrace
+          ./gradlew make makePluginsJson
           cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
           cp build/plugins.json $GITHUB_WORKSPACE/builds
 
@@ -53,5 +54,5 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add .
-          git commit --amend -m "Build $GITHUB_SHA" || exit 0
+          git commit --amend -m "Build $GITHUB_SHA" || exit 0   # do not error if nothing to commit
           git push --force

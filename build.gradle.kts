@@ -45,7 +45,7 @@ subprojects {
 
         defaultConfig {
             minSdk = 21
-            targetSdk = 33
+            targetSdk = 30
         }
 
         compileOptions {
