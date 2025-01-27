@@ -1,6 +1,5 @@
 import com.lagradost.cloudstream3.gradle.CloudstreamExtension
 import com.android.build.gradle.BaseExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     repositories {
@@ -44,14 +43,8 @@ subprojects {
     android {
         compileSdkVersion(30)
 
-        android {
-            lintOptions {
-                baseline("lint-baseline.xml")
-            }
-        }
-
         defaultConfig {
-            minSdk = 24
+            minSdk = 21
             targetSdk = 30
         }
 
@@ -60,7 +53,7 @@ subprojects {
             targetCompatibility = JavaVersion.VERSION_1_8
         }
 
-        tasks.withType<KotlinCompile> {
+        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
             kotlinOptions {
                 jvmTarget = "1.8" // Required
                 // Disables some unnecessary features
@@ -84,8 +77,8 @@ subprojects {
         // https://github.com/recloudstream/cloudstream/blob/master/app/build.gradle
         implementation(kotlin("stdlib")) // adds standard kotlin features, like listOf, mapOf etc
         implementation("com.github.Blatzar:NiceHttp:0.4.4") // http library
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
-        implementation("org.jsoup:jsoup:1.16.2") // html parser
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+        implementation("org.jsoup:jsoup:1.13.1") // html parser
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4") // html parser
     }
 }
