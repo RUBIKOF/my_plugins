@@ -1,6 +1,5 @@
 name: Build
 
-# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
 concurrency:
   group: "build"
   cancel-in-progress: true
@@ -8,7 +7,6 @@ concurrency:
 on:
   push:
     branches:
-      # choose your default branch
       - master
       - main
     paths-ignore:
@@ -17,14 +15,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
         with:
           path: "src"
 
       - name: Checkout builds
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
         with:
           ref: "builds"
           path: "builds"
@@ -40,10 +39,16 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Build Plugins
+      - name: Verify Java Version
+        run: java -version
+
+      - name: Compile and Build with Stacktrace
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
+          ./gradlew compileDebugKotlin --stacktrace
+          ./gradlew compileDebugKotlin --info
+          ./gradlew compileDebugKotlin --debug
           ./gradlew make makePluginsJson
           cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
           cp build/plugins.json $GITHUB_WORKSPACE/builds
