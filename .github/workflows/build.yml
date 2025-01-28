@@ -42,7 +42,13 @@ jobs:
       - name: Verify Java Version
         run: java -version
 
-      - name: Compile and Build with Stacktrace
+      - name: Scan Dependencies
+        run: |
+          cd $GITHUB_WORKSPACE/src
+          chmod +x gradlew
+          ./gradlew dependencies --scan
+
+      - name: Compile and Build
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
